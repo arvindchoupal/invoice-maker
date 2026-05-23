@@ -1,0 +1,228 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "onMatchHeaders": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/invoices/[id]/edit",
+      "regex": "^/invoices/([^/]+?)/edit(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/invoices/(?<nxtPid>[^/]+?)/edit(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/admin",
+      "regex": "^/admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin(?:/)?$"
+    },
+    {
+      "page": "/ai-import",
+      "regex": "^/ai\\-import(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/ai\\-import(?:/)?$"
+    },
+    {
+      "page": "/bookkeeping",
+      "regex": "^/bookkeeping(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/bookkeeping(?:/)?$"
+    },
+    {
+      "page": "/clients",
+      "regex": "^/clients(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/clients(?:/)?$"
+    },
+    {
+      "page": "/dashboard",
+      "regex": "^/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard(?:/)?$"
+    },
+    {
+      "page": "/documents",
+      "regex": "^/documents(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/documents(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/forgot-password",
+      "regex": "^/forgot\\-password(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/forgot\\-password(?:/)?$"
+    },
+    {
+      "page": "/invoices",
+      "regex": "^/invoices(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/invoices(?:/)?$"
+    },
+    {
+      "page": "/invoices/new",
+      "regex": "^/invoices/new(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/invoices/new(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/payments",
+      "regex": "^/payments(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/payments(?:/)?$"
+    },
+    {
+      "page": "/pricing",
+      "regex": "^/pricing(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/pricing(?:/)?$"
+    },
+    {
+      "page": "/recurring",
+      "regex": "^/recurring(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/recurring(?:/)?$"
+    },
+    {
+      "page": "/reports",
+      "regex": "^/reports(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/reports(?:/)?$"
+    },
+    {
+      "page": "/settings",
+      "regex": "^/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/settings(?:/)?$"
+    },
+    {
+      "page": "/signup",
+      "regex": "^/signup(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/signup(?:/)?$"
+    },
+    {
+      "page": "/tools",
+      "regex": "^/tools(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools(?:/)?$"
+    },
+    {
+      "page": "/tools/emi-calculator",
+      "regex": "^/tools/emi\\-calculator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/emi\\-calculator(?:/)?$"
+    },
+    {
+      "page": "/tools/gst-calculator",
+      "regex": "^/tools/gst\\-calculator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/gst\\-calculator(?:/)?$"
+    },
+    {
+      "page": "/tools/invoice-number-generator",
+      "regex": "^/tools/invoice\\-number\\-generator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/invoice\\-number\\-generator(?:/)?$"
+    },
+    {
+      "page": "/tools/invoice-to-excel-converter",
+      "regex": "^/tools/invoice\\-to\\-excel\\-converter(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/invoice\\-to\\-excel\\-converter(?:/)?$"
+    },
+    {
+      "page": "/tools/margin-calculator",
+      "regex": "^/tools/margin\\-calculator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/margin\\-calculator(?:/)?$"
+    },
+    {
+      "page": "/tools/pdf-to-invoice-extractor",
+      "regex": "^/tools/pdf\\-to\\-invoice\\-extractor(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/pdf\\-to\\-invoice\\-extractor(?:/)?$"
+    },
+    {
+      "page": "/tools/profit-calculator",
+      "regex": "^/tools/profit\\-calculator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/profit\\-calculator(?:/)?$"
+    },
+    {
+      "page": "/tools/tax-calculator",
+      "regex": "^/tools/tax\\-calculator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/tax\\-calculator(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

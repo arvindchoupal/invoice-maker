@@ -5,4 +5,5 @@
 /.pnp
 .pnp.*
 .yarn/*
-.next/*
+.next/cache
+.next/dev
