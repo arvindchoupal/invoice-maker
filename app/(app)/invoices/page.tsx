@@ -17,6 +17,7 @@ interface InvoiceRow {
   due_date: string;
   total: number;
   currency: string;
+  pdf_style?: string;
 }
 
 interface InvoiceListResponse {
@@ -117,12 +118,13 @@ export default function InvoicesPage() {
     await api(`/invoices/${id}/reminder`, { method: "POST" });
   }
 
-  function pdfUrl(id: number, style = selectedTemplate) {
-    return `${API_URL}/invoices/${id}/pdf?token=${getToken()}&style=${encodeURIComponent(style)}`;
+  function pdfUrl(id: number, style?: string) {
+    const resolved = style ?? selectedTemplate;
+    return `${API_URL}/invoices/${id}/pdf?token=${getToken()}&style=${encodeURIComponent(resolved)}`;
   }
 
   function whatsappUrl(invoice: InvoiceRow) {
-    const text = `Hi, here is invoice ${invoice.invoice_number} for ${currency(Number(invoice.total), invoice.currency)}. Download PDF: ${pdfUrl(invoice.id)}`;
+    const text = `Hi, here is invoice ${invoice.invoice_number} for ${currency(Number(invoice.total), invoice.currency)}. Download PDF: ${pdfUrl(invoice.id, invoice.pdf_style)}`;
     return `https://wa.me/7973974616?text=${encodeURIComponent(text)}`;
   }
 
@@ -216,13 +218,16 @@ export default function InvoicesPage() {
                     <td className="p-4"><Badge tone={statusTone(invoice.status)}>{invoice.status}</Badge></td>
                     <td className="p-4">
                       <div className="flex flex-wrap gap-2">
-                        <Button variant="secondary" className="px-3" onClick={() => setPreviewInvoice(invoice)}><Eye className="h-4 w-4" />Preview</Button>
+                        <Button variant="secondary" className="px-3" onClick={() => {
+                          setPreviewInvoice(invoice);
+                          if (invoice.pdf_style) setSelectedStyle(invoice.pdf_style);
+                        }}><Eye className="h-4 w-4" />Preview</Button>
                         <Link className="inline-flex min-h-10 items-center rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold dark:border-white/10" href={`/invoices/${invoice.id}/edit`}>Edit</Link>
                         <Button variant="secondary" className="px-3" onClick={() => duplicate(invoice.id)}><Copy className="h-4 w-4" /></Button>
                         <Button variant="secondary" className="px-3" onClick={() => sendInvoice(invoice.id)}><Send className="h-4 w-4" /></Button>
                         <Button variant="ghost" className="px-3" onClick={() => sendReminder(invoice.id)}><Mail className="h-4 w-4" /></Button>
                         <a className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-emerald-200 px-3 py-2 text-sm font-semibold text-emerald-700 dark:border-emerald-500/20 dark:text-emerald-200" href={whatsappUrl(invoice)} target="_blank" rel="noreferrer"><MessageCircle className="h-4 w-4" />WA</a>
-                        <a className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white" href={pdfUrl(invoice.id)}><Download className="h-4 w-4" />PDF</a>
+                        <a className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white" href={pdfUrl(invoice.id, invoice.pdf_style)}><Download className="h-4 w-4" />PDF</a>
                         <Button variant="danger" className="px-3" onClick={() => remove(invoice.id)}><Trash2 className="h-4 w-4" /></Button>
                       </div>
                     </td>
@@ -271,7 +276,7 @@ export default function InvoicesPage() {
                 </button>
               ))}
             </div>
-            <a className="mt-5 inline-flex w-full min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white" href={pdfUrl(previewInvoice.id)}>
+            <a className="mt-5 inline-flex w-full min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white" href={pdfUrl(previewInvoice.id, selectedTemplate)}>
               <Download className="h-4 w-4" />
               Download selected template
             </a>
@@ -281,7 +286,7 @@ export default function InvoicesPage() {
             </a>
           </Card>
           <div className="min-h-0 rounded-2xl bg-white p-2">
-            <iframe className="h-full min-h-[80vh] w-full rounded-xl" src={pdfUrl(previewInvoice.id)} title="Live PDF preview" />
+            <iframe className="h-full min-h-[80vh] w-full rounded-xl" src={pdfUrl(previewInvoice.id, selectedTemplate)} title="Live PDF preview" />
           </div>
         </div>
       ) : null}

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import './globals.css'
 export const metadata: Metadata = {
-  title: "Ledgerly Invoice Maker",
-  description: "Modern invoice maker for teams, freelancers, and finance admins.",
+  title: "InvoiceWala — GST invoices & billing",
+  description:
+    "Create GST invoices, track payments, import bills, and manage clients. Built for Indian businesses at invoicewala.shop.",
+  metadataBase: new URL("https://invoicewala.shop"),
 };
 
 export default function RootLayout({

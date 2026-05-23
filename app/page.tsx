@@ -1,15 +1,32 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { TOOLS_CATALOG } from "@/lib/tools-catalog";
+import { faqSchema, organizationSchema, toolsItemListSchema, websiteSchema } from "@/lib/seo-schemas";
+
+export const metadata: Metadata = {
+  title: "InvoiceWala | GST Invoices, Billing and Free Business Tools",
+  description:
+    "Create GST invoices, track payments, import bills and use free calculators for GST, profit, margin, EMI, tax and invoice workflows. Built for Indian businesses at invoicewala.shop.",
+  metadataBase: new URL("https://invoicewala.shop"),
+  openGraph: {
+    title: "InvoiceWala — GST invoices, billing and free tools",
+    description: "Invoice maker with AI import, GST-ready PDFs and free public business calculators.",
+    url: "https://invoicewala.shop",
+    siteName: "InvoiceWala",
+  },
+};
 
 const metrics = [
   ["GST-ready", "invoice and tax document flows"],
   ["AI", "extracts bills, receipts and PDFs"],
   ["Payment", "tracking, reminders and overdue visibility"],
-  ["8 free", "public calculators and converters"],
+  ["8 free", "GST, profit, margin and invoice tools"],
 ];
 
 const features = [
   ["Get paid faster", "Send polished invoices, payment links and WhatsApp-ready reminders without chasing clients manually."],
-  ["Turn bills into books", "Upload receipts, GST bills and vendor PDFs; Ledgerly extracts vendors, taxes, items and totals."],
+  ["Turn bills into books", "Upload receipts, GST bills and vendor PDFs; InvoiceWala extracts vendors, taxes, items and totals."],
   ["Know profit monthly", "Track revenue, expenses, GST, client balances and profit trends from one finance workspace."],
   ["Work like a real business", "Invoices, receipts, quotations, estimates, purchase orders and reports live together."],
 ];
@@ -21,30 +38,23 @@ const simpleUseCases = [
   ["Need a quote before billing?", "Prepare a quotation or estimate first, then convert it into an invoice later."],
 ];
 
-const tools = [
-  ["GST calculator", "/tools/gst-calculator"],
-  ["Profit calculator", "/tools/profit-calculator"],
-  ["Margin calculator", "/tools/margin-calculator"],
-  ["PDF invoice extractor", "/tools/pdf-to-invoice-extractor"],
-  ["Invoice to Excel", "/tools/invoice-to-excel-converter"],
-  ["EMI calculator", "/tools/emi-calculator"],
-];
-
-const faqs = [
-  ["Is Ledgerly only an invoice maker?", "No. Ledgerly is being built as an AI-powered finance OS for invoices, bills, expenses, payments, GST reports and bookkeeping."],
-  ["Does Ledgerly support GST businesses in India?", "Yes. Ledgerly supports GST/VAT fields, GST-ready invoice data, tax summaries and GST-focused public tools."],
+const faqs: Array<[string, string]> = [
+  ["Is InvoiceWala only an invoice maker?", "No. InvoiceWala is being built as an AI-powered finance OS for invoices, bills, expenses, payments, GST reports and bookkeeping."],
+  ["Does InvoiceWala support GST businesses in India?", "Yes. InvoiceWala supports GST/VAT fields, GST-ready invoice data, tax summaries and GST-focused public tools."],
   ["Can I use the free tools without signup?", "Yes. The public calculators work without login. Signup is needed when you want to save results, create invoices or build reports."],
-  ["Can I send invoices on WhatsApp?", "Yes. Ledgerly supports direct WhatsApp sharing links for invoices without needing a WhatsApp API provider."],
+  ["Can I send invoices on WhatsApp?", "Yes. InvoiceWala supports direct WhatsApp sharing links for invoices without needing a WhatsApp API provider."],
 ];
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
+      <JsonLd data={[organizationSchema(), websiteSchema(), toolsItemListSchema(), faqSchema(faqs)]} />
       <section className="mx-auto w-full max-w-7xl px-6 py-6">
         <nav className="flex items-center justify-between">
-          <Link className="text-xl font-semibold tracking-tight" href="/">Ledgerly</Link>
+          <Link className="text-xl font-semibold tracking-tight" href="/">InvoiceWala</Link>
           <div className="flex items-center gap-2 sm:gap-3">
             <Link className="rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10" href="/tools">Free tools</Link>
+            <Link className="hidden rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10 md:inline-flex" href="/blog">Blog</Link>
             <Link className="hidden rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10 sm:inline-flex" href="/login">Log in</Link>
             <Link className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-slate-200" href="/signup">Start free</Link>
           </div>
@@ -59,7 +69,7 @@ export default function Home() {
               Get paid faster. Automate invoices, bills, GST and bookkeeping with AI.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-              Ledgerly helps you send invoices, import vendor bills, track payments, create finance documents and turn messy business paperwork into clean reports.
+              InvoiceWala helps you send invoices, import vendor bills, track payments, create finance documents and turn messy business paperwork into clean reports.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link className="rounded-xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-200" href="/signup">Start free</Link>
@@ -134,7 +144,7 @@ export default function Home() {
               Sold something or completed work? Give your customer a proper invoice in minutes.
             </h2>
             <p className="mt-4 text-base leading-7 text-slate-300">
-              Ledgerly is simple enough for one invoice today and powerful enough to manage payments, GST, clients and reports as your business grows.
+              InvoiceWala is simple enough for one invoice today and powerful enough to manage payments, GST, clients and reports as your business grows.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Link className="inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-5 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-100" href="/signup?intent=create-invoice">
@@ -168,7 +178,7 @@ export default function Home() {
       <section className="mx-auto grid max-w-7xl gap-8 px-6 py-20 lg:grid-cols-[0.8fr_1.2fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">AI import</p>
-          <h2 className="mt-3 text-4xl font-semibold tracking-tight">Upload bills and receipts. Ledgerly turns them into structured finance records.</h2>
+          <h2 className="mt-3 text-4xl font-semibold tracking-tight">Upload bills and receipts. InvoiceWala turns them into structured finance records.</h2>
           <p className="mt-4 text-slate-300">Extract vendor, GSTIN, dates, line items, subtotal, tax and total. Save as invoice, purchase or expense after review.</p>
         </div>
         <div className="grid gap-3 md:grid-cols-3">
@@ -190,15 +200,24 @@ export default function Home() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Free tools</p>
-            <h2 className="mt-3 text-4xl font-semibold tracking-tight">Win on Google. Convert useful calculations into Ledgerly accounts.</h2>
+            <h2 className="mt-3 text-4xl font-semibold tracking-tight">Win on Google. Convert useful calculations into InvoiceWala accounts.</h2>
           </div>
           <Link className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950" href="/tools">View all tools</Link>
         </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {tools.map(([title, href]) => (
-            <Link className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 transition hover:-translate-y-1 hover:bg-white/[0.08]" href={href} key={href}>
-              <h3 className="font-semibold">{title}</h3>
-              <p className="mt-2 text-sm text-slate-400">Calculate, share, export, then save into Ledgerly.</p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {TOOLS_CATALOG.map((tool) => (
+            <Link
+              className="group rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition duration-200 hover:-translate-y-1 hover:border-cyan-300/30 hover:bg-white/[0.08] hover:shadow-2xl hover:shadow-cyan-950/20"
+              href={tool.href}
+              key={tool.href}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className="rounded-full bg-white/8 px-2.5 py-1 text-xs font-semibold text-cyan-200 ring-1 ring-white/10">{tool.tag}</span>
+                <span className="text-xs font-medium text-slate-500 transition group-hover:text-cyan-200">Open</span>
+              </div>
+              <h3 className="mt-4 text-lg font-semibold tracking-tight">{tool.title}</h3>
+              <p className="mt-2 min-h-12 text-sm leading-6 text-slate-400">{tool.body}</p>
+              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{tool.intent}</p>
             </Link>
           ))}
         </div>
@@ -241,9 +260,10 @@ export default function Home() {
 
       <footer className="border-t border-white/10 px-6 py-10">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 text-sm text-slate-400">
-          <p>Ledgerly · AI Finance OS</p>
+          <p>InvoiceWala · invoicewala.shop</p>
           <div className="flex gap-4">
             <Link href="/tools">Tools</Link>
+            <Link href="/blog">Blog</Link>
             <Link href="/pricing">Pricing</Link>
             <Link href="/signup">Start free</Link>
           </div>

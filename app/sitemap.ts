@@ -1,0 +1,30 @@
+import type { MetadataRoute } from "next";
+import { getAllPosts } from "@/lib/blog/posts";
+import { TOOLS_CATALOG } from "@/lib/tools-catalog";
+
+const siteUrl = "https://invoicewala.shop";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const staticRoutes = ["", "/tools", "/blog", "/login", "/signup", "/pricing"].map((path) => ({
+    url: `${siteUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: path === "" ? 1 : 0.8,
+  }));
+
+  const toolRoutes = TOOLS_CATALOG.map((tool) => ({
+    url: `${siteUrl}${tool.href}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.9,
+  }));
+
+  const blogRoutes = getAllPosts().map((post) => ({
+    url: `${siteUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.updatedAt ?? post.publishedAt),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...toolRoutes, ...blogRoutes];
+}

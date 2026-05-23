@@ -28,6 +28,7 @@ export default function EditInvoicePage() {
         customerAddress: String(data.customer_address ?? ""),
         notes: String(data.notes ?? ""),
         terms: String(data.terms ?? ""),
+        pdfStyle: String(data.pdf_style ?? "classic"),
         items: (data.items as Array<Record<string, unknown>>).map((item) => ({
           name: String(item.name ?? ""),
           description: String(item.description ?? ""),

@@ -41,7 +41,7 @@ export default function LoginPage() {
       <section className="grid min-h-screen lg:grid-cols-[1.04fr_0.96fr]">
         <div className="relative hidden overflow-hidden border-r border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.2),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.16),transparent_32%)] p-10 lg:flex lg:flex-col">
           <Link className="text-xl font-semibold tracking-tight" href="/">
-            Ledgerly
+            InvoiceWala
           </Link>
           <div className="flex flex-1 items-center">
             <div className="max-w-2xl">
@@ -66,7 +66,7 @@ export default function LoginPage() {
           <div className="w-full max-w-md">
             <div className="mb-8 flex items-center justify-between lg:hidden">
               <Link className="text-xl font-semibold tracking-tight" href="/">
-                Ledgerly
+                InvoiceWala
               </Link>
               <Link className="rounded-xl border border-white/10 px-3 py-2 text-sm font-semibold text-slate-200" href="/signup">
                 Sign up
@@ -76,7 +76,7 @@ export default function LoginPage() {
             <form className="rounded-3xl border border-white/10 bg-white/[0.06] p-6 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-8" onSubmit={submit}>
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Secure login</p>
-                <h2 className="mt-3 text-3xl font-semibold tracking-tight">Log in to Ledgerly</h2>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight">Log in to InvoiceWala</h2>
                 <p className="mt-2 text-sm leading-6 text-slate-400">Access your invoices, clients, reports and AI bookkeeping workspace.</p>
               </div>
 
@@ -103,7 +103,7 @@ export default function LoginPage() {
               </div>
 
               <p className="mt-6 text-center text-sm text-slate-400">
-                New to Ledgerly?{" "}
+                New to InvoiceWala?{" "}
                 <Link className="font-semibold text-cyan-300 hover:text-cyan-200" href="/signup">
                   Create your workspace
                 </Link>

@@ -49,7 +49,7 @@ export default function GstCalculatorClient() {
     };
   }, [amount, mode, rate, supplyType]);
 
-  const shareText = `Ledgerly GST calculation: ${mode === "inclusive" ? "Inclusive" : "Exclusive"} GST at ${result.rate}% on ${money(result.amount)}. Taxable value ${money(result.taxable)}, GST ${money(result.tax)}, total ${money(result.total)}.`;
+  const shareText = `InvoiceWala GST calculation: ${mode === "inclusive" ? "Inclusive" : "Exclusive"} GST at ${result.rate}% on ${money(result.amount)}. Taxable value ${money(result.taxable)}, GST ${money(result.tax)}, total ${money(result.total)}.`;
 
   async function shareResult() {
     setCopied(false);
@@ -84,7 +84,7 @@ export default function GstCalculatorClient() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = "ledgerly-gst-calculation.csv";
+    anchor.download = "invoicewala-gst-calculation.csv";
     anchor.click();
     URL.revokeObjectURL(url);
   }
@@ -94,7 +94,7 @@ export default function GstCalculatorClient() {
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_32%),radial-gradient(circle_at_top_right,rgba(99,102,241,0.14),transparent_30%)] px-5 py-6 sm:px-8">
         <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <Link className="text-xl font-semibold tracking-tight" href="/">
-            Ledgerly
+            InvoiceWala
           </Link>
           <div className="flex items-center gap-2">
             <Link className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white" href="/tools">
@@ -111,7 +111,7 @@ export default function GstCalculatorClient() {
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">GST calculator India</p>
             <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-6xl">Calculate GST, split tax and create invoices faster.</h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-slate-300">
-              Work out inclusive or exclusive GST with CGST/SGST or IGST split, then move the result into Ledgerly for branded invoices, payment links and reminders.
+              Work out inclusive or exclusive GST with CGST/SGST or IGST split, then move the result into InvoiceWala for branded invoices, payment links and reminders.
             </p>
             <div className="mt-8 grid gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm text-slate-300">
               {["Live calculation updates", "CSV download and shareable result", "Built for GST invoices, quotes and estimates"].map((item) => (
@@ -220,7 +220,7 @@ export default function GstCalculatorClient() {
                 <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
                   <h3 className="font-semibold text-white">Next step</h3>
                   <p className="mt-2 text-sm leading-6 text-slate-400">
-                    Save this GST calculation into Ledgerly to create a branded tax invoice, add payment links and track due reminders.
+                    Save this GST calculation into InvoiceWala to create a branded tax invoice, add payment links and track due reminders.
                   </p>
                   <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                     <Link className="inline-flex min-h-11 items-center justify-center rounded-xl bg-white px-4 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-100" href="/signup?source=gst-calculator">
@@ -240,7 +240,7 @@ export default function GstCalculatorClient() {
       <section className="px-5 py-12 sm:px-8">
         <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-3">
           {[
-            ["GST invoice", "Use the tax split while creating GST-compliant invoices in Ledgerly."],
+            ["GST invoice", "Use the tax split while creating GST-compliant invoices in InvoiceWala."],
             ["Quotation", "Estimate GST before sharing a proposal with your customer."],
             ["Purchase check", "Validate vendor GST totals before bookkeeping or expense entry."],
           ].map(([title, body]) => (

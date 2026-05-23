@@ -49,6 +49,7 @@ export interface Invoice {
   customerAddress?: string;
   notes?: string;
   terms?: string;
+  pdfStyle?: string;
   items: InvoiceItem[];
   subtotal?: number;
   taxTotal?: number;

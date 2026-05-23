@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { toolByHref } from "@/lib/tools-catalog";
+import { webApplicationSchema } from "@/lib/seo-schemas";
 import GstCalculatorClient from "./GstCalculatorClient";
 
+const tool = toolByHref("/tools/gst-calculator")!;
+
 export const metadata: Metadata = {
-  title: "GST Calculator India | Inclusive, Exclusive, CGST, SGST, IGST",
-  description:
-    "Free GST calculator for India. Calculate inclusive or exclusive GST, split CGST/SGST or IGST, share results, download a breakdown and convert GST calculations into Ledgerly invoices.",
+  title: tool.metaTitle,
+  description: tool.metaDescription,
+  alternates: { canonical: `https://invoicewala.shop${tool.href}` },
 };
 
 export default function GstCalculatorPage() {
-  return <GstCalculatorClient />;
+  return (
+    <>
+      <JsonLd data={webApplicationSchema(tool)} />
+      <GstCalculatorClient />
+    </>
+  );
 }

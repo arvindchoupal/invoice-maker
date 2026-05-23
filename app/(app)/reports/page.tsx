@@ -50,7 +50,7 @@ export default function ReportsPage() {
           <h1 className="text-3xl font-semibold tracking-tight">Reports</h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Revenue, client, invoice, GST, and export data from your database.</p>
         </div>
-        <Button disabled={!data} onClick={() => downloadJson(data, "ledgerly-reports.json")}>
+        <Button disabled={!data} onClick={() => downloadJson(data, "invoicewala-reports.json")}>
           <Download className="h-4 w-4" />
           Export JSON
         </Button>

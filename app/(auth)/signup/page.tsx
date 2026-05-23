@@ -44,7 +44,7 @@ export default function SignupPage() {
       <section className="grid min-h-screen lg:grid-cols-[1.04fr_0.96fr]">
         <div className="relative hidden overflow-hidden border-r border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.2),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.15),transparent_32%)] p-10 lg:flex lg:flex-col">
           <Link className="text-xl font-semibold tracking-tight" href="/">
-            Ledgerly
+            InvoiceWala
           </Link>
           <div className="flex flex-1 items-center">
             <div className="max-w-2xl">
@@ -69,7 +69,7 @@ export default function SignupPage() {
           <div className="w-full max-w-md">
             <div className="mb-8 flex items-center justify-between">
               <Link className="text-xl font-semibold tracking-tight lg:hidden" href="/">
-                Ledgerly
+                InvoiceWala
               </Link>
               <Link className="ml-auto rounded-xl border border-white/10 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-white/10" href="/login">
                 Log in
@@ -79,7 +79,7 @@ export default function SignupPage() {
             <form className="rounded-3xl border border-white/10 bg-white/[0.06] p-6 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-8" onSubmit={submit}>
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Start free</p>
-                <h1 className="mt-3 text-3xl font-semibold tracking-tight">Create your Ledgerly workspace</h1>
+                <h1 className="mt-3 text-3xl font-semibold tracking-tight">Create your InvoiceWala workspace</h1>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
                   Make your first invoice, import bills and track payments from one premium finance workspace.
                 </p>
@@ -121,7 +121,7 @@ export default function SignupPage() {
               </div>
 
               <p className="mt-5 text-center text-xs leading-5 text-slate-500">
-                By continuing, you can create invoices, save clients and manage your Ledgerly workspace.
+                By continuing, you can create invoices, save clients and manage your InvoiceWala workspace.
               </p>
             </form>
           </div>

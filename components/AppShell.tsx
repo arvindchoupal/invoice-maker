@@ -55,7 +55,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     api<{ company_name?: string; company_tax_id?: string }>("/settings").then(setSettings).catch(() => undefined);
   }, []);
 
-  const companyName = settings?.company_name || "Ledgerly workspace";
+  const companyName = settings?.company_name || "InvoiceWala workspace";
   const workspaceLabel = settings?.company_tax_id ? "GST workspace" : "Business workspace";
   const compactSidebar = pathname === "/invoices/new" || /^\/invoices\/[^/]+\/edit$/.test(pathname);
   const initials = (user?.name || "User")
@@ -66,7 +66,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     .toUpperCase();
 
   return (
-    <div className="ledgerly-shell min-h-screen text-slate-950 dark:text-white">
+    <div className="invoicewala-shell min-h-screen text-slate-950 dark:text-white">
       <aside
         className={`fixed inset-y-3 left-3 z-30 hidden rounded-3xl border border-slate-200/80 bg-white/85 p-3 shadow-2xl shadow-slate-950/[0.06] backdrop-blur-2xl transition-[width] duration-300 dark:border-white/10 dark:bg-slate-950/72 dark:shadow-black/30 lg:block ${
           compactSidebar ? "w-[76px]" : "w-[272px]"
@@ -75,14 +75,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex h-full flex-col">
           <Link
             href="/dashboard"
-            title={compactSidebar ? "Ledgerly" : undefined}
+            title={compactSidebar ? "InvoiceWala" : undefined}
             className={`flex items-center rounded-2xl px-3 py-3 transition hover:bg-slate-100 dark:hover:bg-white/[0.06] ${compactSidebar ? "justify-center" : "gap-3"}`}
           >
             <div className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 text-white shadow-lg shadow-blue-950/25">
               <BarChart3 className="h-5 w-5" />
             </div>
             <div className={compactSidebar ? "hidden" : ""}>
-              <p className="text-lg font-semibold tracking-tight">Ledgerly</p>
+              <p className="text-lg font-semibold tracking-tight">InvoiceWala</p>
               <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Finance OS</p>
             </div>
           </Link>
@@ -179,7 +179,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <BarChart3 className="h-5 w-5" />
               </Link>
               <div>
-                <p className="text-sm font-semibold">Ledgerly</p>
+                <p className="text-sm font-semibold">InvoiceWala</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">{companyName}</p>
               </div>
             </div>

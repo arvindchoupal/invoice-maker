@@ -20,7 +20,7 @@ interface Usage {
 }
 
 const prices = {
-  free: { monthly: 0, yearly: 0, tagline: "For trying Ledgerly" },
+  free: { monthly: 0, yearly: 0, tagline: "For trying InvoiceWala" },
   pro: { monthly: 999, yearly: 799, tagline: "For freelancers and agencies" },
   business: { monthly: 2499, yearly: 1999, tagline: "For teams and growing businesses" },
 };
@@ -66,7 +66,7 @@ export default function PricingPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-500">Pricing</p>
-          <h1 className="mt-2 text-4xl font-semibold tracking-tight">Scale Ledgerly as your business grows.</h1>
+          <h1 className="mt-2 text-4xl font-semibold tracking-tight">Scale InvoiceWala as your business grows.</h1>
           <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Plans, limits, and usage are loaded from backend subscription records.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 bg-white p-1 dark:border-white/10 dark:bg-white/[0.04]">

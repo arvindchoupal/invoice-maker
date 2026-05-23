@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { API_URL, api } from "@/lib/api";
+import type { PdfStyleMeta } from "@/lib/pdf-styles";
+import { TemplateGallery } from "@/components/TemplateGallery";
 import { Button, Field, inputClass } from "@/components/ui";
 
 function assetUrl(path: string | number | undefined) {
@@ -16,10 +18,16 @@ function assetUrl(path: string | number | undefined) {
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<Record<string, string | number>>({});
+  const [pdfStyles, setPdfStyles] = useState<PdfStyleMeta[]>([]);
+  const [defaultPdfStyle, setDefaultPdfStyle] = useState("classic");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    api<Record<string, string | number>>("/settings").then(setSettings).catch(() => undefined);
+    api<Record<string, string | number>>("/settings").then((data) => {
+      setSettings(data);
+      setDefaultPdfStyle(String(data.default_pdf_style ?? "classic"));
+    }).catch(() => undefined);
+    api<PdfStyleMeta[]>("/invoices/pdf/styles/list").then(setPdfStyles).catch(() => undefined);
   }, []);
 
   async function save(event: React.FormEvent<HTMLFormElement>) {
@@ -37,6 +45,7 @@ export default function SettingsPage() {
         taxRate: Number(form.get("taxRate")),
         theme: form.get("theme"),
         invoicePrefix: form.get("invoicePrefix"),
+        defaultPdfStyle,
       }),
     });
     setMessage("Settings saved.");
@@ -72,6 +81,11 @@ export default function SettingsPage() {
           </select>
         </Field>
         <Field label="Company address"><textarea className={inputClass} name="companyAddress" defaultValue={String(settings.company_address ?? "")} /></Field>
+        <div className="md:col-span-2">
+          <p className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Default invoice PDF template</p>
+          <p className="mb-3 text-xs text-slate-500">Used for new invoices when no template is chosen yet.</p>
+          <TemplateGallery styles={pdfStyles} selectedId={defaultPdfStyle} onSelect={setDefaultPdfStyle} />
+        </div>
         <Button className="md:col-span-2">Save settings</Button>
       </form>
       <form onSubmit={uploadLogo} className="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
