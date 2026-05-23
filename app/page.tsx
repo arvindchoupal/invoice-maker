@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
+import { PublicFooterLinks } from "@/components/PublicFooterLinks";
+import { PublicHeroActions } from "@/components/PublicHeroActions";
+import { PublicNavActions } from "@/components/PublicNavActions";
+import { PublicPrimaryCta } from "@/components/PublicPrimaryCta";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TOOLS_CATALOG } from "@/lib/tools-catalog";
 import { faqSchema, organizationSchema, toolsItemListSchema, websiteSchema } from "@/lib/seo-schemas";
@@ -51,13 +56,8 @@ export default function Home() {
       <JsonLd data={[organizationSchema(), websiteSchema(), toolsItemListSchema(), faqSchema(faqs)]} />
       <section className="mx-auto w-full max-w-7xl px-6 py-6">
         <nav className="flex items-center justify-between">
-          <Link className="text-xl font-semibold tracking-tight" href="/">InvoiceWala</Link>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link className="rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10" href="/tools">Free tools</Link>
-            <Link className="hidden rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10 md:inline-flex" href="/blog">Blog</Link>
-            <Link className="hidden rounded-xl px-3 py-2 text-sm text-slate-200 hover:bg-white/10 sm:inline-flex" href="/login">Log in</Link>
-            <Link className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-slate-200" href="/signup">Start free</Link>
-          </div>
+          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
+          <PublicNavActions />
         </nav>
 
         <div className="grid min-h-[720px] items-center gap-10 py-16 lg:grid-cols-[1fr_560px]">
@@ -71,12 +71,7 @@ export default function Home() {
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
               InvoiceWala helps you send invoices, import vendor bills, track payments, create finance documents and turn messy business paperwork into clean reports.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link className="rounded-xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-200" href="/signup">Start free</Link>
-              <Link className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10" href="/tools">Try free tools</Link>
-              <Link className="rounded-xl border border-cyan-300/30 px-5 py-3 text-sm font-semibold text-cyan-100 hover:bg-cyan-300/10" href="/dashboard">View product demo</Link>
-            </div>
-            <p className="mt-4 text-sm text-slate-400">No credit card required. Save your first invoice in minutes.</p>
+            <PublicHeroActions />
           </div>
 
           <div className="relative">
@@ -147,9 +142,12 @@ export default function Home() {
               InvoiceWala is simple enough for one invoice today and powerful enough to manage payments, GST, clients and reports as your business grows.
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Link className="inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-5 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-100" href="/signup?intent=create-invoice">
-                Create invoice
-              </Link>
+              <PublicPrimaryCta
+                guestHref="/signup?intent=create-invoice"
+                guestLabel="Create invoice"
+                authedHref="/invoices/new"
+                authedLabel="Create invoice"
+              />
               <Link className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/10" href="/tools/gst-calculator">
                 Calculate GST first
               </Link>
@@ -261,12 +259,7 @@ export default function Home() {
       <footer className="border-t border-white/10 px-6 py-10">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 text-sm text-slate-400">
           <p>InvoiceWala · invoicewala.shop</p>
-          <div className="flex gap-4">
-            <Link href="/tools">Tools</Link>
-            <Link href="/blog">Blog</Link>
-            <Link href="/pricing">Pricing</Link>
-            <Link href="/signup">Start free</Link>
-          </div>
+          <PublicFooterLinks />
         </div>
       </footer>
     </main>

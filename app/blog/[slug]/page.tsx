@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MarkdownContent } from "@/components/blog/MarkdownContent";
+import { PublicNavActions } from "@/components/PublicNavActions";
+import { PublicPrimaryCta } from "@/components/PublicPrimaryCta";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getAllPosts, getPostBySlug } from "@/lib/blog/posts";
 
@@ -58,9 +60,7 @@ export default async function BlogPostPage({ params }: Props) {
           <Link className="text-sm font-semibold text-cyan-300" href="/blog">
             ← All articles
           </Link>
-          <Link className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950" href="/signup">
-            Start free
-          </Link>
+          <PublicNavActions showBlog={false} />
         </nav>
       </section>
 
@@ -87,12 +87,18 @@ export default async function BlogPostPage({ params }: Props) {
             <p className="text-sm font-semibold uppercase tracking-wide text-cyan-200">Next step</p>
             <p className="mt-2 text-lg font-semibold text-white">Put this guide into practice</p>
             <div className="mt-4 flex flex-wrap gap-3">
-              <Link className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950" href={post.relatedToolHref}>
-                {post.relatedToolLabel ?? "Open tool"}
-              </Link>
-              <Link className="rounded-xl border border-white/15 px-4 py-2 text-sm font-semibold text-white" href="/signup">
-                Create free account
-              </Link>
+              {post.relatedToolHref ? (
+                <Link className="rounded-xl bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950" href={post.relatedToolHref}>
+                  {post.relatedToolLabel ?? "Open tool"}
+                </Link>
+              ) : null}
+              <PublicPrimaryCta
+                guestHref="/signup"
+                guestLabel="Create free account"
+                authedHref="/invoices/new"
+                authedLabel="Create invoice"
+                className="rounded-xl border border-white/15 px-4 py-2 text-sm font-semibold text-white"
+              />
             </div>
           </div>
         ) : null}

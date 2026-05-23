@@ -71,6 +71,12 @@
       "namedRegex": "^/ai\\-import(?:/)?$"
     },
     {
+      "page": "/apple-icon.png",
+      "regex": "^/apple\\-icon\\.png(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/apple\\-icon\\.png(?:/)?$"
+    },
+    {
       "page": "/blog",
       "regex": "^/blog(?:/)?$",
       "routeKeys": {},
@@ -111,6 +117,12 @@
       "regex": "^/forgot\\-password(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/forgot\\-password(?:/)?$"
+    },
+    {
+      "page": "/icon.png",
+      "regex": "^/icon\\.png(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/icon\\.png(?:/)?$"
     },
     {
       "page": "/invoices",

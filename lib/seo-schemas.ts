@@ -8,7 +8,7 @@ export function organizationSchema() {
     "@type": "Organization",
     name: "InvoiceWala",
     url: SITE,
-    logo: `${SITE}/favicon.ico`,
+    logo: `${SITE}/logo.png`,
     description: "GST invoice maker and free business calculators for Indian freelancers and small businesses.",
   };
 }

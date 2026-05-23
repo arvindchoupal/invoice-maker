@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
+import { PublicToolNavActions } from "@/components/PublicToolNavActions";
 import type { ToolCatalogEntry } from "@/lib/tools-catalog";
 
 export function ToolPageLayout({
@@ -12,20 +14,8 @@ export function ToolPageLayout({
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_32%),radial-gradient(circle_at_top_right,rgba(99,102,241,0.14),transparent_30%)] px-5 py-6 sm:px-8">
         <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <Link className="text-xl font-semibold tracking-tight" href="/">
-            InvoiceWala
-          </Link>
-          <div className="flex items-center gap-2">
-            <Link className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white" href="/tools">
-              All tools
-            </Link>
-            <Link
-              className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 shadow-xl shadow-cyan-950/20 transition hover:-translate-y-0.5 hover:bg-cyan-100"
-              href={`/signup?source=${tool.signupSource}`}
-            >
-              Save result
-            </Link>
-          </div>
+          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
+          <PublicToolNavActions signupSource={tool.signupSource} />
         </nav>
 
         <div className="mx-auto grid max-w-7xl gap-10 py-14 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
+import { PublicNavActions } from "@/components/PublicNavActions";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getAllPosts } from "@/lib/blog/posts";
 import { websiteSchema } from "@/lib/seo-schemas";
@@ -36,17 +38,8 @@ export default function BlogIndexPage() {
       <JsonLd data={[websiteSchema(), blogListSchema]} />
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.14),transparent_34%)] px-5 py-6 sm:px-8">
         <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <Link className="text-xl font-semibold tracking-tight" href="/">
-            InvoiceWala
-          </Link>
-          <div className="flex items-center gap-2">
-            <Link className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 hover:bg-white/10" href="/tools">
-              Free tools
-            </Link>
-            <Link className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-100" href="/signup">
-              Start free
-            </Link>
-          </div>
+          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
+          <PublicNavActions showBlog={false} />
         </nav>
         <div className="mx-auto max-w-7xl py-16">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">Blog</p>

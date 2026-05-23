@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
+import { PublicPrimaryCta } from "@/components/PublicPrimaryCta";
+import { PublicToolNavActions } from "@/components/PublicToolNavActions";
 
 const rates = [0, 3, 5, 12, 18, 28];
 const currencyFormatter = new Intl.NumberFormat("en-IN", {
@@ -93,17 +96,8 @@ export default function GstCalculatorClient() {
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_32%),radial-gradient(circle_at_top_right,rgba(99,102,241,0.14),transparent_30%)] px-5 py-6 sm:px-8">
         <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <Link className="text-xl font-semibold tracking-tight" href="/">
-            InvoiceWala
-          </Link>
-          <div className="flex items-center gap-2">
-            <Link className="rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white" href="/tools">
-              Tools
-            </Link>
-            <Link className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 shadow-xl shadow-cyan-950/20 transition hover:-translate-y-0.5 hover:bg-cyan-100" href="/signup?source=gst-calculator">
-              Save result
-            </Link>
-          </div>
+          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
+          <PublicToolNavActions signupSource="gst-calculator" />
         </nav>
 
         <div className="mx-auto grid max-w-7xl gap-10 py-14 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
@@ -223,9 +217,13 @@ export default function GstCalculatorClient() {
                     Save this GST calculation into InvoiceWala to create a branded tax invoice, add payment links and track due reminders.
                   </p>
                   <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-                    <Link className="inline-flex min-h-11 items-center justify-center rounded-xl bg-white px-4 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-100" href="/signup?source=gst-calculator">
-                      Save as invoice
-                    </Link>
+                    <PublicPrimaryCta
+                      guestHref="/signup?source=gst-calculator"
+                      guestLabel="Save as invoice"
+                      authedHref="/invoices/new"
+                      authedLabel="Create GST invoice"
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-white px-4 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-100"
+                    />
                     <Link className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 px-4 text-sm font-semibold text-white transition hover:bg-white/10" href="/tools/invoice-number-generator">
                       Generate invoice number
                     </Link>

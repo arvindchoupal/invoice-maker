@@ -1,7 +1,7 @@
 var R=require("../../../chunks/ssr/[turbopack]_runtime.js")("server/app/(app)/invoices/page.js")
-R.c("server/chunks/ssr/[root-of-the-server]__0aglcmq._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0849za.._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_09jzzl8._.js")
-R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_0d.i9da.js")
+R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_0efp25..js")
 R.c("server/chunks/ssr/[root-of-the-server]__0l-eqf7._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__098zro9._.js")
 R.c("server/chunks/ssr/app_layout_tsx_13yf0ls._.js")
@@ -11,5 +11,5 @@ R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthor
 R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_0lgvd_..js")
 R.c("server/chunks/ssr/_0mwqjzh._.js")
 R.c("server/chunks/ssr/_next-internal_server_app_(app)_invoices_page_actions_0_i8~1n.js")
-R.m(8254)
-module.exports=R.m(8254).exports
+R.m(5892)
+module.exports=R.m(5892).exports

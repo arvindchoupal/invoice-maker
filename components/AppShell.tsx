@@ -21,6 +21,7 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { api, clearSession } from "@/lib/api";
 
 const nav = [
@@ -35,7 +36,6 @@ const nav = [
   { href: "/reports", label: "Reports", icon: Download },
   { href: "/settings", label: "Settings", icon: Settings },
   { href: "/pricing", label: "Pricing", icon: Shield },
-  { href: "/admin", label: "Admin", icon: Shield },
 ];
 
 const quickActions = [
@@ -65,6 +65,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     .slice(0, 2)
     .toUpperCase();
 
+  function signOut() {
+    clearSession();
+    router.push("/");
+  }
+
   return (
     <div className="invoicewala-shell min-h-screen text-slate-950 dark:text-white">
       <aside
@@ -73,19 +78,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         }`}
       >
         <div className="flex h-full flex-col">
-          <Link
+          <BrandLogo
             href="/dashboard"
-            title={compactSidebar ? "InvoiceWala" : undefined}
-            className={`flex items-center rounded-2xl px-3 py-3 transition hover:bg-slate-100 dark:hover:bg-white/[0.06] ${compactSidebar ? "justify-center" : "gap-3"}`}
-          >
-            <div className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 text-white shadow-lg shadow-blue-950/25">
-              <BarChart3 className="h-5 w-5" />
-            </div>
-            <div className={compactSidebar ? "hidden" : ""}>
-              <p className="text-lg font-semibold tracking-tight">InvoiceWala</p>
-              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Finance OS</p>
-            </div>
-          </Link>
+            className={`rounded-2xl px-3 py-3 transition hover:bg-slate-100 dark:hover:bg-white/[0.06] ${compactSidebar ? "justify-center" : ""}`}
+            imageClassName={compactSidebar ? "h-10 w-10" : "h-10 w-10"}
+            showText={!compactSidebar}
+          />
 
           <button
             className={`mt-3 flex w-full items-center rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-left transition hover:border-blue-200 hover:bg-blue-50/60 dark:border-white/10 dark:bg-white/[0.04] dark:hover:bg-white/[0.07] ${
@@ -157,10 +155,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </div>
               <button
                 className={`mt-3 flex w-full items-center justify-center rounded-xl px-3 py-2 text-xs font-semibold text-slate-500 transition hover:bg-slate-200/60 hover:text-slate-950 dark:hover:bg-white/[0.06] dark:hover:text-white ${compactSidebar ? "" : "gap-2"}`}
-                onClick={() => {
-                  clearSession();
-                  router.push("/login");
-                }}
+                onClick={signOut}
                 title={compactSidebar ? "Sign out" : undefined}
               >
                 <LogOut className="h-3.5 w-3.5" />
@@ -174,13 +169,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className={`transition-[padding] duration-300 ${compactSidebar ? "lg:pl-[104px]" : "lg:pl-[304px]"}`}>
         <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-white/78 px-4 py-3 backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/72 lg:px-8">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-            <div className="flex items-center gap-3 lg:hidden">
-              <Link href="/dashboard" className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 text-white">
-                <BarChart3 className="h-5 w-5" />
-              </Link>
-              <div>
-                <p className="text-sm font-semibold">InvoiceWala</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">{companyName}</p>
+            <div className="flex min-w-0 items-center gap-3 lg:hidden">
+              <BrandLogo href="/dashboard" imageClassName="h-9 w-9" showText={false} />
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold">InvoiceWala</p>
+                <p className="truncate text-xs text-slate-500 dark:text-slate-400">{companyName}</p>
               </div>
             </div>
 
@@ -200,12 +193,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <Download className="h-4 w-4" />
                 Reports
               </Link>
-              <button className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white/70 text-slate-600 transition hover:bg-white dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300">
+              <button className="hidden h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white/70 text-slate-600 transition hover:bg-white dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 sm:grid">
                 <Bell className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={signOut}
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/70 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-white dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200"
+                title="Sign out"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden md:inline">Sign out</span>
               </button>
               <Link href="/invoices/new" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-950/20 transition hover:-translate-y-0.5 hover:bg-blue-500">
                 <Plus className="h-4 w-4" />
-                New
+                <span className="hidden sm:inline">New</span>
               </Link>
             </div>
           </div>

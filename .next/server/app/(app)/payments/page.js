@@ -1,7 +1,7 @@
 var R=require("../../../chunks/ssr/[turbopack]_runtime.js")("server/app/(app)/payments/page.js")
-R.c("server/chunks/ssr/[root-of-the-server]__0erb3ks._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__03m-cfs._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_09jzzl8._.js")
-R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_0w2r-me.js")
+R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_0_nncd3.js")
 R.c("server/chunks/ssr/[root-of-the-server]__0l-eqf7._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__098zro9._.js")
 R.c("server/chunks/ssr/app_layout_tsx_13yf0ls._.js")
@@ -11,5 +11,5 @@ R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthor
 R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_0lgvd_..js")
 R.c("server/chunks/ssr/_0mwqjzh._.js")
 R.c("server/chunks/ssr/_next-internal_server_app_(app)_payments_page_actions_0xeyy3p.js")
-R.m(28495)
-module.exports=R.m(28495).exports
+R.m(87628)
+module.exports=R.m(87628).exports
