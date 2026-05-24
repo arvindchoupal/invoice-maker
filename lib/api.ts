@@ -30,7 +30,17 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
   const response = await fetch(`${API_URL}${path}`, { ...options, headers });
   if (!response.ok) {
     const error = await response.json().catch(() => ({ message: "Request failed" }));
-    throw new Error(error.message ?? "Request failed");
+    const message = typeof error.message === "string" ? error.message : "Request failed";
+    const issues = Array.isArray(error.issues)
+      ? error.issues
+          .map((issue: { path?: unknown; message?: unknown }) => {
+            const pathLabel = typeof issue.path === "string" && issue.path ? issue.path : "";
+            const issueMessage = typeof issue.message === "string" ? issue.message : "";
+            return [pathLabel, issueMessage].filter(Boolean).join(": ");
+          })
+          .filter(Boolean)
+      : [];
+    throw new Error(issues.length ? issues.join("\n") : message);
   }
   if (response.status === 204) return undefined as T;
   return response.json() as Promise<T>;

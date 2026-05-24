@@ -1,16 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getStoredUser, type StoredUser } from "@/lib/session";
 
 export function useAuthSession() {
-  const [user, setUser] = useState<StoredUser | null>(null);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setUser(getStoredUser());
-    setReady(true);
-  }, []);
+  const [user] = useState<StoredUser | null>(() => getStoredUser());
+  const ready = true;
 
   return { user, isLoggedIn: Boolean(user), ready };
 }

@@ -59,6 +59,12 @@ export default function SettingsPage() {
     setMessage(`Logo uploaded: ${data.logoUrl}`);
   }
 
+  async function removeLogo() {
+    const data = await api<{ logoUrl: string }>("/settings/logo", { method: "DELETE" });
+    setSettings((current) => ({ ...current, logo_url: data.logoUrl }));
+    setMessage("Logo removed. New PDFs will use the clean template mark.");
+  }
+
   return (
     <div className="grid gap-6">
       <div>
@@ -102,7 +108,10 @@ export default function SettingsPage() {
           </div>
         </div>
         <Field label="Company logo"><input className={inputClass} name="logo" type="file" accept="image/png,image/jpeg" required /></Field>
-        <Button className="mt-4">Upload logo</Button>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Button>Upload logo</Button>
+          {assetUrl(settings.logo_url) ? <Button type="button" variant="secondary" onClick={removeLogo}>Remove logo</Button> : null}
+        </div>
       </form>
       {message ? <p className="rounded-md bg-emerald-50 p-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-200">{message}</p> : null}
     </div>

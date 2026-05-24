@@ -9,7 +9,7 @@ export default function AdminPage() {
   const [analytics, setAnalytics] = useState<Record<string, number> | null>(null);
   const [users, setUsers] = useState<Array<Record<string, string | number>>>([]);
   const [error, setError] = useState("");
-
+console.log(error)
   useEffect(() => {
     Promise.all([api<Record<string, number>>("/admin/analytics"), api<Array<Record<string, string | number>>>("/admin/users")])
       .then(([a, u]) => {
@@ -33,7 +33,8 @@ export default function AdminPage() {
         <StatCard label="Volume" value={analytics ? currency(Number(analytics.total_volume ?? 0)) : "..."} tone="amber" />
       </div>
       <div className="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        <table className="w-full text-left text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[680px] text-left text-sm">
           <thead className="bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
             <tr><th className="p-3">User</th><th className="p-3">Role</th><th className="p-3">Invoices</th><th className="p-3">Billed</th></tr>
           </thead>
@@ -48,6 +49,7 @@ export default function AdminPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

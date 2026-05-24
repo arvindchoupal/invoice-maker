@@ -61,7 +61,7 @@ export default function ReportsPage() {
           <Skeleton className="h-32" /><Skeleton className="h-32" /><Skeleton className="h-32" /><Skeleton className="h-32" />
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-6">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
           <Card className="p-5"><p className="text-sm text-slate-500">Revenue</p><p className="mt-2 text-2xl font-semibold">{currency(totals.revenue)}</p></Card>
           <Card className="p-5"><p className="text-sm text-slate-500">Invoices</p><p className="mt-2 text-2xl font-semibold">{totals.invoices}</p></Card>
           <Card className="p-5"><p className="text-sm text-slate-500">Expenses</p><p className="mt-2 text-2xl font-semibold">{currency(totals.expenses)}</p></Card>
@@ -75,20 +75,24 @@ export default function ReportsPage() {
         <Card className="overflow-hidden">
           <div className="border-b border-slate-200 p-5 dark:border-white/10"><h2 className="text-lg font-semibold">Revenue by month</h2></div>
           {data?.revenue.length ? (
-            <table className="w-full text-left text-sm">
+            <div className="overflow-x-auto">
+            <table className="w-full min-w-[520px] text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-white/[0.04]"><tr><th className="p-4">Month</th><th className="p-4">Invoices</th><th className="p-4">Total</th></tr></thead>
               <tbody>{data.revenue.map((row) => <tr className="border-t border-slate-100 dark:border-white/5" key={row.month}><td className="p-4">{row.month}</td><td className="p-4">{row.invoices}</td><td className="p-4">{currency(Number(row.total))}</td></tr>)}</tbody>
             </table>
+            </div>
           ) : <div className="p-5"><EmptyState title="No revenue report yet" body="Create invoices to populate revenue reports." /></div>}
         </Card>
 
         <Card className="overflow-hidden">
           <div className="border-b border-slate-200 p-5 dark:border-white/10"><h2 className="text-lg font-semibold">Top clients</h2></div>
           {data?.clients.length ? (
-            <table className="w-full text-left text-sm">
+            <div className="overflow-x-auto">
+            <table className="w-full min-w-[560px] text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase text-slate-500 dark:bg-white/[0.04]"><tr><th className="p-4">Client</th><th className="p-4">Invoices</th><th className="p-4">Revenue</th></tr></thead>
               <tbody>{data.clients.map((row) => <tr className="border-t border-slate-100 dark:border-white/5" key={row.name}><td className="p-4">{row.name}<div className="text-xs text-slate-500">{row.email}</div></td><td className="p-4">{row.invoices}</td><td className="p-4">{currency(Number(row.revenue))}</td></tr>)}</tbody>
             </table>
+            </div>
           ) : <div className="p-5"><EmptyState title="No client report yet" body="Create clients and invoices to populate client reports." /></div>}
         </Card>
       </div>

@@ -22,6 +22,9 @@ export function PublicNavActions({ showBlog = true }: { showBlog?: boolean }) {
         <Link className={guestLinkClass} href="/tools">
           Free tools
         </Link>
+        <Link className={`hidden lg:inline-flex ${guestLinkClass}`} href="/free-invoice">
+          Make invoice
+        </Link>
         {showBlog ? (
           <Link className={`hidden md:inline-flex ${guestLinkClass}`} href="/blog">
             Blog
@@ -41,6 +44,9 @@ export function PublicNavActions({ showBlog = true }: { showBlog?: boolean }) {
     <div className="flex items-center gap-2 sm:gap-3">
       <Link className={guestLinkClass} href="/tools">
         Free tools
+      </Link>
+      <Link className={`hidden lg:inline-flex ${guestLinkClass}`} href="/free-invoice">
+        Make invoice
       </Link>
       {showBlog ? (
         <Link className={`hidden md:inline-flex ${guestLinkClass}`} href="/blog">

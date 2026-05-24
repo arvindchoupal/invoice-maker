@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import { PublicToolNavActions } from "@/components/PublicToolNavActions";
 import type { ToolCatalogEntry } from "@/lib/tools-catalog";

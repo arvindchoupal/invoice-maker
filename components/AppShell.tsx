@@ -38,6 +38,8 @@ const nav = [
   { href: "/pricing", label: "Pricing", icon: Shield },
 ];
 
+const adminNav = { href: "/admin", label: "Admin", icon: Shield };
+
 const quickActions = [
   { href: "/invoices/new", label: "Invoice", icon: FilePlus2 },
   { href: "/ai-import", label: "Import", icon: Sparkles },
@@ -47,17 +49,19 @@ const quickActions = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = useState<{ name: string; role: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email?: string; role: string } | null>(null);
   const [settings, setSettings] = useState<{ company_name?: string; company_tax_id?: string } | null>(null);
 
   useEffect(() => {
-    api<{ name: string; role: string }>("/auth/me").then(setUser).catch(() => undefined);
+    api<{ name: string; email?: string; role: string }>("/auth/me").then(setUser).catch(() => undefined);
     api<{ company_name?: string; company_tax_id?: string }>("/settings").then(setSettings).catch(() => undefined);
   }, []);
 
   const companyName = settings?.company_name || "InvoiceWala workspace";
   const workspaceLabel = settings?.company_tax_id ? "GST workspace" : "Business workspace";
   const compactSidebar = pathname === "/invoices/new" || /^\/invoices\/[^/]+\/edit$/.test(pathname);
+  const isAdmin = user?.role === "admin" || user?.email?.toLowerCase() === "arvind@vtechserve.io";
+  const visibleNav = isAdmin ? [...nav, adminNav] : nav;
   const initials = (user?.name || "User")
     .split(" ")
     .map((part) => part[0])
@@ -69,6 +73,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     clearSession();
     router.push("/");
   }
+  const mobileNav = visibleNav.filter((item) => ["/dashboard", "/invoices", "/clients", "/reports", "/settings"].includes(item.href));
 
   return (
     <div className="invoicewala-shell min-h-screen text-slate-950 dark:text-white">
@@ -104,7 +109,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </button>
 
           <nav className="mt-5 grid gap-1.5">
-            {nav.map(({ href, label, icon: Icon }) => {
+            {visibleNav.map(({ href, label, icon: Icon }) => {
               const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
               return (
                 <Link
@@ -213,8 +218,26 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className={`px-4 py-6 lg:py-8 ${compactSidebar ? "lg:px-4" : "lg:px-8"}`}>{children}</main>
+        <main className={`px-4 pb-24 pt-6 lg:py-8 ${compactSidebar ? "lg:px-4" : "lg:px-8"}`}>{children}</main>
       </div>
+
+      <nav className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-5 gap-1 rounded-3xl border border-slate-200/80 bg-white/90 p-2 shadow-2xl shadow-slate-950/15 backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/90 lg:hidden">
+        {mobileNav.map(({ href, label, icon: Icon }) => {
+          const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+          return (
+            <Link
+              className={`grid min-h-12 place-items-center rounded-2xl text-xs font-semibold transition ${
+                active ? "bg-blue-600 text-white shadow-lg shadow-blue-950/25" : "text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/[0.06]"
+              }`}
+              href={href}
+              key={href}
+            >
+              <Icon className="h-4 w-4" />
+              <span className="mt-0.5 max-w-full truncate text-[10px]">{label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 }

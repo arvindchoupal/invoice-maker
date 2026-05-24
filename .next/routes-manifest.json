@@ -119,6 +119,12 @@
       "namedRegex": "^/forgot\\-password(?:/)?$"
     },
     {
+      "page": "/free-invoice",
+      "regex": "^/free\\-invoice(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/free\\-invoice(?:/)?$"
+    },
+    {
       "page": "/icon.png",
       "regex": "^/icon\\.png(?:/)?$",
       "routeKeys": {},

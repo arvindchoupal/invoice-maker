@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/BrandLogo";
 import { api, setSession } from "@/lib/api";
+import { attachPublicInvoiceDraft } from "@/lib/public-invoice-draft";
 import { Button, Field, inputClass } from "@/components/ui";
 
 const trustPoints = [
@@ -29,7 +30,8 @@ export default function LoginPage() {
         body: JSON.stringify({ email: form.get("email"), password: form.get("password") }),
       });
       setSession(data.token, data.user);
-      router.push("/dashboard");
+      const savedDraft = await attachPublicInvoiceDraft().catch(() => null);
+      router.push(savedDraft?.id ? `/invoices/${savedDraft.id}/edit` : "/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to log in");
     } finally {

@@ -35,6 +35,9 @@ export function PublicHeroActions() {
         <Link className="rounded-xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-200" href="/signup">
           Start free
         </Link>
+        <Link className="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-100" href="/free-invoice">
+          Make invoice first
+        </Link>
         <Link className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10" href="/tools">
           Try free tools
         </Link>

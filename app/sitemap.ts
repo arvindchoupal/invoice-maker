@@ -5,7 +5,7 @@ import { TOOLS_CATALOG } from "@/lib/tools-catalog";
 const siteUrl = "https://invoicewala.shop";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/tools", "/blog", "/login", "/signup", "/pricing"].map((path) => ({
+  const staticRoutes = ["", "/free-invoice", "/tools", "/blog", "/login", "/signup", "/pricing"].map((path) => ({
     url: `${siteUrl}${path}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,

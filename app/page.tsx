@@ -54,18 +54,18 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <JsonLd data={[organizationSchema(), websiteSchema(), toolsItemListSchema(), faqSchema(faqs)]} />
-      <section className="mx-auto w-full max-w-7xl px-6 py-6">
+      <section className="mx-auto w-full max-w-7xl px-5 py-5 sm:px-6 sm:py-6">
         <nav className="flex items-center justify-between">
           <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
           <PublicNavActions />
         </nav>
 
-        <div className="grid min-h-[720px] items-center gap-10 py-16 lg:grid-cols-[1fr_560px]">
+        <div className="grid items-center gap-10 py-12 sm:py-16 lg:min-h-[720px] lg:grid-cols-[1fr_560px]">
           <div>
             <div className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-sm font-semibold text-cyan-100">
               AI Finance OS for freelancers, agencies, contractors and small businesses
             </div>
-            <h1 className="mt-6 max-w-4xl text-5xl font-semibold leading-tight tracking-tight md:text-7xl">
+            <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
               Get paid faster. Automate invoices, bills, GST and bookkeeping with AI.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
@@ -131,11 +131,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20">
+      <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6 sm:py-20">
         <div className="grid gap-8 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/20 lg:grid-cols-[0.82fr_1.18fr] lg:p-8">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Need an invoice right now?</p>
-            <h2 className="mt-3 text-4xl font-semibold tracking-tight">
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
               Sold something or completed work? Give your customer a proper invoice in minutes.
             </h2>
             <p className="mt-4 text-base leading-7 text-slate-300">
@@ -164,7 +164,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-5 px-6 py-20 lg:grid-cols-4">
+      <section className="mx-auto grid max-w-7xl gap-5 px-5 py-14 sm:px-6 sm:py-20 lg:grid-cols-4">
         {features.map(([title, body]) => (
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6" key={title}>
             <h2 className="text-xl font-semibold">{title}</h2>
@@ -173,10 +173,10 @@ export default function Home() {
         ))}
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-8 px-6 py-20 lg:grid-cols-[0.8fr_1.2fr]">
+      <section className="mx-auto grid max-w-7xl gap-8 px-5 py-14 sm:px-6 sm:py-20 lg:grid-cols-[0.8fr_1.2fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">AI import</p>
-          <h2 className="mt-3 text-4xl font-semibold tracking-tight">Upload bills and receipts. InvoiceWala turns them into structured finance records.</h2>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Upload bills and receipts. InvoiceWala turns them into structured finance records.</h2>
           <p className="mt-4 text-slate-300">Extract vendor, GSTIN, dates, line items, subtotal, tax and total. Save as invoice, purchase or expense after review.</p>
         </div>
         <div className="grid gap-3 md:grid-cols-3">
@@ -194,11 +194,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20">
+      <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6 sm:py-20">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Free tools</p>
-            <h2 className="mt-3 text-4xl font-semibold tracking-tight">Win on Google. Convert useful calculations into InvoiceWala accounts.</h2>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Win on Google. Convert useful calculations into InvoiceWala accounts.</h2>
           </div>
           <Link className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950" href="/tools">View all tools</Link>
         </div>
@@ -221,12 +221,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20">
+      <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6 sm:py-20">
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8">
           <div className="grid gap-8 lg:grid-cols-[1fr_420px]">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Pricing teaser</p>
-              <h2 className="mt-3 text-4xl font-semibold tracking-tight">Start free. Upgrade when automation saves real time.</h2>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Start free. Upgrade when automation saves real time.</h2>
               <p className="mt-4 text-slate-300">Free includes limited invoices and AI imports. Pro unlocks unlimited invoices, AI automation, branding removal and reminders. Business adds teams, workspaces and client portals.</p>
             </div>
             <div className="grid gap-3">
@@ -244,8 +244,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20">
-        <h2 className="text-4xl font-semibold tracking-tight">Questions before you switch?</h2>
+      <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6 sm:py-20">
+        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Questions before you switch?</h2>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {faqs.map(([question, answer]) => (
             <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6" key={question}>

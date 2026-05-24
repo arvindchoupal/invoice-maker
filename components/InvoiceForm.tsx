@@ -35,6 +35,19 @@ const sectionLabels: Record<SectionId, string> = {
   notes: "Notes",
 };
 
+const supportedCurrencies = [
+  { code: "INR", label: "INR - Indian Rupee" },
+  { code: "USD", label: "USD - US Dollar" },
+  { code: "EUR", label: "EUR - Euro" },
+  { code: "GBP", label: "GBP - British Pound" },
+  { code: "AED", label: "AED - UAE Dirham" },
+];
+
+function normalizeCurrency(code?: string) {
+  const normalized = (code || "INR").trim().toUpperCase();
+  return supportedCurrencies.some((currency) => currency.code === normalized) ? normalized : "INR";
+}
+
 const blankItem = (): BuilderItem => ({
   localId: crypto.randomUUID(),
   name: "",
@@ -70,21 +83,43 @@ function toBuilderInvoice(initial?: Partial<Invoice>): BuilderInvoice {
 }
 
 function toApiInvoice(invoice: BuilderInvoice, pdfStyle: string): Invoice {
+  const items = invoice.items
+    .filter((item) => {
+      const hasName = item.name.trim().length > 0;
+      const hasDescription = (item.description ?? "").trim().length > 0;
+      const hasAmount = Number(item.quantity) > 0 && Number(item.unitPrice) > 0;
+      const hasTaxOrDiscount = Number(item.taxRate) > 0 || Number(item.discountRate) > 0;
+      return hasName || hasDescription || hasAmount || hasTaxOrDiscount;
+    })
+    .map((item) => ({
+      name: item.name.trim(),
+      description: item.description?.trim() || undefined,
+      quantity: Number(item.quantity) || 1,
+      unitPrice: Number(item.unitPrice) || 0,
+      taxRate: Number(item.taxRate) || 0,
+      discountRate: Number(item.discountRate) || 0,
+    }));
+
   return {
     ...invoice,
+    invoiceNumber: invoice.invoiceNumber?.trim() || undefined,
+    currency: normalizeCurrency(invoice.currency),
+    businessName: invoice.businessName.trim(),
+    businessEmail: invoice.businessEmail?.trim() || undefined,
+    businessTaxId: invoice.businessTaxId?.trim() || undefined,
+    businessAddress: invoice.businessAddress?.trim() || undefined,
+    customerName: invoice.customerName.trim(),
+    customerEmail: invoice.customerEmail?.trim() || undefined,
+    customerTaxId: invoice.customerTaxId?.trim() || undefined,
+    customerAddress: invoice.customerAddress?.trim() || undefined,
+    notes: invoice.notes?.trim() || undefined,
+    terms: invoice.terms?.trim() || undefined,
     pdfStyle,
-    items: invoice.items.map((item) => ({
-      name: item.name,
-      description: item.description,
-      quantity: item.quantity,
-      unitPrice: item.unitPrice,
-      taxRate: item.taxRate,
-      discountRate: item.discountRate,
-    })),
+    items,
   };
 }
 
-const compactInput = `${inputClass} min-h-9 rounded-lg border-transparent bg-transparent px-2 py-1 shadow-none hover:border-slate-200 hover:bg-white focus:border-blue-500 dark:hover:border-white/10 dark:hover:bg-white/[0.04]`;
+const compactInput = `${inputClass} w-full min-w-0 min-h-9 rounded-lg border-transparent bg-transparent px-2 py-1 shadow-none hover:border-slate-200 hover:bg-white focus:border-blue-500 dark:hover:border-white/10 dark:hover:bg-white/[0.04]`;
 const previewInput = "w-full rounded-md border border-transparent bg-transparent px-1 py-0.5 outline-none transition hover:border-slate-200 hover:bg-slate-50 focus:border-blue-400 focus:bg-white";
 
 function assetUrl(path: string | undefined) {
@@ -114,6 +149,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
   const [sectionOrder, setSectionOrder] = useState<SectionId[]>(["details", "parties", "items", "notes"]);
   const [autosaveState, setAutosaveState] = useState<"saved" | "saving" | "idle">("idle");
   const [branding, setBranding] = useState<BrandingSettings>({});
+  const [failedLogoSrc, setFailedLogoSrc] = useState("");
   const [invoice, setInvoice] = useState<BuilderInvoice>(() => {
     const key = `invoicewala-draft-${invoiceId ?? "new"}`;
     if (typeof window !== "undefined") {
@@ -134,6 +170,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
   const family = previewFamily(pdfStyle);
   const familyIs = (id: PreviewFamily) => family === id;
   const logoSrc = assetUrl(branding.logo_url);
+  const showLogo = Boolean(logoSrc && failedLogoSrc !== logoSrc);
   const taxSplit = {
     cgst: totals.taxTotal / 2,
     sgst: totals.taxTotal / 2,
@@ -150,10 +187,6 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
       if (!initial?.pdfStyle && items[0]) setPdfStyle((current) => current || items[0].id);
     }).catch(() => undefined);
     api<Client[]>("/clients").then(setClients).catch(() => undefined);
-  }, [initial?.pdfStyle]);
-
-  useEffect(() => {
-    if (initial?.pdfStyle) setPdfStyle(initial.pdfStyle);
   }, [initial?.pdfStyle]);
 
   useEffect(() => {
@@ -292,6 +325,11 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
     setShareMessage("");
     try {
       const payload = toApiInvoice(invoice, pdfStyle);
+      const firstInvalidItem = payload.items.findIndex((item) => !item.name?.trim());
+      if (!payload.businessName.trim()) throw new Error("Business name is required.");
+      if (!payload.customerName.trim()) throw new Error("Customer name is required.");
+      if (!payload.items.length) throw new Error("Add at least one line item before saving.");
+      if (firstInvalidItem >= 0) throw new Error(`Line item ${firstInvalidItem + 1}: item name is required.`);
       const saved = await api<{ id: number }>(invoiceId ? `/invoices/${invoiceId}` : "/invoices", {
         method: invoiceId ? "PUT" : "POST",
         body: JSON.stringify(payload),
@@ -351,6 +389,12 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
     setBranding((current) => ({ ...current, logo_url: data.logoUrl }));
   }
 
+  async function removeLogo() {
+    const data = await api<{ logoUrl: string }>("/settings/logo", { method: "DELETE" });
+    setBranding((current) => ({ ...current, logo_url: data.logoUrl }));
+    setFailedLogoSrc("");
+  }
+
   function pdfDownloadUrl(style = pdfStyle) {
     if (!invoiceId) return "";
     return `${API_URL}/invoices/${invoiceId}/pdf?token=${getToken()}&style=${encodeURIComponent(style)}`;
@@ -391,12 +435,18 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
   function renderSection(id: SectionId) {
     if (id === "details") {
       return sectionShell(id, (
-        <div className="grid gap-3 sm:grid-cols-5">
+        <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           <Field label="Invoice #"><input className={compactInput} value={invoice.invoiceNumber ?? ""} placeholder="Auto" onChange={(e) => update("invoiceNumber", e.target.value)} /></Field>
           <Field label="Issue"><input className={compactInput} type="date" value={invoice.issueDate} onChange={(e) => update("issueDate", e.target.value)} /></Field>
           <Field label="Due"><input className={compactInput} type="date" value={invoice.dueDate} onChange={(e) => update("dueDate", e.target.value)} /></Field>
           <Field label="Status"><select className={compactInput} value={invoice.status} onChange={(e) => update("status", e.target.value as InvoiceStatus)}>{["Draft", "Sent", "Paid", "Overdue"].map((status) => <option key={status}>{status}</option>)}</select></Field>
-          <Field label="Currency"><input className={compactInput} value={invoice.currency} maxLength={3} onChange={(e) => update("currency", e.target.value.toUpperCase())} /></Field>
+          <Field label="Currency">
+            <select className={compactInput} value={normalizeCurrency(invoice.currency)} onChange={(e) => update("currency", e.target.value)}>
+              {supportedCurrencies.map((currency) => (
+                <option key={currency.code} value={currency.code}>{currency.label}</option>
+              ))}
+            </select>
+          </Field>
         </div>
       ));
     }
@@ -417,7 +467,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Bill to</p>
               {clients.length ? (
-                <select className={`${compactInput} max-w-[220px] text-xs`} defaultValue="" onChange={(e) => applyClient(e.target.value)}>
+                <select className={`${compactInput} text-xs sm:max-w-[220px]`} defaultValue="" onChange={(e) => applyClient(e.target.value)}>
                   <option value="">Pick saved client</option>
                   {clients.map((client) => (
                     <option key={client.id} value={client.id}>{client.name}</option>
@@ -489,10 +539,10 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
   }
 
   return (
-    <div className="relative grid gap-3">
-      <Card className="sticky top-[76px] z-20 p-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+    <div className="relative grid gap-4">
+      <Card className="p-4">
+        <div className="grid gap-4 xl:grid-cols-[1fr_auto] xl:items-center">
+          <div className="flex min-w-0 flex-wrap items-center gap-3">
             <Badge tone={autosaveState === "saved" ? "green" : autosaveState === "saving" ? "amber" : "slate"}>
               {autosaveState === "saved" ? "Draft saved" : autosaveState === "saving" ? "Autosaving..." : "Ready"}
             </Badge>
@@ -501,7 +551,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
               Ctrl/⌘+S save · Ctrl/⌘+Enter item · Ctrl/⌘+P print
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 xl:justify-end">
             <Button variant="secondary" onClick={() => setShowGallery((open) => !open)}>
               <LayoutGrid className="h-4 w-4" />
               {styleMeta?.label ?? "Template"}
@@ -510,6 +560,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
               Logo
               <input className="sr-only" type="file" accept="image/png,image/jpeg" onChange={(event) => uploadLogo(event.target.files?.[0] ?? null)} />
             </label>
+            {logoSrc ? <Button variant="secondary" onClick={removeLogo}>Remove logo</Button> : null}
             {invoiceId ? (
               <>
                 <a className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-100 dark:hover:bg-white/[0.08]" href={pdfDownloadUrl()}>
@@ -551,9 +602,9 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
       ) : null}
 
       <div ref={shellRef} className="grid gap-3 lg:flex lg:items-start">
-        <div className="grid min-w-0 gap-3" style={{ width: typeof window === "undefined" ? undefined : `${editorWidth}%` }}>
+        <div className="grid w-full min-w-0 gap-3 lg:w-[var(--editor-width)]" style={{ "--editor-width": `${editorWidth}%` } as React.CSSProperties}>
           <Card className="p-3">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Section order</p>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Document sections</p>
             <div className="flex flex-wrap gap-2">
               {sectionOrder.map((section) => (
                 <button
@@ -571,8 +622,8 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
             </div>
           </Card>
           {sectionOrder.map(renderSection)}
-          <div className="sticky bottom-3 z-30 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-2xl shadow-slate-950/10 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/95">
-            <div className="flex flex-wrap items-center justify-between gap-3">
+          <Card className="p-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="grid grid-cols-3 gap-3 text-sm">
                 <div><p className="text-xs text-slate-500">Subtotal</p><strong>{currency(totals.subtotal, invoice.currency)}</strong></div>
                 <div><p className="text-xs text-slate-500">Tax</p><strong>{currency(totals.taxTotal, invoice.currency)}</strong></div>
@@ -580,8 +631,12 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
               </div>
               <Button disabled={loading} onClick={save}><Save className="h-4 w-4" />{loading ? "Saving..." : "Save invoice"}</Button>
             </div>
-            {error ? <p className="mt-2 rounded-xl bg-red-50 p-2 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-200">{error}</p> : null}
-          </div>
+            {error ? (
+              <div className="mt-2 rounded-xl bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-200">
+                {error.split("\n").map((line) => <p key={line}>{line}</p>)}
+              </div>
+            ) : null}
+          </Card>
         </div>
 
         <button
@@ -593,8 +648,8 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
           <MoveHorizontal className="h-3.5 w-3.5 rotate-90" />
         </button>
 
-        <aside className="min-w-[380px] flex-1 lg:sticky lg:top-32 lg:h-[calc(100vh-8rem)]">
-          <Card className="flex h-full flex-col overflow-hidden">
+        <aside className="min-w-0 flex-1 lg:min-w-[380px]">
+          <Card className="flex overflow-hidden lg:max-h-[calc(100vh-7.5rem)] lg:flex-col">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 p-3 dark:border-white/10">
               <div>
                 <h2 className="font-semibold">{previewMode === "live" ? "Editable live preview" : "PDF preview"}</h2>
@@ -619,9 +674,9 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
               <div className="mx-auto min-h-[800px] w-full max-w-[920px] border-t-8 bg-white p-5 text-slate-950 shadow-2xl sm:p-7" style={{ borderTopColor: styleMeta?.accent ?? "#2563eb" }}>
                 <div className={`grid gap-6 ${familyIs("minimal") ? "" : "sm:grid-cols-[1fr_auto]"}`}>
                   <div>
-                    {logoSrc ? (
+                    {showLogo ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img alt="Company logo" className="mb-3 h-12 w-12 rounded-2xl object-contain ring-1 ring-slate-200" src={logoSrc} />
+                      <img alt="Company logo" className="mb-3 h-12 w-12 rounded-2xl object-contain ring-1 ring-slate-200" src={logoSrc} onError={() => setFailedLogoSrc(logoSrc)} />
                     ) : (
                       <div className="mb-3 h-10 w-10 rounded-2xl" style={{ backgroundColor: styleMeta?.accent ?? "#2563eb" }} />
                     )}
@@ -634,6 +689,21 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                     <input className={`${previewInput} mt-1 text-sm text-slate-500 sm:text-right`} value={invoice.invoiceNumber ?? ""} placeholder="Auto-generated" onChange={(e) => update("invoiceNumber", e.target.value)} />
                     <Badge tone={statusTone(invoice.status)}>{invoice.status}</Badge>
                     {familyIs("corporate") ? <div className="mt-3 rounded-xl px-3 py-2 text-xs font-semibold" style={{ backgroundColor: styleMeta?.soft ?? "#eff6ff", color: styleMeta?.accentDark ?? "#1d4ed8" }}>Due badge · {String(invoice.dueDate).slice(0, 10)}</div> : null}
+                  </div>
+                </div>
+
+                <div className="mt-7 grid gap-4 rounded-2xl bg-slate-50 p-4 sm:grid-cols-2">
+                  <div>
+                    <p className="text-xs font-semibold uppercase text-slate-400">Bill to</p>
+                    <input className={`${previewInput} mt-2 font-semibold`} value={invoice.customerName || ""} placeholder="Client name" onChange={(e) => update("customerName", e.target.value)} />
+                    <input className={`${previewInput} text-xs text-slate-500`} value={invoice.customerEmail || ""} placeholder="client@email.com" onChange={(e) => update("customerEmail", e.target.value)} />
+                    <textarea className={`${previewInput} mt-2 min-h-12 resize-none text-xs text-slate-500`} value={invoice.customerAddress || ""} placeholder="Client address" onChange={(e) => update("customerAddress", e.target.value)} />
+                  </div>
+                  <div className="grid gap-2 text-sm sm:text-right">
+                    <label>Issue <input className={`${previewInput} w-auto sm:text-right`} type="date" value={invoice.issueDate} onChange={(e) => update("issueDate", e.target.value)} /></label>
+                    <label>Due <input className={`${previewInput} w-auto sm:text-right`} type="date" value={invoice.dueDate} onChange={(e) => update("dueDate", e.target.value)} /></label>
+                    <label>GST/VAT <input className={`${previewInput} w-auto sm:text-right`} value={invoice.customerTaxId || ""} placeholder="—" onChange={(e) => update("customerTaxId", e.target.value)} /></label>
+                    {familyIs("gst") ? <label>Place of supply <input className={`${previewInput} w-auto sm:text-right`} value="India" readOnly /></label> : null}
                   </div>
                 </div>
 
@@ -662,7 +732,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                     </div>
                     <div>
                       <p className="text-xs font-semibold uppercase text-amber-700">Milestone</p>
-                      <p className="mt-2 text-sm font-semibold">Work completion billing</p>
+                      <p className="mt-2 text-sm font-semibold">Completion billing</p>
                     </div>
                   </div>
                 ) : null}
@@ -674,23 +744,8 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                   </div>
                 ) : null}
 
-                <div className="mt-7 grid gap-4 rounded-2xl bg-slate-50 p-4 sm:grid-cols-2">
-                  <div>
-                    <p className="text-xs font-semibold uppercase text-slate-400">Bill to</p>
-                    <input className={`${previewInput} mt-2 font-semibold`} value={invoice.customerName || ""} placeholder="Client name" onChange={(e) => update("customerName", e.target.value)} />
-                    <input className={`${previewInput} text-xs text-slate-500`} value={invoice.customerEmail || ""} placeholder="client@email.com" onChange={(e) => update("customerEmail", e.target.value)} />
-                    <textarea className={`${previewInput} mt-2 min-h-12 resize-none text-xs text-slate-500`} value={invoice.customerAddress || ""} placeholder="Client address" onChange={(e) => update("customerAddress", e.target.value)} />
-                  </div>
-                  <div className="grid gap-2 text-sm sm:text-right">
-                    <label>Issue <input className={`${previewInput} w-auto sm:text-right`} type="date" value={invoice.issueDate} onChange={(e) => update("issueDate", e.target.value)} /></label>
-                    <label>Due <input className={`${previewInput} w-auto sm:text-right`} type="date" value={invoice.dueDate} onChange={(e) => update("dueDate", e.target.value)} /></label>
-                    <label>GST/VAT <input className={`${previewInput} w-auto sm:text-right`} value={invoice.customerTaxId || ""} placeholder="—" onChange={(e) => update("customerTaxId", e.target.value)} /></label>
-                    {familyIs("gst") ? <label>Place of supply <input className={`${previewInput} w-auto sm:text-right`} value="India" readOnly /></label> : null}
-                  </div>
-                </div>
-
-                <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200">
-                  <div className={`grid ${familyIs("gst") || familyIs("retail") ? "grid-cols-[1.4fr_54px_64px_64px_86px]" : familyIs("agency") ? "grid-cols-[1.5fr_64px_90px_90px]" : "grid-cols-[1.7fr_56px_92px_92px]"} px-3 py-2 text-xs font-semibold uppercase text-white sm:px-4`} style={{ backgroundColor: styleMeta?.accentDark ?? "#0f172a" }}>
+                <div className="mt-6 overflow-x-auto rounded-2xl border border-slate-200">
+                  <div className={`grid min-w-[560px] ${familyIs("gst") || familyIs("retail") ? "grid-cols-[1.4fr_54px_64px_64px_86px]" : familyIs("agency") ? "grid-cols-[1.5fr_64px_90px_90px]" : "grid-cols-[1.7fr_56px_92px_92px]"} px-3 py-2 text-xs font-semibold uppercase text-white sm:px-4`} style={{ backgroundColor: styleMeta?.accentDark ?? "#0f172a" }}>
                     <span>{familyIs("agency") ? "Deliverable" : familyIs("construction") ? "Material / labor" : "Item"}</span>
                     <span>{familyIs("agency") ? "Hours" : "Qty"}</span>
                     {(familyIs("gst") || familyIs("retail")) ? <span>HSN</span> : null}
@@ -699,7 +754,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                   </div>
                   {invoice.items.map((item, index) => (
                     <div
-                      className={`grid ${familyIs("gst") || familyIs("retail") ? "grid-cols-[1.4fr_54px_64px_64px_86px]" : familyIs("agency") ? "grid-cols-[1.5fr_64px_90px_90px]" : "grid-cols-[1.7fr_56px_92px_92px]"} border-t border-slate-100 px-3 py-2 text-sm transition hover:bg-slate-50 sm:px-4`}
+                      className={`grid min-w-[560px] ${familyIs("gst") || familyIs("retail") ? "grid-cols-[1.4fr_54px_64px_64px_86px]" : familyIs("agency") ? "grid-cols-[1.5fr_64px_90px_90px]" : "grid-cols-[1.7fr_56px_92px_92px]"} border-t border-slate-100 px-3 py-2 text-sm transition hover:bg-slate-50 sm:px-4`}
                       draggable
                       key={item.localId}
                       onDragStart={() => setDraggedItemId(item.localId)}
