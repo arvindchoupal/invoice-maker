@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog/posts";
+import { seoPages } from "@/lib/seo-pages";
 import { TOOLS_CATALOG } from "@/lib/tools-catalog";
 
 const siteUrl = "https://invoicewala.shop";
@@ -19,6 +20,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
+  const seoRoutes = seoPages.map((page) => ({
+    url: `${siteUrl}/${page.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.85,
+  }));
+
   const blogRoutes = getAllPosts().map((post) => ({
     url: `${siteUrl}/blog/${post.slug}`,
     lastModified: new Date(post.updatedAt ?? post.publishedAt),
@@ -26,5 +34,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...toolRoutes, ...blogRoutes];
+  return [...staticRoutes, ...seoRoutes, ...toolRoutes, ...blogRoutes];
 }

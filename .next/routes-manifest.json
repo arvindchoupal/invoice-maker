@@ -37,6 +37,14 @@
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/invoices/(?<nxtPid>[^/]+?)/edit(?:/)?$"
+    },
+    {
+      "page": "/[seoSlug]",
+      "regex": "^/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPseoSlug": "nxtPseoSlug"
+      },
+      "namedRegex": "^/(?<nxtPseoSlug>[^/]+?)(?:/)?$"
     }
   ],
   "staticRoutes": [

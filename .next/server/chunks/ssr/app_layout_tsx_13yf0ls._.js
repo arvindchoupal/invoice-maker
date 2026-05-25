@@ -1,3 +1,0 @@
-module.exports=[33290,a=>{"use strict";var b=a.i(7997);let c={title:"InvoiceWala — GST invoices & billing",description:"Create GST invoices, track payments, import bills, and manage clients. Built for Indian businesses at invoicewala.shop.",metadataBase:new URL("https://invoicewala.shop")};a.s(["default",0,function({children:a}){return(0,b.jsx)("html",{lang:"en",className:"h-full antialiased",children:(0,b.jsx)("body",{className:"min-h-full bg-slate-50 text-slate-950 antialiased dark:bg-slate-950 dark:text-slate-50",children:a})})},"metadata",0,c])},70864,a=>{a.n(a.i(33290))}];
-
-//# sourceMappingURL=app_layout_tsx_13yf0ls._.js.map

@@ -15,6 +15,7 @@
   "/(auth)/forgot-password/page": "/forgot-password",
   "/(auth)/login/page": "/login",
   "/(auth)/signup/page": "/signup",
+  "/[seoSlug]/page": "/[seoSlug]",
   "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
   "/apple-icon.png/route": "/apple-icon.png",

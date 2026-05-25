@@ -10,30 +10,30 @@ import { TOOLS_CATALOG } from "@/lib/tools-catalog";
 import { faqSchema, organizationSchema, toolsItemListSchema, websiteSchema } from "@/lib/seo-schemas";
 
 export const metadata: Metadata = {
-  title: "InvoiceWala | GST Invoices, Billing and Free Business Tools",
+  title: "InvoiceWala - Free GST Invoice Generator for Indian Businesses",
   description:
-    "Create GST invoices, track payments, import bills and use free calculators for GST, profit, margin, EMI, tax and invoice workflows. Built for Indian businesses at invoicewala.shop.",
+    "Create GST-ready invoices, download professional PDFs, track payments, and send reminders. Free invoice generator for freelancers, contractors, agencies, and small businesses in India.",
   metadataBase: new URL("https://invoicewala.shop"),
   openGraph: {
-    title: "InvoiceWala — GST invoices, billing and free tools",
-    description: "Invoice maker with AI import, GST-ready PDFs and free public business calculators.",
+    title: "InvoiceWala - Free GST Invoice Generator",
+    description: "Create GST invoices fast, send PDFs, track payments, and get paid faster.",
     url: "https://invoicewala.shop",
     siteName: "InvoiceWala",
   },
 };
 
-const metrics = [
-  ["GST-ready", "invoice and tax document flows"],
-  ["AI", "extracts bills, receipts and PDFs"],
-  ["Payment", "tracking, reminders and overdue visibility"],
-  ["8 free", "GST, profit, margin and invoice tools"],
+const trustMetrics = [
+  ["Free preview", "create before signup"],
+  ["GST-ready", "tax invoice fields"],
+  ["WhatsApp", "share invoice links"],
+  ["₹199 Pro", "early access pricing"],
 ];
 
 const features = [
-  ["Get paid faster", "Send polished invoices, payment links and WhatsApp-ready reminders without chasing clients manually."],
-  ["Turn bills into books", "Upload receipts, GST bills and vendor PDFs; InvoiceWala extracts vendors, taxes, items and totals."],
-  ["Know profit monthly", "Track revenue, expenses, GST, client balances and profit trends from one finance workspace."],
-  ["Work like a real business", "Invoices, receipts, quotations, estimates, purchase orders and reports live together."],
+  ["Create invoices fast", "Add customer details, item rows, tax, discount, notes and terms without fighting a complex accounting screen."],
+  ["Send GST-ready PDFs", "Use GST/VAT fields, professional invoice layouts and PDF export built for Indian freelancers and businesses."],
+  ["Track who has paid", "See paid, pending and overdue invoices so you know who needs a reminder."],
+  ["Automate later", "When you are ready, import bills and receipts with AI, track expenses and review simple profit reports."],
 ];
 
 const simpleUseCases = [
@@ -43,10 +43,26 @@ const simpleUseCases = [
   ["Need a quote before billing?", "Prepare a quotation or estimate first, then convert it into an invoice later."],
 ];
 
+const userTypes = [
+  ["Freelancers", "Bill clients for projects, retainers and one-off work."],
+  ["Contractors", "Invoice labor, materials, repairs and milestones."],
+  ["Agencies", "Send clean invoices for campaigns, design, development and consulting."],
+  ["Local shops", "Create simple sales invoices with tax and item rows."],
+  ["GST businesses", "Use GST/VAT fields and tax-ready invoice layouts."],
+];
+
+const footerSeoLinks = [
+  ["/free-invoice-generator", "Free invoice generator"],
+  ["/gst-invoice-generator", "GST invoice generator"],
+  ["/freelancer-invoice-generator", "Freelancer invoice"],
+  ["/contractor-invoice-generator", "Contractor invoice"],
+  ["/pdf-to-invoice-ai", "PDF to invoice AI"],
+];
+
 const faqs: Array<[string, string]> = [
-  ["Is InvoiceWala only an invoice maker?", "No. InvoiceWala is being built as an AI-powered finance OS for invoices, bills, expenses, payments, GST reports and bookkeeping."],
-  ["Does InvoiceWala support GST businesses in India?", "Yes. InvoiceWala supports GST/VAT fields, GST-ready invoice data, tax summaries and GST-focused public tools."],
-  ["Can I use the free tools without signup?", "Yes. The public calculators work without login. Signup is needed when you want to save results, create invoices or build reports."],
+  ["Can I create an invoice without signup?", "Yes. You can create and preview an invoice for free. Signup or login is needed when you want to save it and download the PDF."],
+  ["Does InvoiceWala support GST invoices?", "Yes. InvoiceWala supports GST/VAT fields, tax-ready invoice data and GST-focused tools for Indian businesses."],
+  ["Is InvoiceWala accounting software?", "No. InvoiceWala is a simple invoicing and business tracking tool. AI import, expenses and reports are optional automation after the invoice flow."],
   ["Can I send invoices on WhatsApp?", "Yes. InvoiceWala supports direct WhatsApp sharing links for invoices without needing a WhatsApp API provider."],
 ];
 
@@ -54,6 +70,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <JsonLd data={[organizationSchema(), websiteSchema(), toolsItemListSchema(), faqSchema(faqs)]} />
+
       <section className="mx-auto w-full max-w-7xl px-5 py-5 sm:px-6 sm:py-6">
         <nav className="flex items-center justify-between">
           <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
@@ -63,58 +80,70 @@ export default function Home() {
         <div className="grid items-center gap-10 py-12 sm:py-16 lg:min-h-[720px] lg:grid-cols-[1fr_560px]">
           <div>
             <div className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-sm font-semibold text-cyan-100">
-              AI Finance OS for freelancers, agencies, contractors and small businesses
+              Free GST invoice generator for freelancers, contractors and small businesses
             </div>
             <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
-              Get paid faster. Automate invoices, bills, GST and bookkeeping with AI.
+              Create invoices fast. Send GST-ready PDFs. Get paid faster.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-              InvoiceWala helps you send invoices, import vendor bills, track payments, create finance documents and turn messy business paperwork into clean reports.
+              InvoiceWala helps Indian freelancers, contractors, agencies and small businesses create professional invoices, track payments and send reminders without accounting complexity.
             </p>
             <PublicHeroActions />
+            <p className="mt-4 text-sm text-slate-400">No credit card required. Preview your invoice before signup.</p>
           </div>
 
-          <div className="relative">
+          <div className="relative" id="demo">
             <div className="absolute -inset-4 rounded-[2rem] bg-cyan-400/10 blur-3xl" />
             <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl">
-              <div className="grid gap-3">
-                <div className="rounded-2xl bg-slate-950 p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-slate-400">Example workspace</p>
-                      <p className="mt-1 text-3xl font-semibold">₹4,82,400</p>
-                    </div>
-                    <span className="rounded-full bg-emerald-400/15 px-3 py-1 text-sm text-emerald-200">Receivables</span>
+              <div className="rounded-2xl bg-white p-5 text-slate-950 sm:p-7">
+                <div className="flex items-start justify-between gap-5">
+                  <div>
+                    <div className="h-10 w-10 rounded-2xl bg-blue-600" />
+                    <p className="mt-4 text-2xl font-bold">Your Business</p>
+                    <p className="text-sm text-slate-500">business@email.com</p>
                   </div>
-                  <div className="mt-5 grid grid-cols-3 gap-2 text-center text-sm">
-                    <div className="rounded-xl bg-white/[0.06] p-3"><strong>42</strong><br /><span className="text-slate-400">Invoices</span></div>
-                    <div className="rounded-xl bg-white/[0.06] p-3"><strong>11</strong><br /><span className="text-slate-400">Pending</span></div>
-                    <div className="rounded-xl bg-white/[0.06] p-3"><strong>3</strong><br /><span className="text-slate-400">Overdue</span></div>
+                  <div className="text-right">
+                    <p className="text-4xl font-bold text-blue-600">INVOICE</p>
+                    <p className="mt-1 text-sm text-slate-500">Preview before signup</p>
                   </div>
                 </div>
-                <div className="grid gap-3 md:grid-cols-2">
-                  <div className="rounded-2xl bg-white p-4 text-slate-950">
-                    <p className="text-xs font-semibold uppercase text-slate-400">AI Import</p>
-                    <p className="mt-2 font-semibold">GST bill detected</p>
-                    <div className="mt-4 space-y-2 text-sm">
-                      <p className="flex justify-between"><span>Vendor</span><strong>Metro Supplies</strong></p>
-                      <p className="flex justify-between"><span>GST</span><strong>18%</strong></p>
-                      <p className="flex justify-between"><span>Total</span><strong>₹28,320</strong></p>
-                    </div>
+
+                <div className="mt-8 grid gap-4 rounded-2xl bg-slate-50 p-4 sm:grid-cols-2">
+                  <div>
+                    <p className="text-xs font-semibold uppercase text-slate-400">Bill to</p>
+                    <p className="mt-2 font-semibold">Customer Name</p>
+                    <p className="text-sm text-slate-500">customer@email.com</p>
                   </div>
-                  <div className="rounded-2xl bg-white p-4 text-slate-950">
-                    <p className="text-xs font-semibold uppercase text-slate-400">Template</p>
-                    <p className="mt-2 font-semibold">GST Tax Invoice</p>
-                    <div className="mt-4 h-28 rounded-xl border border-slate-200 bg-slate-50 p-3">
-                      <div className="h-2 w-20 rounded bg-blue-600" />
-                      <div className="mt-4 h-2 rounded bg-slate-300" />
-                      <div className="mt-2 h-2 w-2/3 rounded bg-slate-300" />
-                    </div>
+                  <div className="text-sm sm:text-right">
+                    <p>Issue: 2026-05-25</p>
+                    <p className="mt-2">Due: 2026-06-08</p>
                   </div>
                 </div>
-                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                  <p className="text-sm font-semibold text-cyan-100">AI insight</p>
-                  <p className="mt-2 text-sm leading-6 text-slate-300">Three invoices are due this week. Send WhatsApp reminders today to improve collection speed.</p>
+
+                <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200">
+                  <div className="grid grid-cols-[1fr_56px_90px_100px] bg-slate-950 px-3 py-2 text-xs font-semibold uppercase text-white">
+                    <span>Item</span><span>Qty</span><span>Rate</span><span className="text-right">Total</span>
+                  </div>
+                  {[
+                    ["Service work", "1", "5,000", "₹5,000"],
+                    ["GST", "18%", "", "₹900"],
+                  ].map(([item, qty, rate, total]) => (
+                    <div className="grid grid-cols-[1fr_56px_90px_100px] border-t border-slate-100 px-3 py-3 text-sm" key={item}>
+                      <span className="font-medium">{item}</span>
+                      <span>{qty}</span>
+                      <span>{rate}</span>
+                      <span className="text-right">{total}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="ml-auto mt-6 max-w-xs border-t border-slate-200 pt-4 text-right">
+                  <p className="text-sm text-slate-500">Total due</p>
+                  <p className="text-3xl font-bold">₹5,900</p>
+                </div>
+
+                <div className="mt-6 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-800">
+                  No credit card required · PDF download after free signup
                 </div>
               </div>
             </div>
@@ -122,12 +151,26 @@ export default function Home() {
         </div>
 
         <div className="grid gap-3 border-y border-white/10 py-6 sm:grid-cols-2 lg:grid-cols-4">
-          {metrics.map(([value, label]) => (
+          {trustMetrics.map(([value, label]) => (
             <div className="rounded-2xl bg-white/[0.04] p-4" key={label}>
               <p className="text-3xl font-semibold">{value}</p>
               <p className="mt-1 text-sm text-slate-400">{label}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-16">
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Built for people who invoice customers</p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            {userTypes.map(([title, body]) => (
+              <div className="rounded-2xl bg-slate-950/70 p-4" key={title}>
+                <h2 className="font-semibold">{title}</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-400">{body}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -143,8 +186,8 @@ export default function Home() {
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <PublicPrimaryCta
-                guestHref="/signup?intent=create-invoice"
-                guestLabel="Create invoice"
+                guestHref="/free-invoice"
+                guestLabel="Create free invoice"
                 authedHref="/invoices/new"
                 authedLabel="Create invoice"
               />
@@ -176,8 +219,8 @@ export default function Home() {
       <section className="mx-auto grid max-w-7xl gap-8 px-5 py-14 sm:px-6 sm:py-20 lg:grid-cols-[0.8fr_1.2fr]">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">AI import</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Upload bills and receipts. InvoiceWala turns them into structured finance records.</h2>
-          <p className="mt-4 text-slate-300">Extract vendor, GSTIN, dates, line items, subtotal, tax and total. Save as invoice, purchase or expense after review.</p>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Already have a bill or receipt? Let AI extract it.</h2>
+          <p className="mt-4 text-slate-300">Upload a vendor bill, GST invoice, receipt or PDF. InvoiceWala can detect vendor details, invoice number, dates, GST/VAT, line items, subtotal, tax and total so you can review and save faster.</p>
         </div>
         <div className="grid gap-3 md:grid-cols-3">
           {["Receipt", "GST Bill", "Vendor PDF"].map((item, index) => (
@@ -198,7 +241,7 @@ export default function Home() {
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Free tools</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Win on Google. Convert useful calculations into InvoiceWala accounts.</h2>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Useful calculators that lead into better invoices.</h2>
           </div>
           <Link className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950" href="/tools">View all tools</Link>
         </div>
@@ -222,21 +265,24 @@ export default function Home() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6 sm:py-20">
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8">
+        <div className="rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-8">
           <div className="grid gap-8 lg:grid-cols-[1fr_420px]">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Pricing teaser</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Start free. Upgrade when automation saves real time.</h2>
-              <p className="mt-4 text-slate-300">Free includes limited invoices and AI imports. Pro unlocks unlimited invoices, AI automation, branding removal and reminders. Business adds teams, workspaces and client portals.</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Simple pricing</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Start free. Upgrade to Pro for ₹199/month when you need more.</h2>
+              <p className="mt-4 text-slate-300">Create and preview invoices free. Pro unlocks saved invoices, PDF templates, reminders, GST reports, AI imports and business tracking features at early access pricing.</p>
             </div>
             <div className="grid gap-3">
-              {["Free", "Pro", "Business"].map((plan, index) => (
+              {[
+                ["Free", "Preview invoices and use free tools", "/free-invoice"],
+                ["Pro ₹199", "PDFs, reminders, GST reports and AI imports", "/pricing"],
+              ].map(([plan, body, href]) => (
                 <div className="flex items-center justify-between rounded-2xl bg-slate-950 p-4" key={plan}>
                   <div>
                     <p className="font-semibold">{plan}</p>
-                    <p className="text-sm text-slate-400">{["Limited invoices", "Unlimited automation", "Teams + portals"][index]}</p>
+                    <p className="text-sm text-slate-400">{body}</p>
                   </div>
-                  <Link className="rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-950" href="/pricing">View</Link>
+                  <Link className="rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-950" href={href}>View</Link>
                 </div>
               ))}
             </div>
@@ -245,7 +291,7 @@ export default function Home() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6 sm:py-20">
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Questions before you switch?</h2>
+        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Questions before you create your invoice?</h2>
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {faqs.map(([question, answer]) => (
             <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6" key={question}>
@@ -257,8 +303,15 @@ export default function Home() {
       </section>
 
       <footer className="border-t border-white/10 px-6 py-10">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 text-sm text-slate-400">
-          <p>InvoiceWala · invoicewala.shop</p>
+        <div className="mx-auto grid max-w-7xl gap-6 text-sm text-slate-400 lg:grid-cols-[1fr_auto]">
+          <div>
+            <p>InvoiceWala · invoicewala.shop</p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {footerSeoLinks.map(([href, label]) => (
+                <Link className="hover:text-white" href={href} key={href}>{label}</Link>
+              ))}
+            </div>
+          </div>
           <PublicFooterLinks />
         </div>
       </footer>
