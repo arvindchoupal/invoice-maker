@@ -18,8 +18,8 @@ export function PublicNavActions({ showBlog = true }: { showBlog?: boolean }) {
 
   if (isLoggedIn) {
     return (
-      <div className="flex items-center gap-2 sm:gap-3">
-        <Link className={guestLinkClass} href="/tools">
+      <div className="flex items-center gap- sm:gap-3">
+        <Link className={`${guestLinkClass} hidden md:inline-flex`} href="/tools">
           Free tools
         </Link>
         <Link className={`hidden lg:inline-flex ${guestLinkClass}`} href="/free-invoice">

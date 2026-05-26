@@ -2,9 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Copy, Download, Eye, Mail, MessageCircle, Search, Send, Trash2 } from "lucide-react";
+import { Download, MessageCircle, Search, Trash2 } from "lucide-react";
 import { API_URL, api, getToken } from "@/lib/api";
 import { currency } from "@/lib/invoice";
+import type { PdfStyleMeta } from "@/lib/pdf-styles";
+import { TemplateGallery } from "@/components/TemplateGallery";
 import { Badge, Button, Card, EmptyState, LinkButton, Skeleton, inputClass } from "@/components/ui";
 
 interface InvoiceRow {
@@ -26,13 +28,6 @@ interface InvoiceListResponse {
   facets: Array<{ status: string; count: number }>;
 }
 
-interface PdfStyle {
-  id: string;
-  label: string;
-  accent: string;
-  soft: string;
-}
-
 const statusTabs = ["all", "Draft", "Sent", "Paid", "Overdue"];
 
 function statusTone(status: string) {
@@ -45,9 +40,9 @@ function statusTone(status: string) {
 
 export default function InvoicesPage() {
   const [response, setResponse] = useState<InvoiceListResponse | null>(null);
-  const [styles, setStyles] = useState<PdfStyle[]>([]);
+  const [styles, setStyles] = useState<PdfStyleMeta[]>([]);
   const [selectedStyle, setSelectedStyle] = useState("");
-  const [previewInvoice, setPreviewInvoice] = useState<InvoiceRow | null>(null);
+  const [downloadInvoice, setDownloadInvoice] = useState<InvoiceRow | null>(null);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
   const [sortBy, setSortBy] = useState("created_at");
@@ -94,7 +89,7 @@ export default function InvoicesPage() {
   }, [page, search, status, sortBy, sortDir]);
 
   useEffect(() => {
-    api<PdfStyle[]>("/invoices/pdf/styles/list").then((items) => {
+    api<PdfStyleMeta[]>("/invoices/pdf/styles/list").then((items) => {
       setStyles(items);
       setSelectedStyle(items[0]?.id ?? "classic");
     });
@@ -103,19 +98,6 @@ export default function InvoicesPage() {
   async function remove(id: number) {
     await api(`/invoices/${id}`, { method: "DELETE" });
     load();
-  }
-
-  async function duplicate(id: number) {
-    await api(`/invoices/${id}/duplicate`, { method: "POST" });
-    load();
-  }
-
-  async function sendInvoice(id: number) {
-    await api(`/invoices/${id}/email`, { method: "POST" });
-  }
-
-  async function sendReminder(id: number) {
-    await api(`/invoices/${id}/reminder`, { method: "POST" });
   }
 
   function pdfUrl(id: number, style?: string) {
@@ -133,7 +115,7 @@ export default function InvoicesPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Invoices</h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Search, filter, preview, send, duplicate, and download real invoices.</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Search, filter, edit, share, and download invoices with real PDF templates.</p>
         </div>
         <LinkButton href="/invoices/new">Create invoice</LinkButton>
       </div>
@@ -192,7 +174,7 @@ export default function InvoicesPage() {
           </div>
         ) : response?.data.length ? (
           <div className="overflow-x-auto premium-scrollbar">
-            <table className="w-full min-w-[980px] text-left text-sm">
+            <table className="w-full min-w-[860px] text-left text-sm">
               <thead className="border-b border-slate-200/80 bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:border-white/10 dark:bg-white/[0.04]">
                 <tr>
                   <th className="p-4">Invoice</th>
@@ -218,16 +200,12 @@ export default function InvoicesPage() {
                     <td className="p-4"><Badge tone={statusTone(invoice.status)}>{invoice.status}</Badge></td>
                     <td className="p-4">
                       <div className="flex flex-wrap gap-2">
-                        <Button variant="secondary" className="px-3" onClick={() => {
-                          setPreviewInvoice(invoice);
-                          if (invoice.pdf_style) setSelectedStyle(invoice.pdf_style);
-                        }}><Eye className="h-4 w-4" />Preview</Button>
                         <Link className="inline-flex min-h-10 items-center rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold dark:border-white/10" href={`/invoices/${invoice.id}/edit`}>Edit</Link>
-                        <Button variant="secondary" className="px-3" onClick={() => duplicate(invoice.id)}><Copy className="h-4 w-4" /></Button>
-                        <Button variant="secondary" className="px-3" onClick={() => sendInvoice(invoice.id)}><Send className="h-4 w-4" /></Button>
-                        <Button variant="ghost" className="px-3" onClick={() => sendReminder(invoice.id)}><Mail className="h-4 w-4" /></Button>
                         <a className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-emerald-200 px-3 py-2 text-sm font-semibold text-emerald-700 dark:border-emerald-500/20 dark:text-emerald-200" href={whatsappUrl(invoice)} target="_blank" rel="noreferrer"><MessageCircle className="h-4 w-4" />WA</a>
-                        <a className="inline-flex min-h-10 items-center gap-2 rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white" href={pdfUrl(invoice.id, invoice.pdf_style)}><Download className="h-4 w-4" />PDF</a>
+                        <Button className="px-3" onClick={() => {
+                          setDownloadInvoice(invoice);
+                          setSelectedStyle(invoice.pdf_style || styles[0]?.id || "classic");
+                        }}><Download className="h-4 w-4" />PDF</Button>
                         <Button variant="danger" className="px-3" onClick={() => remove(invoice.id)}><Trash2 className="h-4 w-4" /></Button>
                       </div>
                     </td>
@@ -251,44 +229,17 @@ export default function InvoicesPage() {
         </div>
       </div>
 
-      {previewInvoice ? (
-        <div className="fixed inset-0 z-50 grid bg-slate-950/70 p-4 backdrop-blur-sm lg:grid-cols-[420px_1fr]">
-          <Card className="max-h-full overflow-auto p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-xl font-semibold">PDF template gallery</h2>
-                <p className="mt-1 text-sm text-slate-500">Choose a real template and preview it with invoice {previewInvoice.invoice_number}.</p>
-              </div>
-              <Button variant="ghost" onClick={() => setPreviewInvoice(null)}>Close</Button>
-            </div>
-            <div className="mt-5 grid gap-3">
-              {styles.map((style) => (
-                <button
-                  className={`rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 ${selectedTemplate === style.id ? "border-blue-500 bg-blue-50 dark:bg-blue-500/10" : "border-slate-200 bg-white dark:border-white/10 dark:bg-white/[0.04]"}`}
-                  key={style.id}
-                  onClick={() => setSelectedStyle(style.id)}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold">{style.label}</span>
-                    <span className="h-5 w-5 rounded-full ring-1 ring-slate-200" style={{ background: style.accent }} />
-                  </div>
-                  <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Preview renders from the selected invoice PDF endpoint.</p>
-                </button>
-              ))}
-            </div>
-            <a className="mt-5 inline-flex w-full min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white" href={pdfUrl(previewInvoice.id, selectedTemplate)}>
-              <Download className="h-4 w-4" />
-              Download selected template
-            </a>
-            <a className="mt-3 inline-flex w-full min-h-11 items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-2 text-sm font-semibold text-emerald-700 dark:border-emerald-500/20 dark:text-emerald-200" href={whatsappUrl(previewInvoice)} target="_blank" rel="noreferrer">
-              <MessageCircle className="h-4 w-4" />
-              Share on WhatsApp
-            </a>
-          </Card>
-          <div className="min-h-0 rounded-2xl bg-white p-2">
-            <iframe className="h-full min-h-[80vh] w-full rounded-xl" src={pdfUrl(previewInvoice.id, selectedTemplate)} title="Live PDF preview" />
-          </div>
-        </div>
+      {downloadInvoice ? (
+        <TemplateGallery
+          styles={styles}
+          selectedId={selectedTemplate}
+          onClose={() => setDownloadInvoice(null)}
+          onSelect={setSelectedStyle}
+          onDownload={(style) => {
+            setSelectedStyle(style);
+            window.location.href = pdfUrl(downloadInvoice.id, style);
+          }}
+        />
       ) : null}
     </div>
   );

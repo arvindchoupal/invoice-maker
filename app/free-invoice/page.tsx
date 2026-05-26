@@ -126,17 +126,17 @@ export default function FreeInvoicePage() {
               <div className="grid gap-4">
                 <h2 className="text-xl font-semibold">What are you charging for?</h2>
                 {invoice.items.map((item, index) => (
-                  <div className="grid gap-3 rounded-2xl border border-white/10 bg-slate-950/50 p-3" key={index}>
+                  <div className="grid min-w-0 gap-3 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/50 p-3" key={index}>
                     <div className="flex items-center justify-between gap-3">
                       <p className="text-sm font-semibold text-slate-300">Item {index + 1}</p>
                       <button className="rounded-lg p-2 text-red-200 hover:bg-red-500/10" onClick={() => removeItem(index)} type="button"><Trash2 className="h-4 w-4" /></button>
                     </div>
-                    <Field label="Product or service"><input className={inputClass} value={item.name} onChange={(event) => updateItem(index, { name: event.target.value })} placeholder="Website design, keyboard, repair service..." /></Field>
-                    <div className="grid gap-3 sm:grid-cols-4">
-                      <Field label="Qty"><input className={inputClass} min="0" type="number" value={item.quantity} onChange={(event) => updateItem(index, { quantity: Number(event.target.value) })} /></Field>
-                      <Field label="Rate"><input className={inputClass} min="0" type="number" value={item.unitPrice} onChange={(event) => updateItem(index, { unitPrice: Number(event.target.value) })} /></Field>
-                      <Field label="Tax %"><input className={inputClass} min="0" type="number" value={item.taxRate} onChange={(event) => updateItem(index, { taxRate: Number(event.target.value) })} /></Field>
-                      <Field label="Disc %"><input className={inputClass} min="0" type="number" value={item.discountRate} onChange={(event) => updateItem(index, { discountRate: Number(event.target.value) })} /></Field>
+                    <Field label="Product or service"><input className={`${inputClass} w-full min-w-0`} value={item.name} onChange={(event) => updateItem(index, { name: event.target.value })} placeholder="Website design, keyboard, repair service..." /></Field>
+                    <div className="grid min-w-0 grid-cols-2 gap-3 md:grid-cols-4">
+                      <Field label="Qty"><input className={`${inputClass} w-full min-w-0`} min="0" type="number" value={item.quantity} onChange={(event) => updateItem(index, { quantity: Number(event.target.value) })} /></Field>
+                      <Field label="Rate"><input className={`${inputClass} w-full min-w-0`} min="0" type="number" value={item.unitPrice} onChange={(event) => updateItem(index, { unitPrice: Number(event.target.value) })} /></Field>
+                      <Field label="Tax %"><input className={`${inputClass} w-full min-w-0`} min="0" type="number" value={item.taxRate} onChange={(event) => updateItem(index, { taxRate: Number(event.target.value) })} /></Field>
+                      <Field label="Disc %"><input className={`${inputClass} w-full min-w-0`} min="0" type="number" value={item.discountRate} onChange={(event) => updateItem(index, { discountRate: Number(event.target.value) })} /></Field>
                     </div>
                   </div>
                 ))}

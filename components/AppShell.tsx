@@ -18,7 +18,6 @@ import {
   Search,
   Settings,
   Shield,
-  Sparkles,
   Users,
 } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -27,12 +26,9 @@ import { api, clearSession } from "@/lib/api";
 const nav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/invoices", label: "Invoices", icon: FileText },
-  { href: "/documents", label: "Documents", icon: FilePlus2 },
   { href: "/clients", label: "Clients", icon: Users },
   { href: "/bookkeeping", label: "Bookkeeping", icon: BarChart3 },
   { href: "/recurring", label: "Recurring", icon: CreditCard },
-  { href: "/ai-import", label: "AI Import", icon: Sparkles },
-  { href: "/payments", label: "Payments", icon: CreditCard },
   { href: "/reports", label: "Reports", icon: Download },
   { href: "/settings", label: "Settings", icon: Settings },
   { href: "/pricing", label: "Pricing", icon: Shield },
@@ -42,7 +38,6 @@ const adminNav = { href: "/admin", label: "Admin", icon: Shield };
 
 const quickActions = [
   { href: "/invoices/new", label: "Invoice", icon: FilePlus2 },
-  { href: "/ai-import", label: "Import", icon: Sparkles },
   { href: "/clients", label: "Client", icon: Users },
 ];
 
@@ -135,7 +130,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">Quick create</p>
               <Plus className="h-4 w-4 text-blue-500" />
             </div>
-            <div className="mt-3 grid grid-cols-3 gap-2">
+            <div className="mt-3 grid grid-cols-2 gap-2">
               {quickActions.map(({ href, label, icon: Icon }) => (
                 <Link
                   className="grid gap-1 rounded-xl bg-white/70 p-2 text-center text-xs font-semibold text-slate-700 ring-1 ring-slate-200/70 transition hover:-translate-y-0.5 hover:bg-white dark:bg-white/[0.07] dark:text-slate-200 dark:ring-white/10"

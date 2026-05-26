@@ -13,11 +13,15 @@ export default function BookkeepingPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
 
-  async function load() {
-    const [nextSummary, nextExpenses] = await Promise.all([api<Summary>("/bookkeeping/summary"), api<Expense[]>("/bookkeeping/expenses")]);
-    setSummary(nextSummary);
-    setExpenses(nextExpenses);
-    setLoading(false);
+  async function load(showLoading = true) {
+    if (showLoading) setLoading(true);
+    try {
+      const [nextSummary, nextExpenses] = await Promise.all([api<Summary>("/bookkeeping/summary"), api<Expense[]>("/bookkeeping/expenses")]);
+      setSummary(nextSummary);
+      setExpenses(nextExpenses);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -36,12 +40,12 @@ export default function BookkeepingPage() {
     const form = new FormData(event.currentTarget);
     await api("/bookkeeping/expenses", { method: "POST", body: JSON.stringify({ vendorName: form.get("vendorName"), expenseDate: form.get("expenseDate"), total: Number(form.get("total")), subtotal: Number(form.get("total")), currency: form.get("currency"), notes: form.get("notes") }) });
     event.currentTarget.reset();
-    load();
+    await load();
   }
 
   return (
     <div className="grid gap-6">
-      <div><h1 className="text-3xl font-semibold tracking-tight">AI bookkeeping</h1><p className="mt-1 text-sm text-slate-500">Income, expenses, purchases, taxes, vendors, and profit/loss summaries from real records.</p></div>
+      <div><h1 className="text-3xl font-semibold tracking-tight">Bookkeeping</h1><p className="mt-1 text-sm text-slate-500">Income, expenses, purchases, taxes, vendors, and profit/loss summaries from real records.</p></div>
       <div className="grid gap-4 md:grid-cols-4">
         {loading ? <><Skeleton className="h-28" /><Skeleton className="h-28" /><Skeleton className="h-28" /><Skeleton className="h-28" /></> : <>
           <Card className="p-5"><p className="text-sm text-slate-500">Income</p><p className="mt-2 text-2xl font-semibold">{currency(totals.income)}</p></Card>

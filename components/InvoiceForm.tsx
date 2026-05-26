@@ -48,6 +48,13 @@ function normalizeCurrency(code?: string) {
   return supportedCurrencies.some((currency) => currency.code === normalized) ? normalized : "INR";
 }
 
+function emailValidationMessage(value: string | undefined, label: string) {
+  const email = (value ?? "").trim();
+  if (!email) return "";
+  const isValidEmail = /^(?!\.)(?!.*\.\.)[A-Za-z0-9_'+\-.]*[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/.test(email);
+  return isValidEmail ? "" : `${label} must be a valid email address, for example name@business.com.`;
+}
+
 const blankItem = (): BuilderItem => ({
   localId: crypto.randomUUID(),
   name: "",
@@ -326,10 +333,15 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
     try {
       const payload = toApiInvoice(invoice, pdfStyle);
       const firstInvalidItem = payload.items.findIndex((item) => !item.name?.trim());
-      if (!payload.businessName.trim()) throw new Error("Business name is required.");
-      if (!payload.customerName.trim()) throw new Error("Customer name is required.");
-      if (!payload.items.length) throw new Error("Add at least one line item before saving.");
-      if (firstInvalidItem >= 0) throw new Error(`Line item ${firstInvalidItem + 1}: item name is required.`);
+      const validationErrors = [
+        !payload.businessName.trim() ? "Business name is required." : "",
+        emailValidationMessage(payload.businessEmail, "Business email"),
+        !payload.customerName.trim() ? "Client name is required." : "",
+        emailValidationMessage(payload.customerEmail, "Client email"),
+        !payload.items.length ? "Add at least one line item before saving." : "",
+        firstInvalidItem >= 0 ? `Line item ${firstInvalidItem + 1}: item name is required.` : "",
+      ].filter(Boolean);
+      if (validationErrors.length) throw new Error(validationErrors.join("\n"));
       const saved = await api<{ id: number }>(invoiceId ? `/invoices/${invoiceId}` : "/invoices", {
         method: invoiceId ? "PUT" : "POST",
         body: JSON.stringify(payload),
@@ -458,7 +470,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
             <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">From</p>
             <div className="grid gap-2">
               <input className={compactInput} placeholder="Business name" value={invoice.businessName} onChange={(e) => update("businessName", e.target.value)} />
-              <input className={compactInput} placeholder="Business email" value={invoice.businessEmail} onChange={(e) => update("businessEmail", e.target.value)} />
+              <input className={compactInput} type="email" placeholder="Business email" value={invoice.businessEmail} onChange={(e) => update("businessEmail", e.target.value)} />
               <input className={compactInput} placeholder="GST/VAT ID" value={invoice.businessTaxId} onChange={(e) => update("businessTaxId", e.target.value)} />
               <textarea className={`${compactInput} min-h-16`} placeholder="Business address" value={invoice.businessAddress} onChange={(e) => update("businessAddress", e.target.value)} />
             </div>
@@ -477,7 +489,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
             </div>
             <div className="grid gap-2">
               <input className={compactInput} placeholder="Client name" value={invoice.customerName} onChange={(e) => update("customerName", e.target.value)} />
-              <input className={compactInput} placeholder="Client email" value={invoice.customerEmail} onChange={(e) => update("customerEmail", e.target.value)} />
+              <input className={compactInput} type="email" placeholder="Client email" value={invoice.customerEmail} onChange={(e) => update("customerEmail", e.target.value)} />
               <input className={compactInput} placeholder="Client GST/VAT ID" value={invoice.customerTaxId} onChange={(e) => update("customerTaxId", e.target.value)} />
               <textarea className={`${compactInput} min-h-16`} placeholder="Client address" value={invoice.customerAddress} onChange={(e) => update("customerAddress", e.target.value)} />
             </div>
@@ -563,9 +575,9 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
             {logoSrc ? <Button variant="secondary" onClick={removeLogo}>Remove logo</Button> : null}
             {invoiceId ? (
               <>
-                <a className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-100 dark:hover:bg-white/[0.08]" href={pdfDownloadUrl()}>
+                <button className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-100 dark:hover:bg-white/[0.08]" onClick={() => setShowGallery(true)} type="button">
                   Download PDF
-                </a>
+                </button>
                 <Button variant="secondary" onClick={sendEmail}><Mail className="h-4 w-4" />Email</Button>
                 <a className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100" href={whatsappShareUrl()} target="_blank" rel="noreferrer">
                   <MessageCircle className="h-4 w-4" />WhatsApp
@@ -582,23 +594,19 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
       </Card>
 
       {showGallery ? (
-        <Card className="p-4">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <div>
-              <h2 className="font-semibold">PDF template</h2>
-              <p className="text-xs text-slate-500">17 layouts · saved with this invoice · {previewStructure(pdfStyle)}</p>
-            </div>
-            <Button variant="ghost" onClick={() => setShowGallery(false)}>Close</Button>
-          </div>
-          <TemplateGallery
-            styles={pdfStyles}
-            selectedId={pdfStyle}
-            onSelect={(id) => {
-              setPdfStyle(id);
-              markDirty();
-            }}
-          />
-        </Card>
+        <TemplateGallery
+          styles={pdfStyles}
+          selectedId={pdfStyle}
+          onClose={() => setShowGallery(false)}
+          onSelect={(id) => {
+            setPdfStyle(id);
+            markDirty();
+          }}
+          onDownload={invoiceId ? (id) => {
+            setPdfStyle(id);
+            window.location.href = pdfDownloadUrl(id);
+          } : undefined}
+        />
       ) : null}
 
       <div ref={shellRef} className="grid gap-3 lg:flex lg:items-start">
@@ -681,7 +689,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                       <div className="mb-3 h-10 w-10 rounded-2xl" style={{ backgroundColor: styleMeta?.accent ?? "#2563eb" }} />
                     )}
                     <input className={`${previewInput} text-2xl font-bold`} value={invoice.businessName || ""} placeholder="Your business" onChange={(e) => update("businessName", e.target.value)} />
-                    <input className={`${previewInput} mt-1 text-xs text-slate-500`} value={invoice.businessEmail || ""} placeholder="business@email.com" onChange={(e) => update("businessEmail", e.target.value)} />
+                    <input className={`${previewInput} mt-1 text-xs text-slate-500`} type="email" value={invoice.businessEmail || ""} placeholder="business@email.com" onChange={(e) => update("businessEmail", e.target.value)} />
                     <textarea className={`${previewInput} mt-2 min-h-12 resize-none text-xs text-slate-500`} value={invoice.businessAddress || ""} placeholder="Business address" onChange={(e) => update("businessAddress", e.target.value)} />
                   </div>
                   <div className="text-left sm:text-right">
@@ -696,7 +704,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                   <div>
                     <p className="text-xs font-semibold uppercase text-slate-400">Bill to</p>
                     <input className={`${previewInput} mt-2 font-semibold`} value={invoice.customerName || ""} placeholder="Client name" onChange={(e) => update("customerName", e.target.value)} />
-                    <input className={`${previewInput} text-xs text-slate-500`} value={invoice.customerEmail || ""} placeholder="client@email.com" onChange={(e) => update("customerEmail", e.target.value)} />
+                    <input className={`${previewInput} text-xs text-slate-500`} type="email" value={invoice.customerEmail || ""} placeholder="client@email.com" onChange={(e) => update("customerEmail", e.target.value)} />
                     <textarea className={`${previewInput} mt-2 min-h-12 resize-none text-xs text-slate-500`} value={invoice.customerAddress || ""} placeholder="Client address" onChange={(e) => update("customerAddress", e.target.value)} />
                   </div>
                   <div className="grid gap-2 text-sm sm:text-right">

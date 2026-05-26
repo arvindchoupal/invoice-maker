@@ -8,6 +8,8 @@ export interface PdfStyleMeta {
   soft: string;
   header?: string;
   table?: string;
+  category?: string;
+  noLogo?: boolean;
 }
 
 export type PreviewFamily = "corporate" | "minimal" | "gst" | "agency" | "construction" | "retail" | "startup";
@@ -23,12 +25,12 @@ const FAMILY_LABELS: Record<PreviewFamily, string> = {
 };
 
 export function previewFamily(styleId: string): PreviewFamily {
-  if (["gst", "emerald", "ledger"].includes(styleId)) return "gst";
-  if (styleId === "retail") return "retail";
+  if (["gst", "gstIndia", "emerald", "ledger"].includes(styleId)) return "gst";
+  if (["retail", "receipt"].includes(styleId)) return "retail";
   if (["agency", "studio"].includes(styleId)) return "agency";
-  if (["construction", "sunrise"].includes(styleId)) return "construction";
-  if (["startup", "stripe"].includes(styleId)) return "startup";
-  if (["minimal", "mono"].includes(styleId)) return "minimal";
+  if (["construction", "sunrise", "purchaseOrder"].includes(styleId)) return "construction";
+  if (["startup", "stripe", "quotation", "modernBlue", "pureBlue", "transparentBlue", "transparentLeaf", "transparentRose"].includes(styleId)) return "startup";
+  if (["minimal", "mono", "monoBlack", "pureWhite", "slim", "sharp", "noLogoSlate"].includes(styleId)) return "minimal";
   return "corporate";
 }
 
