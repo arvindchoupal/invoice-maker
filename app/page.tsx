@@ -65,6 +65,7 @@ const faqs: Array<[string, string]> = [
   ["Is InvoiceWala accounting software?", "No. InvoiceWala is a simple invoicing and business tracking tool. AI import, expenses and reports are optional automation after the invoice flow."],
   ["Can I send invoices on WhatsApp?", "Yes. InvoiceWala supports direct WhatsApp sharing links for invoices without needing a WhatsApp API provider."],
 ];
+//test
 
 export default function Home() {
   return (
