@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/blog/layout,_N_T_/blog/gst-bill-format/layout,_N_T_/blog/gst-bill-format/page,_N_T_/blog/gst-bill-format"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/blog/gst-bill-format/__PAGE__",
+    "/blog/gst-bill-format",
+    "/blog",
+    "/_index",
+    "/_head"
+  ]
+}

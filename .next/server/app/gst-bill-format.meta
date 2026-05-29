@@ -1,0 +1,17 @@
+{
+  "status": 307,
+  "headers": {
+    "location": "/blog/gst-bill-format",
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/gst-bill-format/layout,_N_T_/gst-bill-format/page,_N_T_/gst-bill-format"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/gst-bill-format/__PAGE__",
+    "/gst-bill-format",
+    "/_index",
+    "/_head"
+  ]
+}

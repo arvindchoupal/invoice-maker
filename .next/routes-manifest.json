@@ -91,6 +91,12 @@
       "namedRegex": "^/blog(?:/)?$"
     },
     {
+      "page": "/blog/gst-bill-format",
+      "regex": "^/blog/gst\\-bill\\-format(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/blog/gst\\-bill\\-format(?:/)?$"
+    },
+    {
       "page": "/bookkeeping",
       "regex": "^/bookkeeping(?:/)?$",
       "routeKeys": {},
@@ -131,6 +137,12 @@
       "regex": "^/free\\-invoice(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/free\\-invoice(?:/)?$"
+    },
+    {
+      "page": "/gst-bill-format",
+      "regex": "^/gst\\-bill\\-format(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/gst\\-bill\\-format(?:/)?$"
     },
     {
       "page": "/icon.png",
@@ -209,6 +221,12 @@
       "regex": "^/tools(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/tools(?:/)?$"
+    },
+    {
+      "page": "/tools/discount-calculator",
+      "regex": "^/tools/discount\\-calculator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/discount\\-calculator(?:/)?$"
     },
     {
       "page": "/tools/emi-calculator",
