@@ -83,3 +83,28 @@ export function webApplicationSchema(tool: {
     },
   };
 }
+
+export function breadcrumbSchema(items: Array<{ name: string; url: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
+export function howToSchema(name: string, steps: string[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name,
+    step: steps.map((step) => ({
+      "@type": "HowToStep",
+      name: step,
+    })),
+  };
+}

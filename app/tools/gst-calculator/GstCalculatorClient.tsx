@@ -5,8 +5,10 @@ import { useMemo, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { PublicPrimaryCta } from "@/components/PublicPrimaryCta";
 import { PublicToolNavActions } from "@/components/PublicToolNavActions";
+import { ToolSeoContent } from "@/components/tools/ToolSeoContent";
+import { gstCalculatorSeoContent } from "@/lib/tool-seo-content";
 
-const rates = [0, 3, 5, 12, 18, 28];
+const rates = [0, 3, 5, 12, 18, ];
 const currencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "INR",
@@ -94,16 +96,16 @@ export default function GstCalculatorClient() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-      <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_32%),radial-gradient(circle_at_top_right,rgba(99,102,241,0.14),transparent_30%)] px-5 py-6 sm:px-8">
+      <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_32%),radial-gradient(circle_at_top_right,rgba(99,102,241,0.14),transparent_30%)] px-4 py-5 sm:px-6 lg:px-8">
         <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
           <PublicToolNavActions signupSource="gst-calculator" />
         </nav>
 
-        <div className="mx-auto grid max-w-7xl gap-10 py-14 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
-          <div className="lg:sticky lg:top-6">
+        <div className="mx-auto grid max-w-7xl gap-8 py-10 sm:py-12 xl:grid-cols-[minmax(0,0.82fr)_minmax(620px,0.98fr)] xl:items-start">
+          <div className="xl:sticky xl:top-6">
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">GST calculator India</p>
-            <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-6xl">Calculate GST, split tax and create invoices faster.</h1>
+            <h1 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl xl:text-5xl">Calculate GST, split tax and create invoices faster.</h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-slate-300">
               Work out inclusive or exclusive GST with CGST/SGST or IGST split, then move the result into InvoiceWala for branded invoices, payment links and reminders.
             </p>
@@ -117,9 +119,9 @@ export default function GstCalculatorClient() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-3 shadow-2xl shadow-black/30 backdrop-blur">
-            <div className="grid overflow-hidden rounded-2xl border border-white/10 bg-slate-950/85 lg:grid-cols-[0.9fr_1.1fr]">
-              <section className="border-b border-white/10 p-5 sm:p-6 lg:border-b-0 lg:border-r">
+          <div className="w-full min-w-0 rounded-3xl border border-white/10 bg-white/[0.05] p-2 shadow-2xl shadow-black/30 backdrop-blur sm:p-3">
+            <div className="grid min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/85 xl:grid-cols-[minmax(260px,0.85fr)_minmax(340px,1.15fr)]">
+              <section className="min-w-0 border-b border-white/10 p-4 sm:p-5 xl:border-b-0 xl:border-r">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <h2 className="text-lg font-semibold">GST inputs</h2>
@@ -128,11 +130,11 @@ export default function GstCalculatorClient() {
                   <span className="rounded-full bg-cyan-300/10 px-3 py-1 text-xs font-semibold text-cyan-200 ring-1 ring-cyan-300/20">Live</span>
                 </div>
 
-                <div className="mt-6 grid gap-5">
+                <div className="mt-5 grid gap-4">
                   <label className="grid gap-2 text-sm font-medium text-slate-200">
                     Amount
                     <input
-                      className="min-h-12 rounded-xl border border-white/10 bg-white/[0.04] px-4 text-base text-white outline-none transition focus:border-cyan-300/60 focus:ring-4 focus:ring-cyan-300/10"
+                      className="min-h-12 w-full min-w-0 rounded-xl border border-white/10 bg-white/[0.04] px-4 text-base text-white outline-none transition focus:border-cyan-300/60 focus:ring-4 focus:ring-cyan-300/10"
                       inputMode="decimal"
                       min="0"
                       onChange={(event) => setAmount(event.target.value)}
@@ -143,10 +145,10 @@ export default function GstCalculatorClient() {
 
                   <div>
                     <p className="text-sm font-medium text-slate-200">GST rate</p>
-                    <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-3 xl:grid-cols-6">
+                    <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6 xl:grid-cols-3 2xl:grid-cols-5">
                       {rates.map((preset) => (
                         <button
-                          className={`min-h-10 rounded-xl border px-3 text-sm font-semibold transition ${
+                          className={`min-h-10 rounded-xl border px-2 text-sm font-semibold transition ${
                             Number(rate) === preset
                               ? "border-cyan-300/70 bg-cyan-300 text-slate-950"
                               : "border-white/10 bg-white/[0.04] text-slate-300 hover:bg-white/[0.08]"
@@ -160,7 +162,7 @@ export default function GstCalculatorClient() {
                       ))}
                     </div>
                     <input
-                      className="mt-3 min-h-11 w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 text-sm text-white outline-none transition focus:border-cyan-300/60 focus:ring-4 focus:ring-cyan-300/10"
+                      className="mt-3 min-h-11 w-full min-w-0 rounded-xl border border-white/10 bg-white/[0.04] px-4 text-sm text-white outline-none transition focus:border-cyan-300/60 focus:ring-4 focus:ring-cyan-300/10"
                       inputMode="decimal"
                       min="0"
                       onChange={(event) => setRate(event.target.value)}
@@ -181,13 +183,13 @@ export default function GstCalculatorClient() {
                 </div>
               </section>
 
-              <section className="p-5 sm:p-6">
+              <section className="min-w-0 p-4 sm:p-5">
                 <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
                   <div>
                     <h2 className="text-lg font-semibold">GST breakdown</h2>
                     <p className="mt-1 text-sm text-slate-400">Ready for invoice, quotation or estimate checks.</p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex shrink-0 gap-2">
                     <button className="rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10" onClick={shareResult} type="button">
                       {copied ? "Copied" : "Share"}
                     </button>
@@ -207,7 +209,7 @@ export default function GstCalculatorClient() {
                   </div>
                   <div className="rounded-2xl bg-cyan-300 p-5 text-slate-950 shadow-xl shadow-cyan-950/30">
                     <p className="text-sm font-semibold text-slate-700">Grand total</p>
-                    <p className="mt-2 text-4xl font-semibold tracking-tight">{money(result.total)}</p>
+                    <p className="mt-2 break-words text-3xl font-semibold tracking-tight sm:text-4xl">{money(result.total)}</p>
                   </div>
                 </div>
 
@@ -216,15 +218,15 @@ export default function GstCalculatorClient() {
                   <p className="mt-2 text-sm leading-6 text-slate-400">
                     Save this GST calculation into InvoiceWala to create a branded tax invoice, add payment links and track due reminders.
                   </p>
-                  <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                  <div className="mt-4 grid gap-2 sm:grid-cols-2">
                     <PublicPrimaryCta
                       guestHref="/signup?source=gst-calculator"
                       guestLabel="Save as invoice"
                       authedHref="/invoices/new"
                       authedLabel="Create GST invoice"
-                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-white px-4 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-100"
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-white px-4 text-center text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-100"
                     />
-                    <Link className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 px-4 text-sm font-semibold text-white transition hover:bg-white/10" href="/tools/invoice-number-generator">
+                    <Link className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 px-4 text-center text-sm font-semibold text-white transition hover:bg-white/10" href="/tools/invoice-number-generator">
                       Generate invoice number
                     </Link>
                   </div>
@@ -235,7 +237,7 @@ export default function GstCalculatorClient() {
         </div>
       </section>
 
-      <section className="px-5 py-12 sm:px-8">
+      <section className="px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-3">
           {[
             ["GST invoice", "Use the tax split while creating GST-compliant invoices in InvoiceWala."],
@@ -249,6 +251,8 @@ export default function GstCalculatorClient() {
           ))}
         </div>
       </section>
+
+      <ToolSeoContent content={gstCalculatorSeoContent} />
     </main>
   );
 }
@@ -266,7 +270,7 @@ function SegmentedButton({
 }) {
   return (
     <button
-      className={`rounded-2xl border p-4 text-left transition ${
+      className={`min-w-0 rounded-2xl border p-4 text-left transition ${
         active ? "border-cyan-300/70 bg-cyan-300/12 text-white shadow-lg shadow-cyan-950/20" : "border-white/10 bg-white/[0.04] text-slate-300 hover:bg-white/[0.08]"
       }`}
       onClick={onClick}
@@ -280,18 +284,18 @@ function SegmentedButton({
 
 function ResultRow({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className={`flex items-center justify-between gap-4 rounded-2xl border p-4 ${highlight ? "border-cyan-300/25 bg-cyan-300/10" : "border-white/10 bg-white/[0.04]"}`}>
+    <div className={`flex min-w-0 items-center justify-between gap-4 rounded-2xl border p-4 ${highlight ? "border-cyan-300/25 bg-cyan-300/10" : "border-white/10 bg-white/[0.04]"}`}>
       <span className="text-sm text-slate-400">{label}</span>
-      <span className="text-lg font-semibold text-white">{value}</span>
+      <span className="break-words text-right text-lg font-semibold text-white">{value}</span>
     </div>
   );
 }
 
 function MiniResult({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+    <div className="min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{label}</p>
-      <p className="mt-2 text-base font-semibold text-white">{value}</p>
+      <p className="mt-2 break-words text-base font-semibold text-white">{value}</p>
     </div>
   );
 }

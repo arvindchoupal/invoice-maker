@@ -92,11 +92,11 @@ function howToSchema(page: NonNullable<ReturnType<typeof seoPageBySlug>>) {
     "@context": "https://schema.org",
     "@type": "HowTo",
     name: page.h1,
-    step: [
-      { "@type": "HowToStep", name: "Enter business and customer details" },
-      { "@type": "HowToStep", name: "Add items, tax and totals" },
-      { "@type": "HowToStep", name: "Preview, save and download the invoice" },
-    ],
+    step: (page.howItWorks ?? [
+      "Enter business and customer details",
+      "Add items, tax and totals",
+      "Preview, save and download the invoice",
+    ]).map((name) => ({ "@type": "HowToStep", name })),
   };
 }
 
@@ -135,6 +135,15 @@ export default async function SeoLandingPage({ params }: PageProps) {
               </Link>
             </div>
             <p className="mt-4 text-sm text-slate-400">Preview invoices free. Download and save after signup or login.</p>
+            {page.trustBadges?.length ? (
+              <div className="mt-5 flex flex-wrap gap-2">
+                {page.trustBadges.slice(0, 4).map((badge) => (
+                  <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs font-semibold text-slate-300" key={badge}>
+                    {badge}
+                  </span>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-5 shadow-2xl shadow-black/20">
@@ -171,6 +180,41 @@ export default async function SeoLandingPage({ params }: PageProps) {
         </div>
       </section>
 
+      {page.featureBullets?.length ? (
+        <section className="mx-auto max-w-7xl px-5 py-10 sm:px-6">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Features</p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight">Everything needed to create and send invoices faster</h2>
+              </div>
+              <p className="max-w-md text-sm leading-6 text-slate-400">Simple enough for a first invoice, structured enough for repeat business billing.</p>
+            </div>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {page.featureBullets.map((feature) => (
+                <div className="flex gap-3 rounded-2xl bg-slate-950/70 p-4 text-sm font-semibold text-slate-200" key={feature}>
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {page.benefits?.length ? (
+        <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6">
+          <div className="grid gap-5 lg:grid-cols-3">
+            {page.benefits.map((benefit) => (
+              <article className="rounded-3xl border border-white/10 bg-white/[0.04] p-6" key={benefit.title}>
+                <h2 className="text-xl font-semibold">{benefit.title}</h2>
+                <p className="mt-3 text-sm leading-6 text-slate-400">{benefit.body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       <section className="mx-auto grid max-w-7xl gap-5 px-5 py-12 sm:px-6 lg:grid-cols-3">
         {page.sections.map((section) => (
           <article className="rounded-3xl border border-white/10 bg-white/[0.04] p-6" key={section.title}>
@@ -194,6 +238,52 @@ export default async function SeoLandingPage({ params }: PageProps) {
                 </article>
               ))}
             </div>
+          </div>
+        </section>
+      ) : null}
+
+      {page.industryTips?.length || page.howItWorks?.length ? (
+        <section className="mx-auto grid max-w-7xl gap-6 px-5 py-12 sm:px-6 lg:grid-cols-2">
+          {page.industryTips?.length ? (
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Practical tips</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight">Invoice details that help clients pay faster</h2>
+              <div className="mt-6 space-y-3">
+                {page.industryTips.map((tip) => (
+                  <div className="flex gap-3 rounded-2xl bg-slate-950/70 p-4 text-sm leading-6 text-slate-300" key={tip}>
+                    <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-cyan-300" />
+                    <span>{tip}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {page.howItWorks?.length ? (
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">How it works</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight">From blank invoice to PDF in a few steps</h2>
+              <div className="mt-6 space-y-4">
+                {page.howItWorks.map((step, index) => (
+                  <div className="flex gap-4 rounded-2xl bg-slate-950/70 p-4" key={step}>
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-300 text-sm font-bold text-slate-950">{index + 1}</span>
+                    <p className="pt-1 text-sm leading-6 text-slate-300">{step}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
+      {page.testimonial ? (
+        <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6">
+          <div className="rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6 sm:p-8">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Customer proof</p>
+            <blockquote className="mt-4 max-w-4xl text-2xl font-semibold leading-snug tracking-tight text-white">
+              “{page.testimonial.quote}”
+            </blockquote>
+            <p className="mt-4 text-sm font-semibold text-slate-300">— {page.testimonial.author}</p>
           </div>
         </section>
       ) : null}
@@ -237,6 +327,26 @@ export default async function SeoLandingPage({ params }: PageProps) {
               <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold text-slate-300" key={keyword}>{keyword}</span>
             ))}
           </div>
+          {page.longTailKeywords?.length ? (
+            <div className="mt-6">
+              <h3 className="text-sm font-semibold text-white">Helpful long-tail searches</h3>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {page.longTailKeywords.map((keyword) => (
+                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold text-slate-400" key={keyword}>{keyword}</span>
+                ))}
+              </div>
+            </div>
+          ) : null}
+          {page.comparisonKeywords?.length ? (
+            <div className="mt-6">
+              <h3 className="text-sm font-semibold text-white">Comparison searches</h3>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {page.comparisonKeywords.map((keyword) => (
+                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold text-slate-400" key={keyword}>{keyword}</span>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
         <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
           <h2 className="text-xl font-semibold">Related InvoiceWala pages</h2>
