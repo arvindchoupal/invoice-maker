@@ -52,6 +52,19 @@ export const TOOLS_CATALOG: ToolCatalogEntry[] = [
     signupSource: "margin-calculator",
   },
   {
+    href: "/tools/discount-calculator",
+    title: "Discount calculator",
+    body: "Calculate discount amount, final sale price and total savings from original price and discount percentage.",
+    tag: "Sales",
+    intent: "Best for retail pricing",
+    metaTitle: "Discount Calculator | Calculate Sale Price Online",
+    metaDescription:
+      "Use InvoiceWala's free discount calculator to calculate discount amount, final price and savings for shopping, ecommerce, retail and GST billing.",
+    headline: "Discount Calculator",
+    highlights: ["Discount percentage calculator", "Final sale price in one step", "Useful for quotes, retail and GST invoices"],
+    signupSource: "discount-calculator",
+  },
+  {
     href: "/tools/invoice-number-generator",
     title: "Invoice number generator",
     body: "Generate professional invoice numbering formats for FY, monthly and GST workflows.",

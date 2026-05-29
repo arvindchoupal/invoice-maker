@@ -1,0 +1,17 @@
+export const discountFaqs: Array<[string, string]> = [
+  ["What is a discount calculator?", "A discount calculator is an online tool that calculates discount amount, final sale price and savings when you enter original price and discount percentage."],
+  ["How do I calculate discount percentage?", "Multiply the original price by the discount percentage and divide by 100. Subtract the discount amount from original price to get final price."],
+  ["What is the formula for discount amount?", "Discount Amount = Original Price x Discount Percentage / 100."],
+  ["What is the formula for final price after discount?", "Final Price = Original Price - Discount Amount."],
+  ["Can I use this as a sale price calculator?", "Yes. InvoiceWala's discount calculator works as a sale price calculator for retail, ecommerce, wholesale and service pricing."],
+  ["Can this calculator help with GST invoices?", "Yes. You can calculate discount first, then use the final price while creating a GST invoice or quotation."],
+  ["Should GST be calculated before or after discount?", "In many invoice situations, GST is calculated on the taxable value after discount, but confirm exact tax treatment with your accountant for your business case."],
+  ["How do I calculate 10% discount on Rs. 1,000?", "10% of Rs. 1,000 is Rs. 100. The final price after discount is Rs. 900."],
+  ["How do I calculate 20% off?", "Multiply the original price by 20 and divide by 100. Subtract that discount amount from the original price."],
+  ["Is this discount calculator free?", "Yes. This public discount calculator is free to use on InvoiceWala."],
+  ["Who should use a discount calculator?", "Freelancers, retailers, ecommerce sellers, agencies, wholesalers, contractors and small businesses can use it before quoting or billing."],
+  ["Can I use this for percentage off offers?", "Yes. It is also a percentage off calculator for offers such as 5% off, 10% off, 25% off or 50% off."],
+  ["Can I calculate savings from a sale?", "Yes. The savings output shows exactly how much the customer saves from the original price."],
+  ["Can I create an invoice after calculating discount?", "Yes. Use the final price in InvoiceWala's invoice generator or quotation maker."],
+  ["Is this calculator useful for India users?", "Yes. It uses INR formatting and is written for Indian shopping, ecommerce, retail, wholesale, GST and invoicing workflows."],
+];

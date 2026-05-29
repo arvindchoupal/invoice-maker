@@ -3,9 +3,11 @@ import { PublicToolNavActions } from "@/components/PublicToolNavActions";
 import type { ToolCatalogEntry } from "@/lib/tools-catalog";
 
 export function ToolPageLayout({
+  after,
   tool,
   children,
 }: {
+  after?: React.ReactNode;
   tool: ToolCatalogEntry;
   children: React.ReactNode;
 }) {
@@ -37,6 +39,7 @@ export function ToolPageLayout({
           </div>
         </div>
       </section>
+      {after}
     </main>
   );
 }

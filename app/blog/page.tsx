@@ -14,7 +14,20 @@ export const metadata: Metadata = {
 };
 
 export default function BlogIndexPage() {
-  const posts = getAllPosts();
+  const posts = [
+    {
+      slug: "gst-bill-format",
+      title: "GST Bill Format in India: Sample GST Invoice Format",
+      description:
+        "Learn GST bill format, mandatory fields, GST invoice sample table, tax invoice rules, common mistakes and PDF format options.",
+      publishedAt: "2026-05-29",
+      updatedAt: "2026-05-29",
+      author: "InvoiceWala Team",
+      tags: ["GST", "Invoice Format", "India"],
+      readingMinutes: 14,
+    },
+    ...getAllPosts(),
+  ];
 
   const blogListSchema = {
     "@context": "https://schema.org",
