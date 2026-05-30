@@ -85,6 +85,17 @@ export function MarkdownContent({ content }: { content: string }) {
           );
         }
 
+        if (/^\d+\. /.test(trimmed)) {
+          const items = trimmed.split("\n").map((line) => line.replace(/^\d+\. /, ""));
+          return (
+            <ol className="mt-4 list-decimal space-y-2 pl-6 text-slate-300" key={index}>
+              {items.map((item) => (
+                <li key={item}>{renderInline(item)}</li>
+              ))}
+            </ol>
+          );
+        }
+
         if (trimmed.startsWith("> ")) {
           return (
             <blockquote className="mt-6 rounded-2xl border border-cyan-300/20 bg-cyan-300/5 px-5 py-4 text-slate-200" key={index}>

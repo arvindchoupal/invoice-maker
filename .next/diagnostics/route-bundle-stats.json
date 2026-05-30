@@ -380,7 +380,7 @@
     "firstLoadChunkPaths": [
       ".next/static/chunks/0g65zv~fun4x7.js",
       ".next/static/chunks/0d3shmwh5_nmn.js",
-      ".next/static/chunks/17qxmo2btag8l.js",
+      ".next/static/chunks/0dnk-09k_mprr.js",
       ".next/static/chunks/15f54s~r7ng5h.js",
       ".next/static/chunks/0pqt~8bl3ukh4.js",
       ".next/static/chunks/0vn2e3cj4vv3r.js",
@@ -404,6 +404,34 @@
   },
   {
     "route": "/blog/gst-bill-format",
+    "firstLoadUncompressedJsBytes": 546170,
+    "firstLoadChunkPaths": [
+      ".next/static/chunks/0g65zv~fun4x7.js",
+      ".next/static/chunks/0d3shmwh5_nmn.js",
+      ".next/static/chunks/055~big.thoge.js",
+      ".next/static/chunks/15f54s~r7ng5h.js",
+      ".next/static/chunks/0pqt~8bl3ukh4.js",
+      ".next/static/chunks/0vn2e3cj4vv3r.js",
+      ".next/static/chunks/0m_p1bxtorv5i.js",
+      ".next/static/chunks/turbopack-10lphew42-21y.js"
+    ]
+  },
+  {
+    "route": "/blog/tax-invoice-format",
+    "firstLoadUncompressedJsBytes": 546170,
+    "firstLoadChunkPaths": [
+      ".next/static/chunks/0g65zv~fun4x7.js",
+      ".next/static/chunks/0d3shmwh5_nmn.js",
+      ".next/static/chunks/055~big.thoge.js",
+      ".next/static/chunks/15f54s~r7ng5h.js",
+      ".next/static/chunks/0pqt~8bl3ukh4.js",
+      ".next/static/chunks/0vn2e3cj4vv3r.js",
+      ".next/static/chunks/0m_p1bxtorv5i.js",
+      ".next/static/chunks/turbopack-10lphew42-21y.js"
+    ]
+  },
+  {
+    "route": "/tax-invoice-format",
     "firstLoadUncompressedJsBytes": 546170,
     "firstLoadChunkPaths": [
       ".next/static/chunks/0g65zv~fun4x7.js",

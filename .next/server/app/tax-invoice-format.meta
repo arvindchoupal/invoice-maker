@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/tax-invoice-format/layout,_N_T_/tax-invoice-format/page,_N_T_/tax-invoice-format"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/tax-invoice-format/__PAGE__",
+    "/tax-invoice-format",
+    "/_index",
+    "/_head"
+  ]
+}

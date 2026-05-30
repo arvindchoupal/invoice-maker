@@ -6,6 +6,7 @@ import { PublicNavActions } from "@/components/PublicNavActions";
 import { PublicPrimaryCta } from "@/components/PublicPrimaryCta";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getAllPosts, getPostBySlug } from "@/lib/blog/posts";
+import { breadcrumbSchema, faqSchema } from "@/lib/seo-schemas";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -52,9 +53,22 @@ export default async function BlogPostPage({ params }: Props) {
     mainEntityOfPage: `https://invoicewala.shop/blog/${post.slug}`,
   };
 
+  const schemas: Record<string, unknown>[] = [
+    articleSchema,
+    breadcrumbSchema([
+      { name: "Home", url: "https://invoicewala.shop" },
+      { name: "Blog", url: "https://invoicewala.shop/blog" },
+      { name: post.title, url: `https://invoicewala.shop/blog/${post.slug}` },
+    ]),
+  ];
+
+  if (post.faqs?.length) {
+    schemas.push(faqSchema(post.faqs));
+  }
+
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-      <JsonLd data={articleSchema} />
+      <JsonLd data={schemas} />
       <section className="border-b border-white/10 px-5 py-6 sm:px-8">
         <nav className="mx-auto flex max-w-3xl items-center justify-between gap-4">
           <Link className="text-sm font-semibold text-cyan-300" href="/blog">

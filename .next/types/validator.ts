@@ -216,6 +216,15 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
+// Validate ../../app/blog/tax-invoice-format/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/blog/tax-invoice-format">> = Specific
+  const handler = {} as typeof import("../../app/blog/tax-invoice-format/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/free-invoice/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/free-invoice">> = Specific
@@ -247,6 +256,15 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 {
   type __IsExpected<Specific extends AppPageConfig<"/pricing">> = Specific
   const handler = {} as typeof import("../../app/pricing/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/tax-invoice-format/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/tax-invoice-format">> = Specific
+  const handler = {} as typeof import("../../app/tax-invoice-format/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

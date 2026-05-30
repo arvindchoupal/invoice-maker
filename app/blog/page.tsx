@@ -26,6 +26,17 @@ export default function BlogIndexPage() {
       tags: ["GST", "Invoice Format", "India"],
       readingMinutes: 14,
     },
+    {
+      slug: "tax-invoice-format",
+      title: "Tax Invoice Format in India: Sample Tax Invoice Format",
+      description:
+        "Learn Tax Invoice format, mandatory fields, Tax invoice sample table, tax invoice rules, common mistakes and PDF format options.",
+      publishedAt: "2026-05-29",
+      updatedAt: "2026-05-29",
+      author: "InvoiceWala Team",
+      tags: ["GST", "Invoice Format", "India"],
+      readingMinutes: 14,
+    },
     ...getAllPosts(),
   ];
 
