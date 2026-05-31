@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Sparkles, Zap } from "lucide-react";
 import { api, getToken } from "@/lib/api";
+import { BrandLogo } from "@/components/BrandLogo";
 import { Badge, Card, LinkButton, Skeleton } from "@/components/ui";
 
 interface Plan {
@@ -68,10 +69,7 @@ export default function PricingPage() {
     <main className="min-h-screen bg-[#050816] text-white">
       <header className="border-b border-white/10 bg-[#050816]/85 px-4 py-4 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <Link className="flex items-center gap-3 font-semibold" href="/">
-            <span className="grid h-10 w-10 place-items-center rounded-2xl bg-blue-600">L</span>
-            Ledgerly
-          </Link>
+          <BrandLogo className="text-white" href="/" imageClassName="h-10 w-10" tagline="" />
           <div className="flex items-center gap-2">
             <Link className="hidden rounded-xl px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-white/10 sm:inline-flex" href="/tools">Free tools</Link>
             <Link className="rounded-xl border border-white/10 px-3 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10" href={isLoggedIn ? "/dashboard" : "/login"}>
@@ -89,7 +87,7 @@ export default function PricingPage() {
           <Badge tone="blue">Pricing</Badge>
           <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-6xl">Simple pricing for invoices, GST and AI bookkeeping.</h1>
           <p className="mt-5 text-lg text-slate-300">
-            Start free, then upgrade to Pro for ₹199/month while Ledgerly is in its early growth phase.
+            Start free, then upgrade to Pro for ₹199/month while InvoiceWala is in its early growth phase.
           </p>
           <div className="mt-7 inline-flex rounded-2xl border border-white/10 bg-white/[0.04] p-1">
             <button className={`rounded-xl px-4 py-2 text-sm font-semibold ${!yearly ? "bg-white text-slate-950" : "text-slate-400"}`} onClick={() => setYearly(false)}>Monthly</button>

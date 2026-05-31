@@ -1,0 +1,17 @@
+export const invoiceNumberFaqs: Array<[string, string]> = [
+  ["What is an invoice number?", "An invoice number is a unique reference number assigned to an invoice so the business, customer and accountant can identify that specific bill."],
+  ["How do I create invoice numbers?", "Choose a prefix, decide a sequence, add enough digits and increase the number for every new invoice. Example: INV-0001, INV-0002, INV-0003."],
+  ["What is the GST invoice number format?", "A GST invoice number format can use a clear sequence such as GST-2026-0001 or FY26-0001. Keep it unique and consistent for records."],
+  ["Can invoice numbers be repeated?", "No. Repeating invoice numbers creates confusion in payment tracking, GST records and accounting."],
+  ["What is the best invoice numbering system?", "The best system is simple, sequential and easy to understand. Many small businesses use INV-0001 or FY26-0001."],
+  ["Can freelancers use invoice numbers?", "Yes. Freelancers should use invoice numbers to track clients, payments, projects and yearly billing records."],
+  ["How many digits should an invoice number have?", "Use enough digits for growth. Four or five digits such as 0001 or 00001 work well for most small businesses."],
+  ["Can I start invoice numbers from 1001?", "Yes. You can start from 1001 if that matches your business records. The important part is consistency."],
+  ["What happens if I skip invoice numbers?", "A skipped number is not always a problem, but random gaps can create confusion. Keep a note if an invoice is cancelled or voided."],
+  ["Can I use letters in invoice numbers?", "Yes. Letters are commonly used as prefixes, such as INV, GST, FY26 or a client code."],
+  ["What is invoice serial number generator?", "An invoice serial number generator creates the next number in your invoice sequence, such as INV-0007 after INV-0006."],
+  ["What is invoice ID generator?", "An invoice ID generator creates unique invoice identifiers for billing, payment tracking and record keeping."],
+  ["Should quotation numbers and invoice numbers be separate?", "Yes. It is cleaner to use separate prefixes such as QT-0001 for quotations and INV-0001 for invoices."],
+  ["Can I change invoice number format later?", "You can, but frequent changes can confuse records. If changing, start a clear new series such as FY27-0001."],
+  ["Does InvoiceWala generate invoice numbers?", "InvoiceWala helps create clean invoice numbers and can use structured invoice numbering when invoices are saved."],
+];
