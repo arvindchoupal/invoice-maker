@@ -225,6 +225,39 @@ export default async function SeoLandingPage({ params }: PageProps) {
         ))}
       </section>
 
+      {page.contentTables?.length ? (
+        <section className="mx-auto grid max-w-7xl gap-6 px-5 py-12 sm:px-6">
+          {page.contentTables.map((table) => (
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6" key={table.title}>
+              <h2 className="text-3xl font-semibold tracking-tight">{table.title}</h2>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">{table.intro}</p>
+              <div className="mt-6 overflow-x-auto rounded-2xl border border-white/10">
+                <table className="w-full min-w-[680px] text-left text-sm">
+                  <thead className="bg-white/[0.04] text-xs uppercase tracking-wide text-slate-400">
+                    <tr>
+                      {table.headers.map((header) => (
+                        <th className="p-4" key={header}>{header}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {table.rows.map((row) => (
+                      <tr className="border-t border-white/10" key={row.join("-")}>
+                        {row.map((cell, cellIndex) => (
+                          <td className={`p-4 ${cellIndex === 0 ? "font-semibold text-white" : "text-slate-300"}`} key={`${cell}-${cellIndex}`}>
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
+        </section>
+      ) : null}
+
       {page.educationBlocks?.length ? (
         <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6">
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">

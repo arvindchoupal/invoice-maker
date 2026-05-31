@@ -21,6 +21,12 @@ export type SeoPage = {
   trustBadges?: string[];
   comparisonKeywords?: string[];
   longTailKeywords?: string[];
+  contentTables?: Array<{
+    title: string;
+    intro: string;
+    headers: string[];
+    rows: string[][];
+  }>;
   educationBlocks?: Array<{ title: string; body: string }>;
   comparisons?: Array<{ title: string; invoiceWala: string; alternative: string }>;
 };
@@ -559,25 +565,143 @@ export const seoPages: SeoPage[] = [
   {
     slug: "invoice-template-india",
     primaryKeyword: "invoice template India",
-    secondaryKeywords: ["GST invoice format", "invoice format India", "tax invoice template"],
+    secondaryKeywords: [
+      "invoice format India",
+      "invoice sample India",
+      "invoice template PDF",
+      "invoice template for small business",
+      "invoice template for freelancers",
+      "GST invoice template India",
+      "GST invoice format",
+      "tax invoice template",
+    ],
     intent: "Find a practical invoice format for Indian businesses.",
     title: "Invoice Template India | GST-Ready Invoice Format",
     description: "Use a simple Indian invoice template with business details, customer details, item rows, tax, totals, notes and payment terms.",
     h1: "Invoice Template India",
     intro: "Use a clear invoice format that works for freelance services, agencies, contractors and small business sales.",
-    sections: [
-      { title: "What an invoice should include", body: "A good invoice includes your business name, customer details, invoice date, due date, items, quantity, rate, tax, discount, total and payment terms." },
-      { title: "GST-ready when needed", body: "Add GST/VAT IDs and tax fields when you need a GST-ready invoice. Keep it simple when GST is not required." },
-      { title: "Use the template online", body: "Instead of editing a Word or Excel file, create the invoice online and save it as a professional PDF." },
+    featureBullets: [
+      "Business and customer details",
+      "Invoice number and date",
+      "GSTIN and tax fields when needed",
+      "Item rows with quantity and rate",
+      "Notes and payment terms",
+      "Professional PDF invoice output",
+      "Works for freelancers and small businesses",
+      "Easy online editing before download",
     ],
+    benefits: [
+      {
+        title: "Standardize every invoice",
+        body: "An invoice template gives your billing a repeatable structure. Instead of rebuilding the same document every time, you use the same fields for invoice number, date, customer details, item rows, tax, total and terms.",
+      },
+      {
+        title: "Make payment details clear",
+        body: "Customers pay faster when the invoice explains what was sold, how the total was calculated and when payment is due. A clean template removes guesswork from the billing conversation.",
+      },
+      {
+        title: "Reduce manual formatting work",
+        body: "A good online invoice template keeps the layout clean on mobile and desktop, generates a PDF and avoids common spreadsheet formatting problems.",
+      },
+    ],
+    sections: [
+      { title: "What is an invoice template?", body: "An invoice template is a reusable billing format with fixed sections for business details, customer details, invoice number, item rows, taxes, total amount and payment terms. Indian freelancers, consultants, contractors, agencies and small businesses use templates to standardize billing and avoid creating every invoice from scratch." },
+      { title: "Invoice template format in India", body: "A practical Indian invoice format includes invoice number, invoice date, business name, business address, customer name, customer address, GSTIN if applicable, item description, quantity, rate, tax, total amount and payment terms. For GST invoices, add GSTIN, CGST, SGST or IGST based on the transaction." },
+      { title: "GST-ready when needed", body: "A standard invoice can work without GST for non-GST businesses. A GST invoice template India should include supplier GSTIN, customer GSTIN for B2B invoices, HSN or SAC where applicable, taxable value, GST rate, GST amount and final total." },
+    ],
+    contentTables: [
+      {
+        title: "Free invoice template sample",
+        intro: "Here is a simple invoice sample India users can follow before creating a PDF invoice online.",
+        headers: ["Field", "Sample value"],
+        rows: [
+          ["Invoice Number", "INV-2026-001"],
+          ["Date", "31 May 2026"],
+          ["Business", "Your Business Name"],
+          ["Customer", "ABC Pvt Ltd"],
+          ["Subtotal", "₹10,000"],
+          ["GST (18%)", "₹1,800"],
+          ["Total", "₹11,800"],
+          ["Payment Terms", "Due within 7 days"],
+        ],
+      },
+      {
+        title: "Invoice template PDF vs Excel vs Word",
+        intro: "Each invoice format has strengths. The best choice depends on whether you need quick editing, professional sharing or repeat billing records.",
+        headers: ["Area", "PDF invoice", "Excel template", "Word template"],
+        rows: [
+          ["Ease of use", "Best after details are finalized", "Good for calculations", "Simple for text editing"],
+          ["Editing", "Harder to edit after export", "Easy but formulas can break", "Easy but no automatic totals"],
+          ["Professional appearance", "Most consistent for clients", "Can look messy after export", "Depends on manual formatting"],
+          ["Sharing", "Best for email and WhatsApp", "May expose formulas or layout", "Can shift on different devices"],
+          ["Record keeping", "Stable final copy", "Useful working file", "Useful draft format"],
+        ],
+      },
+    ],
+    educationBlocks: [
+      { title: "Invoice number", body: "Use a unique invoice number such as INV-2026-001 or FY26-001. A clear numbering system helps you search records, follow payments and avoid duplicate invoices." },
+      { title: "Invoice date", body: "The invoice date tells the customer when the bill was issued. Add a due date or payment term so the customer knows when payment is expected." },
+      { title: "Business details", body: "Add your business name, address, email, phone and GSTIN if registered. This makes the invoice credible and easier for the customer to process." },
+      { title: "Customer details", body: "Add customer name, billing address, email and GSTIN for B2B GST invoices. Missing customer details are a common reason invoices get delayed." },
+      { title: "Item description", body: "Write clear product or service names. For services, include project name, milestone, retainer month or work period when useful." },
+      { title: "Quantity and rate", body: "Show quantity and rate separately so the customer can understand how the amount was calculated. This is useful for products, hours, units and milestones." },
+      { title: "Tax and total amount", body: "Show subtotal, discount if any, GST or tax, and final amount payable. For GST-ready invoices, use correct CGST, SGST or IGST treatment." },
+      { title: "Payment terms", body: "Mention payment due date, bank details, UPI note or late payment terms. Clear terms reduce follow-up messages." },
+    ],
+    industryTips: [
+      "Freelancer invoice template: include project name, service description, milestone, hourly or fixed fee, payment terms and GST only if applicable.",
+      "Consultant invoice template: include advisory period, retainer month, professional fee, SAC code if applicable and clear due date.",
+      "Contractor invoice template: separate labor, material, site visit and milestone charges so the customer sees the full breakdown.",
+      "Agency invoice template: include campaign name, project scope, monthly retainer, ad management fee, creative work or development milestone.",
+      "Service invoice template: add job reference, service date, customer location, itemized service charges and warranty or notes where useful.",
+      "Small business invoice template: keep product rows, quantity, rate, tax, discount and payment instructions easy to scan.",
+    ],
+    howItWorks: [
+      "Add your business details and GSTIN if your business is GST registered.",
+      "Enter customer details, billing address and customer GSTIN for B2B GST invoices.",
+      "Add products or services with quantity, rate, discount and tax.",
+      "Review subtotal, GST or tax amount, final total and payment terms.",
+      "Preview the invoice and download a professional PDF after signup or login.",
+    ],
+    testimonial: {
+      quote: "InvoiceWala made it easy to stop editing old invoice files. I can fill the invoice online, check totals and send a clean PDF to clients.",
+      author: "Small business user, India",
+    },
+    trustBadges: ["PDF invoices", "GST-ready fields", "Freelancer friendly", "Small business ready", "Mobile-friendly", "Simple invoice format"],
     faqs: [
-      ["Can I use this template for services?", "Yes. It works for consulting, design, development, repairs, construction and other services."],
-      ["Can I use it for product sales?", "Yes. Add multiple product rows with quantity, rate and tax."],
-      ["Is this a downloadable template?", "InvoiceWala lets you fill the template online and download the PDF after signup."],
+      ["What is an invoice template?", "An invoice template is a reusable format for creating invoices. It includes sections for business details, customer details, invoice number, date, items, tax, total amount and payment terms."],
+      ["Is an invoice template legally valid?", "An invoice template can be valid when it contains the required business, customer, item, tax and payment details. GST businesses should include GST fields where applicable."],
+      ["Can I use an invoice template without GST?", "Yes. Non-GST businesses can use a standard invoice template without GSTIN or tax breakup. Add GST details only when they apply to your business."],
+      ["How do I create an invoice template?", "Start with your business details, customer details, invoice number, date, item rows, quantity, rate, tax, total and payment terms. InvoiceWala lets you fill this online and generate a PDF."],
+      ["Can I download an invoice template PDF?", "Yes. You can create an invoice online with InvoiceWala and download a professional PDF after signup or login."],
+      ["What should an invoice contain?", "An invoice should contain invoice number, invoice date, business details, customer details, item description, quantity, rate, tax, total amount and payment terms."],
+      ["What is the difference between invoice and tax invoice?", "A normal invoice requests payment. A tax invoice includes tax details such as GSTIN, taxable value, GST rate and tax amount for taxable supplies."],
+      ["Can freelancers use invoice templates?", "Yes. Freelancers can use invoice templates for project work, hourly billing, retainers, consulting, design, development and other services."],
+      ["How do invoice numbers work?", "Invoice numbers identify each invoice uniquely. Use a simple sequence such as INV-2026-001, INV-2026-002 or FY26-001."],
+      ["Which invoice format is best?", "For sharing with clients, PDF is usually best because it keeps formatting stable. For repeat billing, an online invoice template is better than manually editing Word or Excel files."],
+      ["Can I use this template for services?", "Yes. It works for consulting, design, development, repairs, construction and other service invoices."],
+      ["Can I use it for product sales?", "Yes. Add product rows with quantity, rate, tax, discount and total amount."],
     ],
     cta: "Use invoice template",
     ctaHref: "/free-invoice",
-    internalLinks: defaultLinks,
+    internalLinks: [
+      { href: "/gst-invoice-generator", label: "GST invoice maker" },
+      { href: "/tools/gst-calculator", label: "GST calculator" },
+      { href: "/tools/invoice-number-generator", label: "Invoice number generator" },
+      { href: "/blog/tax-invoice-format-rules-examples", label: "Tax invoice guide" },
+      { href: "/quotation-maker", label: "Quotation maker" },
+      { href: "/free-invoice-generator", label: "Invoice generator" },
+      { href: "/blog/gst-bill-format", label: "GST bill format" },
+      { href: "/tools/margin-calculator", label: "Profit margin calculator" },
+    ],
+    comparisonKeywords: ["invoice template PDF vs Excel", "invoice template India vs Word format", "online invoice template vs manual invoice"],
+    longTailKeywords: [
+      "invoice template India for small business",
+      "invoice template for freelancers India",
+      "GST invoice template India PDF",
+      "invoice sample India with GST",
+      "professional invoice format India",
+    ],
     schema: ["FAQPage", "BreadcrumbList", "HowTo"],
   },
   {
