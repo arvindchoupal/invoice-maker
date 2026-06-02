@@ -367,6 +367,30 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/blog/freelance-writer-invoice-template": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/blog/[slug]",
+      "dataRoute": "/blog/freelance-writer-invoice-template.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/blog/freelancer-invoice-guide": {
       "experimentalBypassFor": [
         {
@@ -382,6 +406,30 @@
       "initialRevalidateSeconds": false,
       "srcRoute": "/blog/[slug]",
       "dataRoute": "/blog/freelancer-invoice-guide.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/blog/freelancer-invoice-template": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/blog/[slug]",
+      "dataRoute": "/blog/freelancer-invoice-template.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1614,7 +1662,7 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/[seoSlug]",
+      "srcRoute": "/purchase-order-generator",
       "dataRoute": "/purchase-order-generator.rsc",
       "allowHeader": [
         "host",

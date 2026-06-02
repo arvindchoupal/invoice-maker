@@ -29,6 +29,7 @@
   "/icon.png/route": "app/icon.png/route.js",
   "/page": "app/page.js",
   "/pricing/page": "app/pricing/page.js",
+  "/purchase-order-generator/page": "app/purchase-order-generator/page.js",
   "/robots.txt/route": "app/robots.txt/route.js",
   "/sitemap.xml/route": "app/sitemap.xml/route.js",
   "/tax-invoice-format/page": "app/tax-invoice-format/page.js",

@@ -29,6 +29,7 @@
   "/icon.png/route": "/icon.png",
   "/page": "/",
   "/pricing/page": "/pricing",
+  "/purchase-order-generator/page": "/purchase-order-generator",
   "/robots.txt/route": "/robots.txt",
   "/sitemap.xml/route": "/sitemap.xml",
   "/tax-invoice-format/page": "/tax-invoice-format",

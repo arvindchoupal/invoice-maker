@@ -104,6 +104,19 @@ export const TOOLS_CATALOG: ToolCatalogEntry[] = [
     signupSource: "invoice-to-excel-converter",
   },
   {
+    href: "/purchase-order-generator",
+    title: "Purchase order generator",
+    body: "Create supplier purchase orders with PO number, item rows, GST fields and PDF download.",
+    tag: "Documents",
+    intent: "Best for procurement",
+    metaTitle: "Purchase Order Generator | Create PO Documents Online",
+    metaDescription:
+      "Create professional purchase orders online with supplier details, item rows, GST fields, purchase order templates and PDF-ready formatting.",
+    headline: "Create purchase orders online and download PDF-ready PO documents.",
+    highlights: ["Buyer and supplier details", "GST and item row totals", "Download purchase order PDF"],
+    signupSource: "purchase-order-generator",
+  },
+  {
     href: "/tools/emi-calculator",
     title: "EMI calculator",
     body: "Calculate loan EMI, interest and repayment totals for business purchases.",

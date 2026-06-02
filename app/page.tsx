@@ -56,6 +56,7 @@ const footerSeoLinks = [
   ["/gst-invoice-generator", "GST invoice generator"],
   ["/freelancer-invoice-generator", "Freelancer invoice"],
   ["/contractor-invoice-generator", "Contractor invoice"],
+  ["/purchase-order-generator", "Purchase order generator"],
   ["/pdf-to-invoice-ai", "PDF to invoice AI"],
 ];
 

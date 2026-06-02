@@ -187,6 +187,12 @@
       "namedRegex": "^/pricing(?:/)?$"
     },
     {
+      "page": "/purchase-order-generator",
+      "regex": "^/purchase\\-order\\-generator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/purchase\\-order\\-generator(?:/)?$"
+    },
+    {
       "page": "/recurring",
       "regex": "^/recurring(?:/)?$",
       "routeKeys": {},
