@@ -433,42 +433,240 @@ Ready to create your GST invoice? Use the [GST Invoice Generator](/gst-invoice-g
   },
   {
     slug: "cgst-sgst-igst-explained",
-    title: "CGST, SGST and IGST Explained for Small Businesses",
+    title: "CGST, SGST and IGST Explained for Small Businesses in India",
     description:
-      "A plain-language guide to when you charge CGST+SGST vs IGST, with examples for freelancers, shops and service providers in India.",
+      "Understand CGST, SGST and IGST with simple examples, GST invoice format tips, place of supply rules, FAQs and GST calculator links.",
     publishedAt: "2026-05-18",
+    updatedAt: "2026-06-09",
     author: "InvoiceWala Team",
-    tags: ["GST", "CGST", "IGST"],
-    readingMinutes: 6,
+    tags: ["GST", "CGST", "SGST", "IGST"],
+    readingMinutes: 14,
     relatedToolHref: "/tools/gst-calculator",
     relatedToolLabel: "Calculate GST split",
+    faqs: [
+      ["What is CGST?", "CGST means Central Goods and Services Tax. It is generally charged with SGST for intra-state supplies where supplier location and place of supply are in the same state."],
+      ["What is SGST?", "SGST means State Goods and Services Tax. It is generally charged with CGST for intra-state supplies within a state."],
+      ["What is IGST?", "IGST means Integrated Goods and Services Tax. It is generally charged for inter-state supplies where supplier location and place of supply are in different states."],
+      ["When should I use CGST and SGST?", "Use CGST and SGST when the transaction is intra-state, meaning the supplier location and place of supply are in the same state."],
+      ["When should I use IGST?", "Use IGST when the transaction is inter-state, meaning the supplier location and place of supply are in different states."],
+      ["Can CGST, SGST and IGST appear together on the same invoice line?", "For a single taxable supply, the invoice line usually uses either CGST plus SGST or IGST, not all three together."],
+      ["How is GST split at 18%?", "For intra-state supply, 18% GST is commonly split as 9% CGST and 9% SGST. For inter-state supply, it is shown as 18% IGST."],
+      ["What is place of supply?", "Place of supply is the location used under GST rules to decide whether a transaction is intra-state or inter-state."],
+      ["Do freelancers need to understand CGST SGST IGST?", "Yes. GST registered freelancers should understand whether to charge CGST plus SGST or IGST based on supplier location and place of supply."],
+      ["Can InvoiceWala calculate CGST SGST and IGST?", "InvoiceWala's GST calculator helps calculate CGST plus SGST or IGST split before creating GST-ready invoices."],
+    ],
     content: `
-## Why India uses three components
+# CGST, SGST and IGST Explained for Small Businesses in India
 
-GST is collected by Centre and States. **CGST** goes to the Centre, **SGST** to the State, and **IGST** is used for inter-state supplies so tax still reaches the right governments.
+CGST, SGST and IGST are three GST components that decide how tax is shown on Indian GST invoices. For small businesses, freelancers, consultants, contractors, agencies and shops, the confusing part is not usually the GST rate. The confusing part is deciding whether the invoice should show CGST plus SGST or IGST.
 
-## Intra-state example
+The short answer is simple: if the supplier location and place of supply are in the same state, the transaction is generally intra-state and CGST plus SGST applies. If they are in different states, the transaction is generally inter-state and IGST applies. Official CBIC material explains that GST follows a place-of-supply principle and that IGST is levied on inter-state supply. You can review official references from [CBIC's GST overview](https://cbic-gst.gov.in/about-gst.html) and the [Government Services GST rate page](https://services.india.gov.in/service/detail/check-gst-rates).
 
-You sell from Delhi to a Delhi customer at 18% GST on ₹10,000 taxable value:
+This article explains CGST, SGST and IGST in practical language with invoice examples, tables, checklists, mistakes and FAQs. It is written for business owners who create invoices, not for tax experts. For edge cases such as exports, SEZ, imports, specific services, branch transfers or unusual place-of-supply situations, confirm with your CA or tax advisor.
 
-- CGST 9% = ₹900
-- SGST 9% = ₹900
-- Total GST = ₹1,800
+## Quick Answer: CGST vs SGST vs IGST
 
-## Inter-state example
+| GST component | Full form | When it generally applies | Simple example |
+| --- | --- | --- | --- |
+| CGST | Central GST | Intra-state supply, along with SGST | Delhi seller to Delhi buyer |
+| SGST | State GST | Intra-state supply, along with CGST | Maharashtra seller to Maharashtra buyer |
+| IGST | Integrated GST | Inter-state supply | Delhi seller to Maharashtra buyer |
 
-Same ₹10,000 sale from Delhi to a Mumbai customer:
+For a single invoice line, do not randomly add all three. A normal taxable supply is usually either CGST plus SGST or IGST. The split depends on place of supply.
 
-- IGST 18% = ₹1,800
-- No separate CGST/SGST on the invoice
+## What is CGST?
 
-## How place of supply matters
+CGST means Central Goods and Services Tax. It is the central government portion of GST on intra-state supplies. If your business and the place of supply are in the same state, the GST amount is generally split into CGST and SGST.
 
-Place of supply rules decide whether a transaction is inter-state or intra-state. Services often follow special rules — when unsure, confirm with your CA.
+Example: A Delhi consultant bills a Delhi client for ₹10,000 at 18% GST.
 
-## Tool tip
+- Taxable value: ₹10,000
+- CGST 9%: ₹900
+- SGST 9%: ₹900
+- Total GST: ₹1,800
+- Invoice total: ₹11,800
 
-Before sending a quote, run amounts in the [GST calculator](/tools/gst-calculator), then [create the invoice](/invoices/new) with the same tax split.
+CGST is not an extra tax above GST. It is one part of the GST split.
+
+## What is SGST?
+
+SGST means State Goods and Services Tax. It is the state government portion of GST on intra-state supplies. SGST generally appears with CGST on the same invoice when supplier location and place of supply are in the same state.
+
+Example: A Bengaluru shop sells goods to a customer in Karnataka and GST is 18%. The invoice may show 9% CGST and 9% SGST. Together they make the full 18% GST.
+
+For businesses, the key practical point is this: CGST and SGST work as a pair for intra-state supplies. If your invoice shows CGST, it will normally also show SGST for the same taxable line.
+
+## What is IGST?
+
+IGST means Integrated Goods and Services Tax. It is generally charged on inter-state supplies where supplier location and place of supply are in different states. CBIC material explains that IGST is levied and collected by the Centre on inter-state supply of goods and services.
+
+Example: A Delhi freelancer bills a Maharashtra client for ₹10,000 at 18% GST.
+
+- Taxable value: ₹10,000
+- IGST 18%: ₹1,800
+- No separate CGST/SGST on that line
+- Invoice total: ₹11,800
+
+IGST is especially important for agencies, consultants, freelancers, ecommerce sellers, distributors and service businesses that work with customers across India.
+
+## CGST, SGST and IGST Calculation Examples
+
+| Scenario | Taxable value | GST rate | Tax breakup | Invoice total |
+| --- | ---: | ---: | --- | ---: |
+| Same-state service | ₹10,000 | 18% | CGST ₹900 + SGST ₹900 | ₹11,800 |
+| Different-state service | ₹10,000 | 18% | IGST ₹1,800 | ₹11,800 |
+| Same-state sale | ₹50,000 | 18% | CGST ₹4,500 + SGST ₹4,500 | ₹59,000 |
+| Different-state sale | ₹50,000 | 18% | IGST ₹9,000 | ₹59,000 |
+
+The total GST amount can be the same, but the reporting split changes. This is why invoices need correct GST columns.
+
+## How Place of Supply Decides the GST Split
+
+Place of supply is the location used under GST rules to decide whether a transaction is intra-state or inter-state. In many simple goods transactions, this may be the destination of goods. In many service transactions, the rule may depend on recipient location or specific place-of-supply provisions.
+
+For a beginner-friendly invoice workflow, think in this order:
+
+1. Identify supplier location.
+2. Identify place of supply.
+3. If both are in the same state, use CGST plus SGST.
+4. If both are in different states, use IGST.
+5. If unsure, check with your accountant before issuing the final invoice.
+
+The [CBIC FAQ page](https://cbic-gst.gov.in/faq.html) includes practical questions about place of supply and whether CGST/SGST or IGST applies. This is a useful authority reference for GST learners.
+
+## GST Invoice Format for CGST, SGST and IGST
+
+A GST invoice should make the tax split easy to read. A practical GST invoice format may include:
+
+| Invoice field | Why it matters |
+| --- | --- |
+| Supplier GSTIN | Identifies the seller under GST |
+| Customer GSTIN | Important for B2B invoices |
+| Invoice number | Required for tracking and records |
+| Invoice date | Shows billing date |
+| Place of supply | Helps decide CGST/SGST or IGST |
+| HSN/SAC | Classifies goods or services |
+| Taxable value | Base amount before GST |
+| GST rate | Example: 5%, 12%, 18%, 28% |
+| CGST/SGST or IGST | Correct tax split |
+| Total invoice value | Final payable amount |
+
+Use the [GST Invoice Generator](/gst-invoice-generator) when you need GST-ready invoice fields and the [GST Calculator](/tools/gst-calculator) when you want to check tax values before billing.
+
+## Examples by Business Type
+
+### Freelancer
+
+A GST registered freelance designer in Delhi bills a Delhi client ₹25,000 plus 18% GST. This is generally intra-state, so the invoice may show CGST ₹2,250 and SGST ₹2,250.
+
+If the same designer bills a Mumbai client, IGST ₹4,500 may apply instead.
+
+### Retail Shop
+
+A shop in Jaipur sells goods to a customer in Rajasthan. The invoice generally shows CGST plus SGST. If the shop ships goods to a registered customer in Gujarat, IGST may apply.
+
+### Agency
+
+A marketing agency in Bengaluru bills a Karnataka client for monthly SEO services. CGST plus SGST may apply. If the client is in Telangana and the place of supply is Telangana, IGST may apply.
+
+### Contractor
+
+A contractor may bill labor and material. The GST split depends on supplier location, place of supply and transaction nature. Contractor invoices should clearly show taxable value, GST rate and tax split.
+
+## Common Mistakes with CGST, SGST and IGST
+
+- Using CGST/SGST when IGST should apply
+- Using IGST when CGST/SGST should apply
+- Missing place of supply
+- Splitting GST incorrectly, such as 18% CGST plus 18% SGST
+- Forgetting customer GSTIN for B2B invoices
+- Using wrong GST rate
+- Not showing taxable value clearly
+- Copying old Excel invoice formats without checking tax split
+- Mixing multiple states in one invoice without understanding place-of-supply rules
+
+These mistakes can create payment delays, customer confusion and reporting issues. A structured invoice tool reduces the chance of missing fields.
+
+## CGST SGST IGST Checklist Before Sending an Invoice
+
+Before sending a GST invoice, check:
+
+- Is your business GST registered?
+- Is the customer B2B or B2C?
+- Do you have customer GSTIN if required?
+- What is the supplier location?
+- What is the place of supply?
+- Is it intra-state or inter-state?
+- Are you using CGST plus SGST or IGST correctly?
+- Is the GST rate correct?
+- Is the taxable value correct?
+- Is invoice number unique?
+- Is the final total clear?
+
+If you are preparing pricing first, use the [Quotation Maker](/quotation-maker). If you are creating the final bill, use the [GST Invoice Generator](/gst-invoice-generator). If you only need to check tax split quickly, use the [GST Calculator](/tools/gst-calculator).
+
+## Competitor Gap and Better Coverage
+
+Most ranking pages explain the definitions of CGST, SGST and IGST, but many stop there. Small business owners need more than definitions. They need invoice examples, same-state vs different-state scenarios, common mistakes, checklist-style guidance and links to actual tools.
+
+This InvoiceWala guide is designed to cover:
+
+- Definitions
+- Tax split examples
+- Place of supply basics
+- GST invoice format
+- Business-specific examples
+- Mistakes to avoid
+- Calculator and invoice generator workflow
+- FAQs for featured snippets and AI Overviews
+
+That makes the page more useful for people searching with billing intent, not only students searching for GST theory.
+
+## Frequently Asked Questions
+
+### What is CGST?
+
+CGST is Central Goods and Services Tax. It is generally charged with SGST for intra-state supplies.
+
+### What is SGST?
+
+SGST is State Goods and Services Tax. It is generally charged with CGST when supplier location and place of supply are in the same state.
+
+### What is IGST?
+
+IGST is Integrated Goods and Services Tax. It is generally charged for inter-state supplies where supplier location and place of supply are in different states.
+
+### When should I use CGST and SGST?
+
+Use CGST and SGST when the transaction is intra-state. For example, a Maharashtra seller billing a Maharashtra buyer may use CGST plus SGST.
+
+### When should I use IGST?
+
+Use IGST when the transaction is inter-state. For example, a Delhi seller billing a Karnataka buyer may use IGST.
+
+### Is 18% GST split as 9% CGST and 9% SGST?
+
+For intra-state supplies, 18% GST is commonly split as 9% CGST and 9% SGST.
+
+### Can CGST, SGST and IGST all be charged together?
+
+For a single taxable supply, invoices generally show either CGST plus SGST or IGST, not all three together.
+
+### What is place of supply?
+
+Place of supply is the location used to decide whether the transaction is intra-state or inter-state under GST.
+
+### Do freelancers need CGST SGST IGST?
+
+GST registered freelancers should understand the tax split because clients may be in the same state or another state.
+
+### How can I calculate CGST SGST and IGST?
+
+Use InvoiceWala's [GST Calculator](/tools/gst-calculator) to calculate CGST plus SGST or IGST split before creating an invoice.
+
+## Final CTA
+
+If you create GST invoices for clients, do not guess the tax split. Check place of supply, calculate the tax correctly and create a GST-ready invoice. Start with the [GST Calculator](/tools/gst-calculator), then create a professional invoice using the [GST Invoice Generator](/gst-invoice-generator).
 `,
   },
   {
@@ -1027,20 +1225,268 @@ If you are still editing old invoice templates or calculating totals manually, t
       ["Common mistake", "Do not send vague invoices like 'work done'. Mention project, deliverable, period or milestone."],
     ],
   }),
-  seoGuide({
+  {
     slug: "contractor-invoice-format-guide",
-    title: "Invoice Format for Contractors: Complete Guide + Example",
-    description: "Learn how contractors should bill clients for labor, materials, milestones, taxes and payment terms.",
-    keyword: "contractor invoice",
+    title: "Contractor Invoice Format Guide: Example, PDF and GST Tips",
+    description: "Learn contractor invoice format with labor, materials, milestones, GST, payment terms, examples and a downloadable sample PDF.",
+    publishedAt: "2026-05-26",
+    updatedAt: "2026-06-09",
+    author: "InvoiceWala Team",
     tags: ["Contractors", "Invoice Format", "Construction"],
+    readingMinutes: 12,
     relatedToolHref: "/contractor-invoice-generator",
     relatedToolLabel: "Contractor invoice generator",
-    sections: [
-      ["Contractor invoice structure", "Separate labor, materials, site visit charges, milestone payments and tax so customers can understand the bill."],
-      ["Example line items", "Labor hours, wiring material, plumbing fittings, site inspection, delivery charge and completion milestone are common rows."],
-      ["Template tip", "Use a construction or contractor layout when material and labor breakdown matters."],
+    faqs: [
+      ["What is a contractor invoice?", "A contractor invoice is a billing document used by contractors to charge clients for labor, materials, site visits, milestones, taxes and payment terms."],
+      ["What should a contractor invoice include?", "It should include invoice number, date, contractor details, client details, project or site address, labor, materials, tax, total and payment terms."],
+      ["Can contractors add GST to invoices?", "Yes. GST registered contractors can add GST fields such as GSTIN, taxable value, GST rate, CGST/SGST or IGST and total invoice value."],
+      ["Can I download a contractor invoice PDF?", "Yes. This guide includes a real sample contractor invoice PDF and InvoiceWala can help create contractor invoice PDFs online."],
+      ["How do contractors bill labor?", "Contractors can bill labor by hour, day, fixed task, project milestone or completion stage."],
+      ["How do contractors bill materials?", "Materials can be listed as separate line items with quantity, rate, tax and amount so customers understand the total."],
+      ["What is a contractor invoice number?", "A contractor invoice number is a unique reference used to track the invoice, payment and project record."],
+      ["Can contractor invoices include milestones?", "Yes. Construction and service contractors often invoice by advance, material delivery, stage completion and final handover."],
     ],
-  }),
+    content: `
+# Contractor Invoice Format Guide: Example, PDF and GST Tips
+
+A contractor invoice is a professional bill used by contractors to charge clients for labor, materials, site visits, project milestones, taxes and payment terms. It is common in construction, renovation, repair work, electrical work, plumbing, interior work, maintenance and service contracting.
+
+For Indian contractors, a proper invoice format matters because contractor work often includes multiple cost types. A simple “work done” bill is not enough when the customer wants to understand labor charges, material cost, GST, advance payment and final payable amount. A clear contractor invoice format reduces disputes and helps clients pay faster.
+
+This guide explains the contractor invoice format with examples, GST notes, line item ideas, common mistakes and a real PDF sample. You can also use InvoiceWala's [Contractor Invoice Generator](/contractor-invoice-generator) to create contractor invoices online.
+
+## Contractor Invoice SEO Snapshot
+
+- Primary keyword: contractor invoice format
+- Secondary keywords: contractor invoice, construction invoice, contractor bill format, contractor invoice template, contractor invoice PDF, labor material invoice, GST contractor invoice
+- Search intent: business owner wants a usable invoice format, sample or PDF
+- Best CTA: create contractor invoice online
+- Internal links: [GST Calculator](/tools/gst-calculator), [Invoice Number Generator](/tools/invoice-number-generator), [Quotation Maker](/quotation-maker), [GST Invoice Generator](/gst-invoice-generator)
+
+## What Is a Contractor Invoice?
+
+A contractor invoice is a payment request sent after work is completed, a milestone is reached or a billing stage becomes due. It records what work was done, what material was used, what taxes apply and how much the client should pay.
+
+Unlike a simple retail invoice, a contractor invoice often needs more detail. It may include:
+
+- Labor charges
+- Material charges
+- Site visit fees
+- Delivery or transport
+- Equipment charges
+- Milestone billing
+- Advance received
+- GST or other tax
+- Payment terms
+- Project/site reference
+
+This makes the invoice useful for both the contractor and the client.
+
+## Contractor Invoice Format
+
+A good contractor invoice format should be easy to understand and hard to misread.
+
+| Field | Why it matters |
+| --- | --- |
+| Invoice Number | Unique reference for payment tracking |
+| Invoice Date | Date invoice is issued |
+| Due Date | When payment should be made |
+| Contractor Details | Business name, address, email, phone, GSTIN if applicable |
+| Client Details | Customer name, address and contact |
+| Project/Site Address | Important for construction and repair work |
+| Labor Details | Hours, days, fixed labor or milestone charges |
+| Material Details | Item name, quantity, rate and amount |
+| Tax Details | GST rate, CGST/SGST or IGST if applicable |
+| Total Amount | Final payable amount |
+| Notes and Terms | Warranty, due date, payment mode and conditions |
+
+## Download Contractor Invoice PDF Example
+
+We created a real sample contractor invoice PDF for this guide.
+
+[Download contractor invoice sample PDF](/downloads/contractor-invoice-sample.pdf)
+
+The sample PDF includes contractor details, client details, project reference, labor, materials, GST, total amount, notes and payment terms. Use it as a visual reference, then create your own invoice with your real project values.
+
+## Contractor Invoice Example
+
+Here is a practical contractor invoice example for a renovation project.
+
+| Line Item | Details | Amount |
+| --- | --- | ---: |
+| Labor | Civil and finishing work for 3 days | ₹18,000 |
+| Materials | Tiles, adhesive, fittings and consumables | ₹32,000 |
+| Site Visit | Measurement and inspection | ₹1,000 |
+| Subtotal | Taxable value | ₹51,000 |
+| GST at 18% | Tax amount | ₹9,180 |
+| Total | Final payable amount | ₹60,180 |
+
+This example is stronger than a single-line bill because the customer can see where the total came from.
+
+## Labor and Material Breakdown
+
+Contractors should separate labor and material wherever possible. This helps customers understand the bill and reduces negotiation after work is done.
+
+Labor examples:
+
+- Mason labor
+- Electrical labor
+- Plumbing labor
+- Carpenter labor
+- Painter labor
+- Site supervision
+- Installation work
+- Repair service
+
+Material examples:
+
+- Tiles
+- Cement
+- Wiring
+- Pipes
+- Switches
+- Paint
+- Fittings
+- Adhesive
+- Hardware
+
+If material prices can change, mention whether the invoice is based on actual material used or approved estimate values.
+
+## GST Invoice for Contractors
+
+GST may apply to contractors depending on registration, work type, customer type and applicable tax rules. This guide is educational, not tax advice. Confirm your exact GST treatment with your CA or tax advisor.
+
+A GST contractor invoice may include:
+
+- Contractor GSTIN
+- Client GSTIN for B2B invoices
+- Invoice number
+- Invoice date
+- Place of supply
+- HSN/SAC where applicable
+- Taxable value
+- GST rate
+- CGST and SGST for intra-state supply
+- IGST for inter-state supply
+- Total invoice value
+
+Use the [GST Calculator](/tools/gst-calculator) to check basic tax values and the [GST Invoice Generator](/gst-invoice-generator) for GST-ready invoice fields.
+
+## Contractor Invoice vs Quotation
+
+Many contractors confuse quotation and invoice. They are not the same.
+
+| Document | When used | Purpose |
+| --- | --- | --- |
+| Quotation | Before work starts | Shares expected price and scope |
+| Invoice | After work or milestone | Requests payment |
+
+For example, a contractor may send a quotation for bathroom renovation before approval. After the work is complete, the contractor sends an invoice for labor, material and tax. Use the [Quotation Maker](/quotation-maker) before the project and contractor invoice format after completion.
+
+## Milestone Billing for Contractors
+
+Large contractor jobs are often billed in stages. This is common for construction, renovation, interiors and manufacturing work.
+
+Example milestone billing:
+
+1. 30% advance after project approval
+2. 30% after material delivery
+3. 30% after stage completion
+4. 10% after final handover
+
+Each milestone invoice should mention the project stage clearly. This avoids confusion when multiple invoices are issued for the same site.
+
+## Common Contractor Invoice Mistakes
+
+Avoid these mistakes:
+
+- Missing invoice number
+- No site or project reference
+- Vague descriptions like “work done”
+- Mixing labor and material without details
+- Missing GST information where applicable
+- No payment due date
+- Not showing advance received
+- Wrong totals
+- Reusing old invoice numbers
+- Sending only a WhatsApp message instead of a proper PDF invoice
+
+A structured invoice format makes your business look more professional and makes payment follow-up easier.
+
+## Contractor Invoice Checklist
+
+Before sending a contractor invoice, check:
+
+- Invoice number is unique
+- Client details are correct
+- Project/site address is mentioned
+- Labor rows are clear
+- Material rows are clear
+- GST is added if applicable
+- Advance payment is adjusted
+- Total amount is correct
+- Payment due date is visible
+- Notes and terms are short and clear
+- PDF is readable on mobile
+
+## Real-World Contractor Invoice Scenarios
+
+Different contractor businesses need slightly different invoice rows. A civil contractor may need labor, cement, steel, sand and transport rows. An electrician may need wiring, switches, installation labor and inspection charges. A plumber may need pipe fittings, valve replacement, leakage repair and emergency visit fees. An interior contractor may need design work, carpentry, hardware, polish, installation and milestone billing.
+
+The invoice format should match the way the customer thinks about the project. If the customer approved labor and material separately, keep them separate on the invoice. If the customer approved milestone billing, mention the milestone clearly. This makes the contractor invoice easier to verify and reduces payment delay.
+
+## Internal Linking Opportunities
+
+Contractor invoice pages should connect to related InvoiceWala pages:
+
+- [Contractor Invoice Generator](/contractor-invoice-generator)
+- [GST Calculator](/tools/gst-calculator)
+- [GST Invoice Generator](/gst-invoice-generator)
+- [Invoice Number Generator](/tools/invoice-number-generator)
+- [Quotation Maker](/quotation-maker)
+- [Estimate vs Invoice Guide](/blog/estimate-vs-invoice)
+
+These links help users move from learning to action and help Google understand InvoiceWala's topical authority around invoices, GST and business documents.
+
+## Frequently Asked Questions
+
+### What is a contractor invoice?
+
+A contractor invoice is a bill sent to a client for contractor work such as labor, materials, site visits, milestones, taxes and payment terms.
+
+### What should a contractor invoice include?
+
+It should include invoice number, date, contractor details, client details, project/site address, labor, materials, tax, total and payment terms.
+
+### Can contractors add GST to invoices?
+
+Yes. GST registered contractors can add GSTIN, taxable value, GST rate, CGST/SGST or IGST and total invoice value.
+
+### Can I download a contractor invoice PDF?
+
+Yes. This guide includes a real [contractor invoice sample PDF](/downloads/contractor-invoice-sample.pdf), and InvoiceWala can help create contractor invoice PDFs online.
+
+### How do contractors bill labor?
+
+Contractors can bill labor by hour, day, task, project stage or milestone depending on the agreement.
+
+### How do contractors bill materials?
+
+Materials should be listed separately with item name, quantity, rate and amount where possible.
+
+### Should contractor invoices include payment terms?
+
+Yes. Add due date, accepted payment method and any stage-wise payment terms.
+
+### Is contractor invoice same as quotation?
+
+No. A quotation is shared before work starts. An invoice is sent after work completion or milestone billing to request payment.
+
+## Final CTA
+
+Create professional contractor invoices with labor, materials, GST and payment terms using InvoiceWala. Start with the [Contractor Invoice Generator](/contractor-invoice-generator), check tax with the [GST Calculator](/tools/gst-calculator), and send a clean PDF invoice to your client.
+`,
+  },
   seoGuide({
     slug: "gst-bill-format-sample-invoice",
     title: "GST Bill Format Explained With Sample Invoice",

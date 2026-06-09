@@ -1,0 +1,87 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2364 >>
+stream
+0.03 0.57 0.70 rg 42 780 52 8 re f
+BT /F2 24 Tf 330 780 Td (CONTRACTOR INVOICE) Tj ET
+BT /F2 11 Tf 420 758 Td (INV-CON-2026-001) Tj ET
+BT /F1 10 Tf 420 742 Td (Issue: 09 Jun 2026) Tj ET
+BT /F1 10 Tf 420 727 Td (Due: 16 Jun 2026) Tj ET
+BT /F2 18 Tf 42 745 Td (Arvind Build Services) Tj ET
+BT /F1 10 Tf 42 727 Td (GSTIN: 27ABCDE1234F1Z5) Tj ET
+BT /F1 10 Tf 42 712 Td (Pune, Maharashtra) Tj ET
+BT /F1 10 Tf 42 697 Td (billing@arvindbuild.example) Tj ET
+0.95 0.98 0.99 rg 42 630 511 54 re f
+BT /F2 9 Tf 58 666 Td (BILL TO) Tj ET
+BT /F2 14 Tf 58 648 Td (Rohan Sharma) Tj ET
+BT /F1 10 Tf 270 648 Td (Project: Bathroom renovation) Tj ET
+BT /F1 10 Tf 270 633 Td (Site: Baner, Pune) Tj ET
+0.06 0.09 0.16 rg 42 590 511 24 re f
+BT /F2 9 Tf 52 598 Td (ITEM) Tj ET
+BT /F2 9 Tf 285 598 Td (QTY) Tj ET
+BT /F2 9 Tf 340 598 Td (RATE) Tj ET
+BT /F2 9 Tf 420 598 Td (GST) Tj ET
+BT /F2 9 Tf 485 598 Td (AMOUNT) Tj ET
+BT /F2 10 Tf 52 560 Td (Labor - civil and finishing work) Tj ET
+BT /F1 10 Tf 285 560 Td (3 days) Tj ET
+BT /F1 10 Tf 340 560 Td (INR 6,000) Tj ET
+BT /F1 10 Tf 420 560 Td (18%) Tj ET
+BT /F1 10 Tf 480 560 Td (INR 18,000) Tj ET
+0.88 0.91 0.95 RG 42 542 511 0.5 re S
+BT /F2 10 Tf 52 522 Td (Materials - tiles, adhesive, fittings) Tj ET
+BT /F1 10 Tf 285 522 Td (1 lot) Tj ET
+BT /F1 10 Tf 340 522 Td (INR 32,000) Tj ET
+BT /F1 10 Tf 420 522 Td (18%) Tj ET
+BT /F1 10 Tf 480 522 Td (INR 32,000) Tj ET
+0.88 0.91 0.95 RG 42 504 511 0.5 re S
+BT /F2 10 Tf 52 484 Td (Site visit and measurement) Tj ET
+BT /F1 10 Tf 285 484 Td (1) Tj ET
+BT /F1 10 Tf 340 484 Td (INR 1,000) Tj ET
+BT /F1 10 Tf 420 484 Td (18%) Tj ET
+BT /F1 10 Tf 480 484 Td (INR 1,000) Tj ET
+0.88 0.91 0.95 RG 42 466 511 0.5 re S
+BT /F1 10 Tf 350 390 Td (Subtotal) Tj ET
+BT /F2 10 Tf 450 390 Td (INR 51,000.00) Tj ET
+BT /F1 10 Tf 350 372 Td (GST 18%) Tj ET
+BT /F2 10 Tf 450 372 Td (INR 9,180.00) Tj ET
+0.88 0.91 0.95 RG 350 356 180 0.8 re S
+BT /F2 16 Tf 350 332 Td (Total) Tj ET
+BT /F2 16 Tf 450 332 Td (INR 60,180.00) Tj ET
+0.95 0.98 0.99 rg 42 210 238 84 re f
+0.95 0.98 0.99 rg 300 210 253 84 re f
+BT /F2 9 Tf 58 270 Td (NOTES) Tj ET
+BT /F1 10 Tf 58 252 Td (Includes labor, material and site visit charges.) Tj ET
+BT /F2 9 Tf 316 270 Td (TERMS) Tj ET
+BT /F1 10 Tf 316 252 Td (Payment due within 7 days. Mention invoice number.) Tj ET
+BT /F1 9 Tf 42 80 Td (Generated sample contractor invoice PDF by InvoiceWala) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000002667 00000 n 
+0000002737 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2812
+%%EOF
