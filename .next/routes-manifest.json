@@ -12,6 +12,42 @@
       "priority": true,
       "statusCode": 308,
       "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    },
+    {
+      "source": "/blog/freelancer-invoice-guide",
+      "destination": "/blog/freelancer-invoice-template",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/blog/freelancer-invoice-guide(?:/)?$"
+    },
+    {
+      "source": "/blog/gst-bill-format-sample-invoice",
+      "destination": "/blog/gst-bill-format",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/blog/gst-bill-format-sample-invoice(?:/)?$"
+    },
+    {
+      "source": "/blog/how-to-create-invoice-numbers",
+      "destination": "/tools/invoice-number-generator",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/blog/how-to-create-invoice-numbers(?:/)?$"
+    },
+    {
+      "source": "/blog/professional-quotation-format-india",
+      "destination": "/quotation-maker",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/blog/professional-quotation-format-india(?:/)?$"
+    },
+    {
+      "source": "/blog/tax-invoice-format",
+      "destination": "/tax-invoice-format",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/blog/tax-invoice-format(?:/)?$"
+    },
+    {
+      "source": "/blog/tax-invoice-format-rules-examples",
+      "destination": "/tax-invoice-format",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/blog/tax-invoice-format-rules-examples(?:/)?$"
     }
   ],
   "headers": [],
@@ -67,6 +103,12 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/about",
+      "regex": "^/about(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/about(?:/)?$"
+    },
+    {
       "page": "/admin",
       "regex": "^/admin(?:/)?$",
       "routeKeys": {},
@@ -113,6 +155,12 @@
       "regex": "^/clients(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/clients(?:/)?$"
+    },
+    {
+      "page": "/contact",
+      "regex": "^/contact(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/contact(?:/)?$"
     },
     {
       "page": "/dashboard",
@@ -187,16 +235,34 @@
       "namedRegex": "^/pricing(?:/)?$"
     },
     {
+      "page": "/privacy-policy",
+      "regex": "^/privacy\\-policy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privacy\\-policy(?:/)?$"
+    },
+    {
       "page": "/purchase-order-generator",
       "regex": "^/purchase\\-order\\-generator(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/purchase\\-order\\-generator(?:/)?$"
     },
     {
+      "page": "/receipt-generator",
+      "regex": "^/receipt\\-generator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/receipt\\-generator(?:/)?$"
+    },
+    {
       "page": "/recurring",
       "regex": "^/recurring(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/recurring(?:/)?$"
+    },
+    {
+      "page": "/refund-policy",
+      "regex": "^/refund\\-policy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/refund\\-policy(?:/)?$"
     },
     {
       "page": "/reports",
@@ -233,6 +299,12 @@
       "regex": "^/tax\\-invoice\\-format(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/tax\\-invoice\\-format(?:/)?$"
+    },
+    {
+      "page": "/terms",
+      "regex": "^/terms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terms(?:/)?$"
     },
     {
       "page": "/tools",

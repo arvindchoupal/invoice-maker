@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
+import { PublicFooterLinks } from "@/components/PublicFooterLinks";
 import { PublicNavActions } from "@/components/PublicNavActions";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { getAllPosts } from "@/lib/blog/posts";
+import { getIndexablePosts } from "@/lib/blog/posts";
 import { websiteSchema } from "@/lib/seo-schemas";
 
 export const metadata: Metadata = {
@@ -26,18 +27,7 @@ export default function BlogIndexPage() {
       tags: ["GST", "Invoice Format", "India"],
       readingMinutes: 14,
     },
-    {
-      slug: "tax-invoice-format",
-      title: "Tax Invoice Format in India: Sample Tax Invoice Format",
-      description:
-        "Learn Tax Invoice format, mandatory fields, Tax invoice sample table, tax invoice rules, common mistakes and PDF format options.",
-      publishedAt: "2026-05-29",
-      updatedAt: "2026-05-29",
-      author: "InvoiceWala Team",
-      tags: ["GST", "Invoice Format", "India"],
-      readingMinutes: 14,
-    },
-    ...getAllPosts(),
+    ...getIndexablePosts(),
   ];
 
   const blogListSchema = {
@@ -103,6 +93,13 @@ export default function BlogIndexPage() {
           ))}
         </div>
       </section>
+
+      <footer className="border-t border-white/10 px-6 py-10">
+        <div className="mx-auto grid max-w-7xl gap-6 text-sm text-slate-400">
+          <p>InvoiceWala Blog · invoicewala.shop</p>
+          <PublicFooterLinks />
+        </div>
+      </footer>
     </main>
   );
 }

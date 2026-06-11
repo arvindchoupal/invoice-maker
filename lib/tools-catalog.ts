@@ -117,6 +117,19 @@ export const TOOLS_CATALOG: ToolCatalogEntry[] = [
     signupSource: "purchase-order-generator",
   },
   {
+    href: "/receipt-generator",
+    title: "Receipt generator",
+    body: "Create payment receipts with receipt number, customer details, payment mode and PDF download.",
+    tag: "Documents",
+    intent: "Best after payment",
+    metaTitle: "Receipt Generator | Create Payment Receipts Online",
+    metaDescription:
+      "Create payment receipts online with receipt number, customer details, payment mode, GST fields and PDF download. Free receipt maker for Indian businesses.",
+    headline: "Create receipts online after payment and download clean PDF proof.",
+    highlights: ["UPI, cash and bank modes", "Customer payment proof", "Download receipt PDF"],
+    signupSource: "receipt-generator",
+  },
+  {
     href: "/tools/emi-calculator",
     title: "EMI calculator",
     body: "Calculate loan EMI, interest and repayment totals for business purchases.",

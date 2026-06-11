@@ -13,12 +13,12 @@ export const metadata: Metadata = {
   title: "Tax Invoice Format India | Sample PDF Template",
   description:
     "Learn tax invoice format in India with sample layout, GST fields, services/products examples, PDF/Excel notes, rules and FAQs.",
-  alternates: { canonical: `${siteUrl}/blog/tax-invoice-format` },
+  alternates: { canonical: `${siteUrl}/tax-invoice-format` },
   openGraph: {
     title: "Tax Invoice Format India | Sample PDF Template",
     description:
       "Complete tax invoice format guide for Indian businesses, freelancers, contractors, agencies and GST registered businesses.",
-    url: `${siteUrl}/blog/tax-invoice-format`,
+    url: `${siteUrl}/tax-invoice-format`,
     siteName: "InvoiceWala",
   },
 };
@@ -110,7 +110,7 @@ function articleSchema() {
       name: "InvoiceWala",
       logo: { "@type": "ImageObject", url: `${siteUrl}/logo.png` },
     },
-    mainEntityOfPage: `${siteUrl}/blog/tax-invoice-format`,
+    mainEntityOfPage: `${siteUrl}/tax-invoice-format`,
     datePublished: "2026-05-30",
     dateModified: "2026-05-30",
     inLanguage: "en-IN",
@@ -126,7 +126,7 @@ export default function TaxInvoiceFormatPage() {
           breadcrumbSchema([
             { name: "Home", url: siteUrl },
             { name: "Blog", url: `${siteUrl}/blog` },
-            { name: "Tax Invoice Format", url: `${siteUrl}/blog/tax-invoice-format` },
+            { name: "Tax Invoice Format", url: `${siteUrl}/tax-invoice-format` },
           ]),
           articleSchema(),
         ]}
@@ -416,7 +416,7 @@ export default function TaxInvoiceFormatPage() {
       </article>
 
       <footer className="border-t border-white/10 px-6 py-10">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 text-sm text-slate-400">
+        <div className="mx-auto grid max-w-7xl gap-6 text-sm text-slate-400">
           <p>InvoiceWala · Tax invoice format guide</p>
           <PublicFooterLinks />
         </div>

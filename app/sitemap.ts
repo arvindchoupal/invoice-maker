@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllPosts } from "@/lib/blog/posts";
+import { getIndexablePosts } from "@/lib/blog/posts";
 import { seoPages } from "@/lib/seo-pages";
 import { TOOLS_CATALOG } from "@/lib/tools-catalog";
 
@@ -11,13 +11,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/free-invoice",
     "/tools",
     "/blog",
-    "/login",
-    "/signup",
     "/pricing",
-    "/gst-bill-format",
+    "/about",
+    "/contact",
+    "/privacy-policy",
+    "/terms",
+    "/refund-policy",
     "/tax-invoice-format",
     "/blog/gst-bill-format",
-    "/blog/tax-invoice-format",
   ].map((path) => ({
     url: `${siteUrl}${path}`,
     lastModified: new Date(),
@@ -32,19 +33,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  const seoRoutes = seoPages.map((page) => ({
+  const toolHrefs = new Set(TOOLS_CATALOG.map((tool) => tool.href));
+  const staticHrefs = new Set(staticRoutes.map((route) => route.url.replace(siteUrl, "")));
+
+  const seoRoutes = seoPages
+    .filter((page) => !toolHrefs.has(`/${page.slug}`) && !staticHrefs.has(`/${page.slug}`))
+    .map((page) => ({
     url: `${siteUrl}/${page.slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.85,
   }));
 
-  const blogRoutes = getAllPosts().map((post) => ({
+  const blogRoutes = getIndexablePosts().map((post) => ({
     url: `${siteUrl}/blog/${post.slug}`,
     lastModified: new Date(post.updatedAt ?? post.publishedAt),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...seoRoutes, ...toolRoutes, ...blogRoutes];
+  return Array.from(
+    new Map([...staticRoutes, ...seoRoutes, ...toolRoutes, ...blogRoutes].map((route) => [route.url, route])).values()
+  );
 }

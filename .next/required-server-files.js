@@ -306,7 +306,39 @@ self.__SERVER_FILES_MANIFEST={
     "turbopack": {
       "root": "/Users/arvind/my_projects/invoice-maker2"
     },
-    "distDirRoot": ".next"
+    "distDirRoot": ".next",
+    "_originalRedirects": [
+      {
+        "source": "/blog/freelancer-invoice-guide",
+        "destination": "/blog/freelancer-invoice-template",
+        "permanent": true
+      },
+      {
+        "source": "/blog/gst-bill-format-sample-invoice",
+        "destination": "/blog/gst-bill-format",
+        "permanent": true
+      },
+      {
+        "source": "/blog/how-to-create-invoice-numbers",
+        "destination": "/tools/invoice-number-generator",
+        "permanent": true
+      },
+      {
+        "source": "/blog/professional-quotation-format-india",
+        "destination": "/quotation-maker",
+        "permanent": true
+      },
+      {
+        "source": "/blog/tax-invoice-format",
+        "destination": "/tax-invoice-format",
+        "permanent": true
+      },
+      {
+        "source": "/blog/tax-invoice-format-rules-examples",
+        "destination": "/tax-invoice-format",
+        "permanent": true
+      }
+    ]
   },
   "appDir": "/Users/arvind/my_projects/invoice-maker2",
   "relativeAppDir": "",

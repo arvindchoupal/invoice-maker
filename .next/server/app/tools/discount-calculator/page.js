@@ -1,5 +1,5 @@
 var R=require("../../../chunks/ssr/[turbopack]_runtime.js")("server/app/tools/discount-calculator/page.js")
-R.c("server/chunks/ssr/[root-of-the-server]__03_v4j2._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0me731~._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_09jzzl8._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_04y1nqn.js")
 R.c("server/chunks/ssr/[root-of-the-server]__05e9x6c._.js")

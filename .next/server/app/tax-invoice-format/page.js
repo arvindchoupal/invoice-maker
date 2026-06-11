@@ -1,6 +1,6 @@
 var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/tax-invoice-format/page.js")
-R.c("server/chunks/ssr/[root-of-the-server]__06wl4nd._.js")
-R.c("server/chunks/ssr/_0o2z0dd._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0rhed~c._.js")
+R.c("server/chunks/ssr/_10ndhoi._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_09jzzl8._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_0k63nps.js")
 R.c("server/chunks/ssr/app_tax-invoice-format_page_tsx_0nhiv7o._.js")

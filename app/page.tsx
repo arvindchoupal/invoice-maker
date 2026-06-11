@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   description:
     "Create GST-ready invoices, download professional PDFs, track payments, and send reminders. Free invoice generator for freelancers, contractors, agencies, and small businesses in India.",
   metadataBase: new URL("https://invoicewala.shop"),
+  alternates: { canonical: "https://invoicewala.shop" },
   openGraph: {
     title: "InvoiceWala - Free GST Invoice Generator",
     description: "Create GST invoices fast, send PDFs, track payments, and get paid faster.",
@@ -56,6 +57,7 @@ const footerSeoLinks = [
   ["/gst-invoice-generator", "GST invoice generator"],
   ["/freelancer-invoice-generator", "Freelancer invoice"],
   ["/contractor-invoice-generator", "Contractor invoice"],
+  ["/receipt-generator", "Receipt generator"],
   ["/purchase-order-generator", "Purchase order generator"],
   ["/pdf-to-invoice-ai", "PDF to invoice AI"],
 ];
@@ -305,7 +307,7 @@ export default function Home() {
       </section>
 
       <footer className="border-t border-white/10 px-6 py-10">
-        <div className="mx-auto grid max-w-7xl gap-6 text-sm text-slate-400 lg:grid-cols-[1fr_auto]">
+        <div className="mx-auto grid max-w-7xl gap-8 text-sm text-slate-400">
           <div>
             <p>InvoiceWala · invoicewala.shop</p>
             <div className="mt-4 flex flex-wrap gap-3">

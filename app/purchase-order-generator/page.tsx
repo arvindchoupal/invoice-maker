@@ -125,7 +125,7 @@ const relatedTools = [
   ["/gst-invoice-generator", "GST Invoice Maker"],
   ["/tools/invoice-number-generator", "Invoice Number Generator"],
   ["/invoice-template-india", "Invoice Template India"],
-  ["/blog/tax-invoice-format-rules-examples", "Tax Invoice Guide"],
+  ["/tax-invoice-format", "Tax Invoice Guide"],
   ["/blog/estimate-vs-invoice", "Estimate vs Invoice"],
 ];
 
@@ -433,7 +433,7 @@ export default function PurchaseOrderGeneratorPage() {
       </section>
 
       <footer className="border-t border-white/10 px-6 py-10">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 text-sm text-slate-400">
+        <div className="mx-auto grid max-w-7xl gap-6 text-sm text-slate-400">
           <p>InvoiceWala · invoicewala.shop</p>
           <PublicFooterLinks />
         </div>

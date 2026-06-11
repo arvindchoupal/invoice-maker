@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
+import { PublicFooterLinks } from "@/components/PublicFooterLinks";
 import { PublicNavActions } from "@/components/PublicNavActions";
 import { PublicPrimaryCta } from "@/components/PublicPrimaryCta";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -34,6 +35,48 @@ const faqs = [
     question: "Can I turn a result into an invoice?",
     answer: "Yes. High-intent tools include InvoiceWala CTAs so you can move from calculation to invoice, PDF, reminders and reporting.",
   },
+];
+
+const toolHubs = [
+  {
+    title: "Invoice creation tools",
+    body: "Start here when the user wants to create, format or number an invoice.",
+    links: [
+      ["/free-invoice-generator", "Free invoice generator"],
+      ["/gst-invoice-generator", "GST invoice generator"],
+      ["/invoice-template-india", "Invoice template India"],
+      ["/tools/invoice-number-generator", "Invoice number generator"],
+    ],
+  },
+  {
+    title: "Business document tools",
+    body: "Support pre-sale and post-payment documents around the invoice workflow.",
+    links: [
+      ["/quotation-maker", "Quotation maker"],
+      ["/purchase-order-generator", "Purchase order generator"],
+      ["/receipt-generator", "Receipt generator"],
+      ["/blog/estimate-vs-invoice", "Estimate vs invoice guide"],
+    ],
+  },
+  {
+    title: "GST and pricing calculators",
+    body: "Help businesses calculate tax, pricing, discounts and profit before billing.",
+    links: [
+      ["/tools/gst-calculator", "GST calculator"],
+      ["/tools/profit-calculator", "Profit calculator"],
+      ["/tools/margin-calculator", "Margin calculator"],
+      ["/tools/discount-calculator", "Discount calculator"],
+    ],
+  },
+];
+
+const recommendedPaths = [
+  ["/free-invoice-generator", "Create invoices online", "Best starting point for users who came from calculators and now need a customer-ready PDF invoice."],
+  ["/gst-invoice-generator", "Create GST invoices", "Use this path when GSTIN, taxable value and CGST/SGST/IGST fields matter."],
+  ["/invoice-template-india", "See invoice formats", "Useful for users comparing PDF, Word, Excel and GST-ready invoice template structures."],
+  ["/quotation-maker", "Send a quotation first", "Best for contractors, agencies and service providers who need approval before invoicing."],
+  ["/receipt-generator", "Create a receipt", "Use after payment is received and the customer needs payment proof."],
+  ["/purchase-order-generator", "Create purchase orders", "Useful for supplier purchases, procurement and vendor communication."],
 ];
 
 export default function ToolsPage() {
@@ -154,7 +197,50 @@ export default function ToolsPage() {
       </section>
 
       <section className="px-5 py-14 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Tool hubs</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight">Choose the right workflow before creating a document.</h2>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
+              These internal hubs help users and search engines understand how InvoiceWala tools connect: calculation, document creation, PDF download and payment tracking.
+            </p>
+          </div>
+          <div className="mt-8 grid gap-5 lg:grid-cols-3">
+            {toolHubs.map((hub) => (
+              <article className="rounded-3xl border border-white/10 bg-white/[0.04] p-6" key={hub.title}>
+                <h3 className="text-xl font-semibold text-white">{hub.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-400">{hub.body}</p>
+                <div className="mt-5 grid gap-2">
+                  {hub.links.map(([href, label]) => (
+                    <Link
+                      className="rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:border-cyan-300/40 hover:text-cyan-100"
+                      href={href}
+                      key={href}
+                    >
+                      {label}
+                    </Link>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 py-14 sm:px-8">
         <div className="mx-auto max-w-4xl">
+          <div className="mb-10 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Recommended paths</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight">Turn free tool traffic into invoice workflows.</h2>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {recommendedPaths.map(([href, label, body]) => (
+                <Link className="rounded-2xl border border-white/10 bg-slate-950/70 p-4 transition hover:-translate-y-0.5 hover:border-cyan-300/40" href={href} key={href}>
+                  <span className="font-semibold text-white">{label}</span>
+                  <span className="mt-2 block text-sm leading-6 text-slate-400">{body}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">FAQ</p>
           <div className="mt-5 divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/[0.04]">
             {faqs.map((faq) => (
@@ -166,6 +252,12 @@ export default function ToolsPage() {
           </div>
         </div>
       </section>
+      <footer className="border-t border-white/10 px-6 py-10">
+        <div className="mx-auto grid max-w-7xl gap-6 text-sm text-slate-400">
+          <p>InvoiceWala Tools · free business tools</p>
+          <PublicFooterLinks />
+        </div>
+      </footer>
     </main>
   );
 }

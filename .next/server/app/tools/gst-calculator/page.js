@@ -1,5 +1,5 @@
 var R=require("../../../chunks/ssr/[turbopack]_runtime.js")("server/app/tools/gst-calculator/page.js")
-R.c("server/chunks/ssr/[root-of-the-server]__0~lqdi4._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0fo50xt._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_09jzzl8._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_118upda.js")
 R.c("server/chunks/ssr/[root-of-the-server]__05e9x6c._.js")
