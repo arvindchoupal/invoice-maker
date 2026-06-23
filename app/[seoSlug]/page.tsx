@@ -32,9 +32,7 @@ const comparisonLinks = [
 ];
 
 export function generateStaticParams() {
-  return seoPages
-    .filter((page) => page.slug !== "purchase-order-generator")
-    .map((page) => ({ seoSlug: page.slug }));
+  return seoPages.map((page) => ({ seoSlug: page.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

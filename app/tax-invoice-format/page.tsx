@@ -92,7 +92,7 @@ const internalLinks = [
   { href: "/tools/invoice-number-generator", label: "Invoice Number Generator", body: "Generate clean invoice numbers for your tax invoice series." },
   { href: "/tools/gst-calculator", label: "GST Calculator", body: "Calculate GST amount before creating your invoice." },
   { href: "/quotation-maker", label: "Quotation Maker", body: "Prepare a quotation before converting it into an invoice." },
-  { href: "/gst-bill-format", label: "GST Bill Format", body: "Read the GST bill format guide with sample invoice table." },
+  { href: "/blog/gst-bill-format", label: "GST Bill Format", body: "Read the GST bill format guide with sample invoice table." },
   { href: "/invoice-template-india", label: "Invoice Format", body: "Use a practical invoice format for Indian businesses." },
   { href: "/tools/margin-calculator", label: "Profit Margin Calculator", body: "Check margin before giving discounts or finalizing pricing." },
 ];
@@ -371,7 +371,7 @@ export default function TaxInvoiceFormatPage() {
                 <Cta href="/free-invoice" label="Create Tax Invoice Online" />
                 <Cta href="/gst-invoice-generator" label="Generate GST Invoice" />
                 <Cta href="/tools/invoice-number-generator" label="Generate Invoice Number" />
-                <Cta href="/online-invoice-maker" label="Download PDF Invoice" />
+                <Cta href="/free-invoice-generator" label="Download PDF Invoice" />
               </div>
             </Section>
 

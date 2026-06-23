@@ -15,6 +15,15 @@ const excludedSitemapHrefs = new Set([
   "/blog/professional-quotation-format-india",
   "/blog/tax-invoice-format",
   "/blog/tax-invoice-format-rules-examples",
+  "/gst-bill-format",
+  "/online-invoice-maker",
+  "/free-online-invoice-maker",
+  "/gst-invoice-maker",
+  "/gst-calculator",
+  "/profit-margin-calculator",
+  "/invoice-number-generator",
+  "/pdf-to-invoice-ai",
+  "/payment-reminder",
 ]);
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -26,8 +35,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/pricing",
     "/about",
     "/contact",
+    "/press-kit",
     "/tax-invoice-format",
     "/blog/gst-bill-format",
+    "/tools/hsn-code-finder/methodology",
   ]
     .filter((path) => !excludedSitemapHrefs.has(path))
     .map((path) => ({

@@ -225,15 +225,6 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
-// Validate ../../app/blog/tax-invoice-format/page.tsx
-{
-  type __IsExpected<Specific extends AppPageConfig<"/blog/tax-invoice-format">> = Specific
-  const handler = {} as typeof import("../../app/blog/tax-invoice-format/page.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
 // Validate ../../app/contact/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/contact">> = Specific
@@ -252,19 +243,19 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
-// Validate ../../app/gst-bill-format/page.tsx
+// Validate ../../app/page.tsx
 {
-  type __IsExpected<Specific extends AppPageConfig<"/gst-bill-format">> = Specific
-  const handler = {} as typeof import("../../app/gst-bill-format/page.js")
+  type __IsExpected<Specific extends AppPageConfig<"/">> = Specific
+  const handler = {} as typeof import("../../app/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
 }
 
-// Validate ../../app/page.tsx
+// Validate ../../app/press-kit/page.tsx
 {
-  type __IsExpected<Specific extends AppPageConfig<"/">> = Specific
-  const handler = {} as typeof import("../../app/page.js")
+  type __IsExpected<Specific extends AppPageConfig<"/press-kit">> = Specific
+  const handler = {} as typeof import("../../app/press-kit/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
@@ -364,6 +355,24 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 {
   type __IsExpected<Specific extends AppPageConfig<"/tools/gst-calculator">> = Specific
   const handler = {} as typeof import("../../app/tools/gst-calculator/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/tools/hsn-code-finder/methodology/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/tools/hsn-code-finder/methodology">> = Specific
+  const handler = {} as typeof import("../../app/tools/hsn-code-finder/methodology/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/tools/hsn-code-finder/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/tools/hsn-code-finder">> = Specific
+  const handler = {} as typeof import("../../app/tools/hsn-code-finder/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

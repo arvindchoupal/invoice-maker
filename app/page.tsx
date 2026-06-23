@@ -59,7 +59,7 @@ const footerSeoLinks = [
   ["/contractor-invoice-generator", "Contractor invoice"],
   ["/receipt-generator", "Receipt generator"],
   ["/purchase-order-generator", "Purchase order generator"],
-  ["/pdf-to-invoice-ai", "PDF to invoice AI"],
+  ["/tools/pdf-to-invoice-extractor", "PDF to invoice AI"],
 ];
 
 const faqs: Array<[string, string]> = [

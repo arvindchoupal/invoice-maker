@@ -1,6 +1,6 @@
 var R=require("../../../chunks/ssr/[turbopack]_runtime.js")("server/app/blog/gst-bill-format/page.js")
-R.c("server/chunks/ssr/[root-of-the-server]__0v0tdjf._.js")
-R.c("server/chunks/ssr/_10ndhoi._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0r~drjv._.js")
+R.c("server/chunks/ssr/_0cewt2p._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_09jzzl8._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_0b~3nc5.js")
 R.c("server/chunks/ssr/app_blog_gst-bill-format_page_tsx_0204klf._.js")

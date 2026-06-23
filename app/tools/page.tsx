@@ -62,6 +62,7 @@ const toolHubs = [
     title: "GST and pricing calculators",
     body: "Help businesses calculate tax, pricing, discounts and profit before billing.",
     links: [
+      ["/tools/hsn-code-finder", "HSN and SAC code finder"],
       ["/tools/gst-calculator", "GST calculator"],
       ["/tools/profit-calculator", "Profit calculator"],
       ["/tools/margin-calculator", "Margin calculator"],

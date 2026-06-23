@@ -68,6 +68,7 @@ const sampleRows = [
 ];
 
 const internalLinks = [
+  { href: "/tools/hsn-code-finder", label: "HSN and SAC Code Finder", body: "Search common goods and service codes before verifying them on the official GST portal." },
   { href: "/gst-invoice-generator", label: "GST Invoice Generator", body: "Create a GST-ready invoice and download a professional PDF." },
   { href: "/invoice-template-india", label: "Invoice Format", body: "See a practical invoice format for Indian businesses." },
   { href: "/tax-invoice-format", label: "Tax Invoice Format", body: "Understand tax invoice fields and structure." },

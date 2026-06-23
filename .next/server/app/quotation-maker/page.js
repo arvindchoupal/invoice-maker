@@ -1,6 +1,6 @@
 var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/quotation-maker/page.js")
-R.c("server/chunks/ssr/[root-of-the-server]__0a4qbc8._.js")
-R.c("server/chunks/ssr/_10ndhoi._.js")
+R.c("server/chunks/ssr/_0cewt2p._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__0n7e5b1._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_06vzw-j.js")
 R.c("server/chunks/ssr/node_modules_next_dist_09jzzl8._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__05e9x6c._.js")

@@ -38,7 +38,7 @@ const defaultLinks = [
   { href: "/tools/invoice-number-generator", label: "Invoice number generator" },
 ];
 
-export const seoPages: SeoPage[] = [
+const allSeoPages: SeoPage[] = [
   {
     slug: "online-invoice-maker",
     primaryKeyword: "online invoice maker",
@@ -230,7 +230,7 @@ export const seoPages: SeoPage[] = [
     cta: "Create free invoice",
     ctaHref: "/free-invoice",
     internalLinks: [
-      { href: "/online-invoice-maker", label: "Online invoice maker" },
+      { href: "/free-invoice-generator", label: "Online invoice maker" },
       { href: "/free-invoice-generator", label: "Free invoice generator" },
       { href: "/gst-invoice-generator", label: "GST invoice generator" },
       { href: "/invoice-template-india", label: "Invoice template India" },
@@ -321,7 +321,7 @@ export const seoPages: SeoPage[] = [
       { href: "/gst-invoice-generator", label: "GST invoice generator" },
       { href: "/tools/gst-calculator", label: "GST calculator" },
       { href: "/invoice-template-india", label: "Invoice template India" },
-      { href: "/online-invoice-maker", label: "Online invoice maker" },
+      { href: "/free-invoice-generator", label: "Online invoice maker" },
       { href: "/blog/how-to-create-gst-invoice-india", label: "How to create GST invoice" },
       { href: "/blog/gst-bill-format", label: "GST bill format guide" },
     ],
@@ -406,8 +406,7 @@ export const seoPages: SeoPage[] = [
     ctaHref: "/free-invoice",
     internalLinks: [
       { href: "/freelancer-invoice-generator", label: "Freelancer invoice generator" },
-      { href: "/online-invoice-maker", label: "Online invoice maker" },
-      { href: "/free-online-invoice-maker", label: "Free online invoice maker" },
+      { href: "/free-invoice-generator", label: "Online invoice maker" },
       { href: "/invoice-template-india", label: "Invoice template India" },
       { href: "/blog/freelancer-invoice-template", label: "Freelancer invoice guide" },
       { href: "/pricing", label: "View ₹199 Pro pricing" },
@@ -1040,6 +1039,21 @@ export const seoPages: SeoPage[] = [
     schema: ["FAQPage", "SoftwareApplication", "BreadcrumbList"],
   },
 ];
+
+const duplicateSeoSlugs = new Set([
+  "online-invoice-maker",
+  "free-online-invoice-maker",
+  "gst-invoice-maker",
+  "quotation-maker",
+  "purchase-order-generator",
+  "gst-calculator",
+  "profit-margin-calculator",
+  "invoice-number-generator",
+  "pdf-to-invoice-ai",
+  "payment-reminder",
+]);
+
+export const seoPages = allSeoPages.filter((page) => !duplicateSeoSlugs.has(page.slug));
 
 export function seoPageBySlug(slug: string) {
   return seoPages.find((page) => page.slug === slug);

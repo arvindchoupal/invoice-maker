@@ -13,6 +13,19 @@ export type ToolCatalogEntry = {
 
 export const TOOLS_CATALOG: ToolCatalogEntry[] = [
   {
+    href: "/tools/hsn-code-finder",
+    title: "HSN and SAC code finder",
+    body: "Search common HSN codes for goods and SAC codes for services by name, category, code and indicative GST rate.",
+    tag: "GST",
+    intent: "Best for GST classification",
+    metaTitle: "HSN Code Finder | Search HSN & SAC Codes with GST Rate",
+    metaDescription:
+      "Free HSN code finder and SAC code search for India. Find common goods and service classification codes by product, profession, category and indicative GST rate.",
+    headline: "Find an HSN or SAC code before creating your GST invoice.",
+    highlights: ["Search products and services", "HSN and SAC filters", "Official GST verification links"],
+    signupSource: "hsn-code-finder",
+  },
+  {
     href: "/quotation-maker",
     title: "Quotation generator",
     body: "Create GST quotations with customer details, item rows, discount, validity, terms and PDF download.",

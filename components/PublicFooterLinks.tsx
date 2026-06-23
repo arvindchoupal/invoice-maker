@@ -51,6 +51,7 @@ const footerGroups = [
     links: [
       { href: "/about", label: "About" },
       { href: "/contact", label: "Contact" },
+      { href: "/press-kit", label: "Press kit" },
       { href: "/privacy-policy", label: "Privacy policy" },
       { href: "/terms", label: "Terms" },
       { href: "/refund-policy", label: "Refund policy" },

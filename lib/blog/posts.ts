@@ -2932,7 +2932,7 @@ These mistakes can delay payments and create extra accounting work.
 
 Here is a practical workflow:
 
-1. Open an online invoice generator such as [InvoiceWala](/online-invoice-maker).
+1. Open an online invoice generator such as [InvoiceWala](/free-invoice-generator).
 2. Add supplier name, address, GSTIN and contact details.
 3. Add customer name, billing address and GSTIN if available.
 4. Create or auto-generate a unique invoice number.
@@ -3096,7 +3096,7 @@ Yes. InvoiceWala lets you create tax invoices online with item rows, GST fields,
 
 Yes. InvoiceWala helps create professional tax invoices, GST invoices, invoice numbers, PDF invoices and related billing documents.
 
-Ready to create one? Use the [GST Invoice Generator](/gst-invoice-generator) or start with the [online invoice maker](/online-invoice-maker).
+Ready to create one? Use the [GST Invoice Generator](/gst-invoice-generator) or start with the [online invoice maker](/free-invoice-generator).
 `,
   },
   {
@@ -4728,7 +4728,7 @@ Use InvoiceWala to create an invoice online, choose a clean PDF format and send 
     description: "A guide to overdue invoices, polite reminders, penalties, follow-up timing and payment reminder examples.",
     keyword: "late payment",
     tags: ["Late Payment", "Reminders", "Cash Flow"],
-    relatedToolHref: "/payment-reminder",
+    relatedToolHref: "/tools/payment-reminder-generator",
     relatedToolLabel: "Payment reminder guide",
     sections: [
       ["Reminder timeline", "Send a polite reminder on due date, follow up after 3 days, then request a payment date if it remains overdue."],

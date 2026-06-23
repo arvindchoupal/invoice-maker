@@ -337,6 +337,51 @@
         "source": "/blog/tax-invoice-format-rules-examples",
         "destination": "/tax-invoice-format",
         "permanent": true
+      },
+      {
+        "source": "/gst-bill-format",
+        "destination": "/blog/gst-bill-format",
+        "permanent": true
+      },
+      {
+        "source": "/online-invoice-maker",
+        "destination": "/free-invoice-generator",
+        "permanent": true
+      },
+      {
+        "source": "/free-online-invoice-maker",
+        "destination": "/free-invoice-generator",
+        "permanent": true
+      },
+      {
+        "source": "/gst-invoice-maker",
+        "destination": "/gst-invoice-generator",
+        "permanent": true
+      },
+      {
+        "source": "/gst-calculator",
+        "destination": "/tools/gst-calculator",
+        "permanent": true
+      },
+      {
+        "source": "/profit-margin-calculator",
+        "destination": "/tools/margin-calculator",
+        "permanent": true
+      },
+      {
+        "source": "/invoice-number-generator",
+        "destination": "/tools/invoice-number-generator",
+        "permanent": true
+      },
+      {
+        "source": "/pdf-to-invoice-ai",
+        "destination": "/tools/pdf-to-invoice-extractor",
+        "permanent": true
+      },
+      {
+        "source": "/payment-reminder",
+        "destination": "/tools/payment-reminder-generator",
+        "permanent": true
       }
     ]
   },

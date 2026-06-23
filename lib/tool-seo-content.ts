@@ -122,7 +122,7 @@ export const gstCalculatorSeoContent: ToolSeoContent = {
   ],
   internalLinks: [
     { href: "/gst-invoice-generator", label: "GST invoice generator", body: "Create a GST-ready invoice after calculating tax." },
-    { href: "/online-invoice-maker", label: "online invoice maker", body: "Make a professional invoice and download a PDF." },
+    { href: "/free-invoice-generator", label: "online invoice maker", body: "Make a professional invoice and download a PDF." },
     { href: "/free-invoice-generator", label: "free invoice generator", body: "Preview an invoice before signup." },
     { href: "/invoice-template-india", label: "invoice template India", body: "Use a practical Indian invoice format." },
     { href: "/quotation-maker", label: "quotation maker", body: "Prepare a quote before billing." },

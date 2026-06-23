@@ -48,6 +48,60 @@
       "destination": "/tax-invoice-format",
       "statusCode": 308,
       "regex": "^(?!/_next)/blog/tax-invoice-format-rules-examples(?:/)?$"
+    },
+    {
+      "source": "/gst-bill-format",
+      "destination": "/blog/gst-bill-format",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/gst-bill-format(?:/)?$"
+    },
+    {
+      "source": "/online-invoice-maker",
+      "destination": "/free-invoice-generator",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/online-invoice-maker(?:/)?$"
+    },
+    {
+      "source": "/free-online-invoice-maker",
+      "destination": "/free-invoice-generator",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/free-online-invoice-maker(?:/)?$"
+    },
+    {
+      "source": "/gst-invoice-maker",
+      "destination": "/gst-invoice-generator",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/gst-invoice-maker(?:/)?$"
+    },
+    {
+      "source": "/gst-calculator",
+      "destination": "/tools/gst-calculator",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/gst-calculator(?:/)?$"
+    },
+    {
+      "source": "/profit-margin-calculator",
+      "destination": "/tools/margin-calculator",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/profit-margin-calculator(?:/)?$"
+    },
+    {
+      "source": "/invoice-number-generator",
+      "destination": "/tools/invoice-number-generator",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/invoice-number-generator(?:/)?$"
+    },
+    {
+      "source": "/pdf-to-invoice-ai",
+      "destination": "/tools/pdf-to-invoice-extractor",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/pdf-to-invoice-ai(?:/)?$"
+    },
+    {
+      "source": "/payment-reminder",
+      "destination": "/tools/payment-reminder-generator",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/payment-reminder(?:/)?$"
     }
   ],
   "headers": [],
@@ -139,12 +193,6 @@
       "namedRegex": "^/blog/gst\\-bill\\-format(?:/)?$"
     },
     {
-      "page": "/blog/tax-invoice-format",
-      "regex": "^/blog/tax\\-invoice\\-format(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/blog/tax\\-invoice\\-format(?:/)?$"
-    },
-    {
       "page": "/bookkeeping",
       "regex": "^/bookkeeping(?:/)?$",
       "routeKeys": {},
@@ -193,12 +241,6 @@
       "namedRegex": "^/free\\-invoice(?:/)?$"
     },
     {
-      "page": "/gst-bill-format",
-      "regex": "^/gst\\-bill\\-format(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/gst\\-bill\\-format(?:/)?$"
-    },
-    {
       "page": "/icon.png",
       "regex": "^/icon\\.png(?:/)?$",
       "routeKeys": {},
@@ -227,6 +269,12 @@
       "regex": "^/payments(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/payments(?:/)?$"
+    },
+    {
+      "page": "/press-kit",
+      "regex": "^/press\\-kit(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/press\\-kit(?:/)?$"
     },
     {
       "page": "/pricing",
@@ -335,6 +383,18 @@
       "regex": "^/tools/gst\\-calculator(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/tools/gst\\-calculator(?:/)?$"
+    },
+    {
+      "page": "/tools/hsn-code-finder",
+      "regex": "^/tools/hsn\\-code\\-finder(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/hsn\\-code\\-finder(?:/)?$"
+    },
+    {
+      "page": "/tools/hsn-code-finder/methodology",
+      "regex": "^/tools/hsn\\-code\\-finder/methodology(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/hsn\\-code\\-finder/methodology(?:/)?$"
     },
     {
       "page": "/tools/invoice-number-generator",
