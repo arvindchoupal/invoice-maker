@@ -15,6 +15,9 @@ export const metadata: Metadata = {
 
 const facts = [
   ["Product", "InvoiceWala"],
+  ["Founder", "Arvind Choupal"],
+  ["Founder role", "Founder & Product Developer"],
+  ["Location", "India"],
   ["Category", "Invoicing and small-business utilities"],
   ["Status", "Early access"],
   ["Platform", "Web"],
@@ -76,6 +79,15 @@ export default function PressKitPage() {
           </p>
         </section>
 
+        <section className="mt-12 rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-cyan-300">Founder</p>
+          <h2 className="mt-3 text-3xl font-semibold">Arvind Choupal</h2>
+          <p className="mt-2 text-sm font-semibold text-slate-400">Founder & Product Developer · India</p>
+          <p className="mt-5 text-base leading-8 text-slate-300">
+            Arvind Choupal is the founder and product developer behind InvoiceWala. He builds practical web tools that help freelancers and small businesses create invoices, manage GST workflows and follow up on payments without complicated accounting software.
+          </p>
+        </section>
+
         <section className="mt-12">
           <h2 className="text-3xl font-semibold">Key product links</h2>
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -100,4 +112,3 @@ export default function PressKitPage() {
     </main>
   );
 }
-

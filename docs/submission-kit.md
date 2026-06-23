@@ -6,12 +6,12 @@ Support/press contact: support@invoicewala.shop
 Status: Early access  
 Pricing: Free plan; Pro currently ₹199/month in India
 
-## Before submitting
+## Founder details
 
-Confirm these two founder fields:
-
-- Founder display name: `[CONFIRM: Arvind Choupal?]`
-- Founder one-line bio: `[CONFIRM: role, city/country, relevant experience]`
+- Founder: Arvind Choupal
+- Location: India
+- Role: Founder & Product Developer
+- Professional background: Independent product developer building practical SaaS tools for freelancers and small businesses.
 
 Do not claim user counts, revenue, awards, compliance certification or “#1” positioning without evidence.
 
@@ -291,11 +291,19 @@ Description:
 
 URL: https://invoicewala.shop
 
-## Founder profile template
+## Founder profile
 
-Do not submit until the bracketed facts are confirmed:
+Short:
 
-> [Founder name] is the founder of InvoiceWala, a utility-first invoicing and business-tool platform. Based in [location], [he/she/they] is focused on helping freelancers and small businesses replace disconnected templates, calculators and payment follow-ups with simpler web workflows. [Add one verified sentence about development, business or industry experience.]
+> Arvind Choupal is the founder and product developer behind InvoiceWala.
+
+Standard:
+
+> Arvind Choupal is the founder and product developer behind InvoiceWala. Based in India, he builds practical web tools that help freelancers and small businesses create invoices, manage GST workflows and follow up on payments without complicated accounting software.
+
+Professional background:
+
+> Independent product developer building practical SaaS tools for freelancers and small businesses.
 
 ## Suggested categories and tags
 
@@ -341,7 +349,7 @@ Still required:
   2. HSN/SAC search result.
   3. Invoice creation or GST calculation workflow.
 - Optional 30–45 second silent demo video.
-- Confirmed founder headshot and bio.
+- Founder headshot, if the selected platform requires one.
 
 ## Screenshot captions
 
@@ -386,4 +394,3 @@ For every submission record:
 - Link type
 - Target URL
 - Follow-up date
-
