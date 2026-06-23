@@ -2,13 +2,13 @@
   "headers": {
     "x-nextjs-stale-time": "300",
     "x-nextjs-prerender": "1",
-    "x-next-cache-tags": "_N_T_/layout,_N_T_/[seoSlug]/layout,_N_T_/[seoSlug]/page,_N_T_/quotation-maker"
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/quotation-maker/layout,_N_T_/quotation-maker/page,_N_T_/quotation-maker"
   },
   "segmentPaths": [
     "/_tree",
     "/_full",
-    "/$d$seoSlug/__PAGE__",
-    "/$d$seoSlug",
+    "/quotation-maker/__PAGE__",
+    "/quotation-maker",
     "/_index",
     "/_head"
   ]

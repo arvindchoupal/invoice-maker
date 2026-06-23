@@ -1,0 +1,32 @@
+export const paymentReminderFaqs: Array<[string, string]> = [
+  ["How do I politely remind a client for payment?", "Mention the invoice number, amount and due date clearly, assume the delay may be accidental, request an expected payment date and keep the message short and professional."],
+  ["Can I send an invoice payment reminder on WhatsApp?", "Yes. A short WhatsApp payment reminder is useful for clients who normally communicate with you there. Keep the message professional and include the invoice reference and amount."],
+  ["What should an overdue invoice reminder email include?", "Include a clear subject line, client name, invoice number, outstanding amount, original due date, payment request and your contact details."],
+  ["When should I send the first payment reminder?", "Many businesses send a friendly reminder one to three days before the due date or on the due date. An overdue reminder can follow after payment becomes late."],
+  ["How often should I follow up on an unpaid invoice?", "A practical sequence is a friendly reminder on the due date, a firm reminder after seven days and a final follow-up after fourteen or thirty days, depending on your payment terms."],
+  ["Is this payment reminder generator free?", "Yes. InvoiceWala's payment reminder generator is free to use for WhatsApp, email and SMS-style invoice follow-ups."],
+  ["Does the generator support Hinglish payment reminders?", "Yes. You can generate natural Hinglish reminders for Indian customers while keeping invoice details and the payment request professional."],
+  ["Can I add UPI or bank details to the reminder?", "Yes. Add your UPI ID, payment link or bank instructions in the optional payment details field before copying the message."],
+];
+
+export const paymentReminderKeywords = [
+  "payment reminder message",
+  "payment reminder",
+  "payment reminder template",
+  "polite payment reminder message",
+  "overdue payment reminder",
+  "invoice payment reminder email",
+  "WhatsApp payment reminder message",
+  "payment follow up message",
+  "outstanding payment reminder",
+  "friendly payment reminder",
+  "firm payment reminder email",
+  "payment reminder message to client",
+  "gentle reminder for payment message",
+  "strong letter for outstanding payment email",
+  "invoice follow up email",
+  "payment reminder SMS",
+  "Hinglish payment reminder",
+  "payment due reminder",
+  "unpaid invoice reminder template",
+];

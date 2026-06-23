@@ -77,28 +77,39 @@ function createPdfBlob(stream: string) {
   return new Blob([pdf], { type: "application/pdf" });
 }
 
-export function PurchaseOrderGeneratorClient() {
-  const [poNumber, setPoNumber] = useState("PO-2026-001");
+export function PurchaseOrderGeneratorClient({
+  documentType = "purchase-order",
+}: {
+  documentType?: "purchase-order" | "quotation";
+}) {
+  const isQuotation = documentType === "quotation";
+  const documentTitle = isQuotation ? "QUOTATION" : "PURCHASE ORDER";
+  const documentLabel = isQuotation ? "Quotation" : "Purchase Order";
+  const [poNumber, setPoNumber] = useState(isQuotation ? "QT-2026-001" : "PO-2026-001");
   const [issueDate, setIssueDate] = useState("2026-06-02");
   const [deliveryDate, setDeliveryDate] = useState("2026-06-12");
   const [buyer, setBuyer] = useState({
-    name: "ABC Technologies",
+    name: isQuotation ? "Your Business" : "ABC Technologies",
     address: "Bengaluru, Karnataka",
-    email: "purchase@abctech.example",
+    email: isQuotation ? "hello@yourbusiness.example" : "purchase@abctech.example",
     phone: "+91 98765 43210",
     gstin: "29ABCDE1234F1Z5",
   });
   const [supplier, setSupplier] = useState({
-    name: "XYZ Office Supplies",
+    name: isQuotation ? "Customer Name" : "XYZ Office Supplies",
     address: "Pune, Maharashtra",
-    email: "sales@xyzoffice.example",
+    email: isQuotation ? "customer@example.com" : "sales@xyzoffice.example",
     phone: "+91 91234 56780",
     gstin: "27XYZAB1234C1Z8",
   });
   const [items, setItems] = useState<Item[]>(initialItems);
   const [discount, setDiscount] = useState(0);
-  const [notes, setNotes] = useState("Please confirm stock availability and delivery schedule before dispatch.");
-  const [terms, setTerms] = useState("Purchase order is valid for 15 days. Supplier invoice should mention the PO number.");
+  const [notes, setNotes] = useState(
+    isQuotation ? "Thank you for the opportunity. Please contact us if you need any changes." : "Please confirm stock availability and delivery schedule before dispatch."
+  );
+  const [terms, setTerms] = useState(
+    isQuotation ? "This quotation is valid for 15 days. Work will begin after written approval." : "Purchase order is valid for 15 days. Supplier invoice should mention the PO number."
+  );
 
   const totals = useMemo(() => {
     const subtotal = items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
@@ -142,14 +153,14 @@ export function PurchaseOrderGeneratorClient() {
     text(buyer.phone, 42, 712);
     text(buyer.address, 42, 697);
     text(`GSTIN: ${buyer.gstin || "-"}`, 42, 682);
-    text("PURCHASE ORDER", 330, 790, 24, "F2");
+    text(documentTitle, 330, 790, 24, "F2");
     text(poNumber, 430, 768, 11, "F2");
     text(`Issue: ${issueDate}`, 430, 750);
     text(`Delivery: ${deliveryDate}`, 430, 735);
 
     rect(42, 610, 511, 52);
-    text("SUPPLIER", 58, 645, 9, "F2");
-    text(supplier.name || "Supplier name", 58, 628, 14, "F2");
+    text(isQuotation ? "QUOTATION FOR" : "SUPPLIER", 58, 645, 9, "F2");
+    text(supplier.name || (isQuotation ? "Customer name" : "Supplier name"), 58, 628, 14, "F2");
     text(`${supplier.email} | ${supplier.phone}`, 270, 628);
     text(`${supplier.address} | GSTIN: ${supplier.gstin || "-"}`, 270, 613);
 
@@ -192,18 +203,18 @@ export function PurchaseOrderGeneratorClient() {
 
     const stream = commands.join("\n");
     const blob = createPdfBlob(stream);
-    const safeName = (poNumber || "purchase-order").replace(/[^a-z0-9-]+/gi, "-").toLowerCase();
+    const safeName = (poNumber || (isQuotation ? "quotation" : "purchase-order")).replace(/[^a-z0-9-]+/gi, "-").toLowerCase();
     downloadBlob(blob, `${safeName}.pdf`);
   }
 
   return (
-    <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6" id="purchase-order-tool">
+    <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6" id={isQuotation ? "quotation-tool" : "purchase-order-tool"}>
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 sm:p-6">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Tool builder</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight">Create a purchase order online</h2>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight">Create a {isQuotation ? "quotation" : "purchase order"} online</h2>
             </div>
             <button
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200"
@@ -217,7 +228,7 @@ export function PurchaseOrderGeneratorClient() {
 
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             <label>
-              <span className={labelClass()}>Purchase Order Number</span>
+              <span className={labelClass()}>{documentLabel} Number</span>
               <input className={inputClass()} value={poNumber} onChange={(event) => setPoNumber(event.target.value)} />
             </label>
             <label>
@@ -225,14 +236,14 @@ export function PurchaseOrderGeneratorClient() {
               <input className={inputClass()} type="date" value={issueDate} onChange={(event) => setIssueDate(event.target.value)} />
             </label>
             <label>
-              <span className={labelClass()}>Expected Delivery Date</span>
+              <span className={labelClass()}>{isQuotation ? "Valid Until" : "Expected Delivery Date"}</span>
               <input className={inputClass()} type="date" value={deliveryDate} onChange={(event) => setDeliveryDate(event.target.value)} />
             </label>
           </div>
 
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             <div className="rounded-3xl border border-white/10 bg-slate-950/50 p-4">
-              <h3 className="font-semibold">Buyer Details</h3>
+              <h3 className="font-semibold">{isQuotation ? "Business Details" : "Buyer Details"}</h3>
               {(["name", "address", "email", "phone", "gstin"] as const).map((key) => (
                 <label className="mt-3 block" key={key}>
                   <span className={labelClass()}>{key === "gstin" ? "GSTIN" : key.replace(/^./, (letter) => letter.toUpperCase())}</span>
@@ -242,7 +253,7 @@ export function PurchaseOrderGeneratorClient() {
             </div>
 
             <div className="rounded-3xl border border-white/10 bg-slate-950/50 p-4">
-              <h3 className="font-semibold">Supplier Details</h3>
+              <h3 className="font-semibold">{isQuotation ? "Customer Details" : "Supplier Details"}</h3>
               {(["name", "address", "email", "phone", "gstin"] as const).map((key) => (
                 <label className="mt-3 block" key={key}>
                   <span className={labelClass()}>{key === "gstin" ? "GSTIN" : key.replace(/^./, (letter) => letter.toUpperCase())}</span>
@@ -325,22 +336,22 @@ export function PurchaseOrderGeneratorClient() {
                   <p className="mt-1 text-xs text-slate-500">GSTIN: {buyer.gstin || "-"}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-cyan-700">PURCHASE ORDER</p>
+                  <p className="text-2xl font-bold text-cyan-700">{documentTitle}</p>
                   <p className="text-sm text-slate-500">{poNumber}</p>
                 </div>
               </div>
 
               <div className="mt-6 grid gap-3 rounded-2xl bg-slate-50 p-4 text-sm sm:grid-cols-2">
                 <div>
-                  <p className="text-xs font-semibold uppercase text-slate-400">Supplier</p>
-                  <p className="mt-2 font-semibold">{supplier.name || "Supplier name"}</p>
+                  <p className="text-xs font-semibold uppercase text-slate-400">{isQuotation ? "Quotation for" : "Supplier"}</p>
+                  <p className="mt-2 font-semibold">{supplier.name || (isQuotation ? "Customer name" : "Supplier name")}</p>
                   <p className="text-xs text-slate-500">{supplier.email}</p>
                   <p className="text-xs text-slate-500">{supplier.address}</p>
                   <p className="text-xs text-slate-500">GSTIN: {supplier.gstin || "-"}</p>
                 </div>
                 <div className="text-left sm:text-right">
                   <p><span className="text-slate-500">Issue:</span> {issueDate}</p>
-                  <p className="mt-2"><span className="text-slate-500">Delivery:</span> {deliveryDate}</p>
+                  <p className="mt-2"><span className="text-slate-500">{isQuotation ? "Valid until:" : "Delivery:"}</span> {deliveryDate}</p>
                 </div>
               </div>
 

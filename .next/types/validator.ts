@@ -297,6 +297,15 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
+// Validate ../../app/quotation-maker/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/quotation-maker">> = Specific
+  const handler = {} as typeof import("../../app/quotation-maker/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/receipt-generator/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/receipt-generator">> = Specific
@@ -391,6 +400,15 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 {
   type __IsExpected<Specific extends AppPageConfig<"/tools">> = Specific
   const handler = {} as typeof import("../../app/tools/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/tools/payment-reminder-generator/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/tools/payment-reminder-generator">> = Specific
+  const handler = {} as typeof import("../../app/tools/payment-reminder-generator/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

@@ -247,6 +247,12 @@
       "namedRegex": "^/purchase\\-order\\-generator(?:/)?$"
     },
     {
+      "page": "/quotation-maker",
+      "regex": "^/quotation\\-maker(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/quotation\\-maker(?:/)?$"
+    },
+    {
       "page": "/receipt-generator",
       "regex": "^/receipt\\-generator(?:/)?$",
       "routeKeys": {},
@@ -347,6 +353,12 @@
       "regex": "^/tools/margin\\-calculator(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/tools/margin\\-calculator(?:/)?$"
+    },
+    {
+      "page": "/tools/payment-reminder-generator",
+      "regex": "^/tools/payment\\-reminder\\-generator(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/tools/payment\\-reminder\\-generator(?:/)?$"
     },
     {
       "page": "/tools/pdf-to-invoice-extractor",

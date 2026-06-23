@@ -33,6 +33,7 @@
   "/pricing/page": "/pricing",
   "/privacy-policy/page": "/privacy-policy",
   "/purchase-order-generator/page": "/purchase-order-generator",
+  "/quotation-maker/page": "/quotation-maker",
   "/receipt-generator/page": "/receipt-generator",
   "/refund-policy/page": "/refund-policy",
   "/robots.txt/route": "/robots.txt",
@@ -46,6 +47,7 @@
   "/tools/invoice-to-excel-converter/page": "/tools/invoice-to-excel-converter",
   "/tools/margin-calculator/page": "/tools/margin-calculator",
   "/tools/page": "/tools",
+  "/tools/payment-reminder-generator/page": "/tools/payment-reminder-generator",
   "/tools/pdf-to-invoice-extractor/page": "/tools/pdf-to-invoice-extractor",
   "/tools/profit-calculator/page": "/tools/profit-calculator",
   "/tools/tax-calculator/page": "/tools/tax-calculator"

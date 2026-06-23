@@ -33,6 +33,7 @@
   "/pricing/page": "app/pricing/page.js",
   "/privacy-policy/page": "app/privacy-policy/page.js",
   "/purchase-order-generator/page": "app/purchase-order-generator/page.js",
+  "/quotation-maker/page": "app/quotation-maker/page.js",
   "/receipt-generator/page": "app/receipt-generator/page.js",
   "/refund-policy/page": "app/refund-policy/page.js",
   "/robots.txt/route": "app/robots.txt/route.js",
@@ -46,6 +47,7 @@
   "/tools/invoice-to-excel-converter/page": "app/tools/invoice-to-excel-converter/page.js",
   "/tools/margin-calculator/page": "app/tools/margin-calculator/page.js",
   "/tools/page": "app/tools/page.js",
+  "/tools/payment-reminder-generator/page": "app/tools/payment-reminder-generator/page.js",
   "/tools/pdf-to-invoice-extractor/page": "app/tools/pdf-to-invoice-extractor/page.js",
   "/tools/profit-calculator/page": "app/tools/profit-calculator/page.js",
   "/tools/tax-calculator/page": "app/tools/tax-calculator/page.js"
