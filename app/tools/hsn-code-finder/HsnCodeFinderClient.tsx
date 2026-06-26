@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { PublicToolNavActions } from "@/components/PublicToolNavActions";
 import { HSN_DATA_LAST_REVIEWED, HSN_SAC_CATEGORIES, HSN_SAC_ENTRIES } from "@/lib/hsn-sac-data";
@@ -9,20 +9,23 @@ import { HSN_DATA_LAST_REVIEWED, HSN_SAC_CATEGORIES, HSN_SAC_ENTRIES } from "@/l
 type Props = { faqs: Array<[string, string]> };
 type TypeFilter = "All" | "HSN" | "SAC";
 
+function getInitialFilters() {
+  if (typeof window === "undefined") return { query: "", type: "All" as TypeFilter };
+  const params = new URLSearchParams(window.location.search);
+  const requestedType = params.get("type");
+  return {
+    query: params.get("q") ?? "",
+    type: requestedType === "HSN" || requestedType === "SAC" ? requestedType : ("All" as TypeFilter),
+  };
+}
+
 export default function HsnCodeFinderClient({ faqs }: Props) {
-  const [query, setQuery] = useState("");
-  const [type, setType] = useState<TypeFilter>("All");
+  const [query, setQuery] = useState(() => getInitialFilters().query);
+  const [type, setType] = useState<TypeFilter>(() => getInitialFilters().type);
   const [category, setCategory] = useState("All");
   const [rate, setRate] = useState("All");
   const [copiedCode, setCopiedCode] = useState("");
   const [shared, setShared] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setQuery(params.get("q") ?? "");
-    const requestedType = params.get("type");
-    if (requestedType === "HSN" || requestedType === "SAC") setType(requestedType);
-  }, []);
 
   const filteredResults = useMemo(() => {
     const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
