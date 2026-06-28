@@ -31,9 +31,9 @@ export const TOOLS_CATALOG: ToolCatalogEntry[] = [
     body: "Create GST quotations with customer details, item rows, discount, validity, terms and PDF download.",
     tag: "Documents",
     intent: "Best before customer approval",
-    metaTitle: "Quotation Generator Online Free | GST Quote PDF India",
+    metaTitle: "Free Quotation Generator Online | Quote Maker India",
     metaDescription:
-      "Free quotation generator for Indian businesses. Create GST quotations with customer details, item rows, discount, validity, terms and instant PDF download.",
+      "Create professional GST quotations with our free quotation generator. Add items, tax and terms, then download a clean quote PDF online.",
     headline: "Create a professional quotation and download the PDF.",
     highlights: ["GST and discount calculation", "Live quotation preview", "Instant PDF download"],
     signupSource: "quotation-generator",

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useAuthSession } from "@/hooks/useAuthSession";
 
 const comparisonLinks = [
   { href: "/invoicewala-vs-excel", label: "InvoiceWala vs Excel" },
@@ -32,8 +31,8 @@ const footerGroups = [
     title: "Calculators",
     links: [
       { href: "/tools/gst-calculator", label: "GST calculator" },
+      { href: "/tools/hsn-code-finder", label: "HSN and SAC finder" },
       { href: "/tools/profit-calculator", label: "Profit calculator" },
-      { href: "/tools/discount-calculator", label: "Discount calculator" },
       { href: "/tools/invoice-number-generator", label: "Invoice number generator" },
     ],
   },
@@ -42,8 +41,8 @@ const footerGroups = [
     links: [
       { href: "/blog/gst-bill-format", label: "GST bill format" },
       { href: "/tax-invoice-format", label: "Tax invoice format" },
-      { href: "/blog/how-to-create-gst-invoice-india", label: "Create GST invoice" },
-      { href: "/blog/estimate-vs-invoice", label: "Estimate vs invoice" },
+      { href: "/blog/cgst-sgst-igst-explained", label: "CGST, SGST and IGST" },
+      { href: "/blog/what-is-invoice-generator", label: "What is an invoice generator?" },
     ],
   },
   {
@@ -60,38 +59,6 @@ const footerGroups = [
 ];
 
 export function PublicFooterLinks() {
-  const { isLoggedIn, ready } = useAuthSession();
-
-  if (!ready) return null;
-
-  if (isLoggedIn) {
-    return (
-      <div className="grid w-full gap-6 text-sm lg:grid-cols-[1fr_3fr]">
-        <div className="flex flex-wrap gap-x-5 gap-y-3 text-slate-300">
-          <Link className="transition hover:text-white" href="/dashboard">Dashboard</Link>
-          <Link className="transition hover:text-white" href="/invoices">Invoices</Link>
-          <Link className="transition hover:text-white" href="/tools">Tools</Link>
-          <Link className="transition hover:text-white" href="/blog">Blog</Link>
-          <Link className="transition hover:text-white" href="/settings">Settings</Link>
-        </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-          {footerGroups.map((group) => (
-            <div key={group.title}>
-              <p className="font-semibold text-slate-200">{group.title}</p>
-              <div className="mt-3 grid gap-2 text-slate-500">
-                {group.links.map((link) => (
-                  <Link className="transition hover:text-slate-200" href={link.href} key={link.href}>
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="grid w-full gap-8 text-sm">
       <div className="flex flex-wrap gap-x-5 gap-y-3 text-slate-300">
