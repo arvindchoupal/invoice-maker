@@ -1,0 +1,3 @@
+{
+  "/invoice-templates/[slug]/opengraph-image/route": "app/invoice-templates/[slug]/opengraph-image/route.js"
+}

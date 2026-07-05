@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/invoice-templates/layout,_N_T_/invoice-templates/[slug]/layout,_N_T_/invoice-templates/[slug]/page,_N_T_/invoice-templates/carpenter-invoice-template"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/invoice-templates/$d$slug/__PAGE__",
+    "/invoice-templates/$d$slug",
+    "/invoice-templates",
+    "/_index",
+    "/_head"
+  ]
+}

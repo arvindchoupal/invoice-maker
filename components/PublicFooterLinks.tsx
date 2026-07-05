@@ -12,6 +12,7 @@ const footerGroups = [
   {
     title: "Invoice tools",
     links: [
+      { href: "/invoice-templates", label: "Invoice templates" },
       { href: "/free-invoice-generator", label: "Free invoice generator" },
       { href: "/gst-invoice-generator", label: "GST invoice generator" },
       { href: "/freelancer-invoice-generator", label: "Freelancer invoice generator" },
@@ -30,6 +31,7 @@ const footerGroups = [
   {
     title: "Calculators",
     links: [
+      { href: "/tools/business-expense-calculator", label: "Business expense calculator" },
       { href: "/tools/gst-calculator", label: "GST calculator" },
       { href: "/tools/hsn-code-finder", label: "HSN and SAC finder" },
       { href: "/tools/profit-calculator", label: "Profit calculator" },

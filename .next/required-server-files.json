@@ -310,7 +310,27 @@
     "_originalRedirects": [
       {
         "source": "/blog/freelancer-invoice-guide",
-        "destination": "/blog/freelancer-invoice-template",
+        "destination": "/invoice-templates/freelancer-invoice-template",
+        "permanent": true
+      },
+      {
+        "source": "/blog/freelancer-invoice-template",
+        "destination": "/invoice-templates/freelancer-invoice-template",
+        "permanent": true
+      },
+      {
+        "source": "/blog/electrician-invoice-template",
+        "destination": "/invoice-templates/electrician-invoice-template",
+        "permanent": true
+      },
+      {
+        "source": "/blog/plumber-invoice-template",
+        "destination": "/invoice-templates/plumber-invoice-template",
+        "permanent": true
+      },
+      {
+        "source": "/freelancer-invoice-template",
+        "destination": "/invoice-templates/freelancer-invoice-template",
         "permanent": true
       },
       {

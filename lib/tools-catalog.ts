@@ -13,6 +13,19 @@ export type ToolCatalogEntry = {
 
 export const TOOLS_CATALOG: ToolCatalogEntry[] = [
   {
+    href: "/tools/business-expense-calculator",
+    title: "Business expense calculator",
+    body: "Add business costs by category, estimate expense ratio and GST included, then export a clean CSV summary.",
+    tag: "Finance",
+    intent: "Best for monthly expense reviews",
+    metaTitle: "Business Expense Calculator | Free Expense Tracker",
+    metaDescription:
+      "Free business expense calculator for Indian freelancers and small businesses. Total costs by category, check expense ratio, estimate included GST and export CSV.",
+    headline: "Understand where your business money goes each month.",
+    highlights: ["Category-wise expense totals", "Expense-to-revenue ratio", "GST estimate and CSV export"],
+    signupSource: "business-expense-calculator",
+  },
+  {
     href: "/tools/hsn-code-finder",
     title: "HSN and SAC code finder",
     body: "Search common HSN codes for goods and SAC codes for services by name, category, code and indicative GST rate.",

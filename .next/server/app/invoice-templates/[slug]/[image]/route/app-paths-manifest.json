@@ -1,0 +1,3 @@
+{
+  "/invoice-templates/[slug]/[image]/route": "app/invoice-templates/[slug]/[image]/route.js"
+}

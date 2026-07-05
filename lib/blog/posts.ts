@@ -14,7 +14,10 @@ export type BlogPost = {
 };
 
 export const BLOG_REDIRECTS: Record<string, string> = {
-  "freelancer-invoice-guide": "/blog/freelancer-invoice-template",
+  "freelancer-invoice-guide": "/invoice-templates/freelancer-invoice-template",
+  "freelancer-invoice-template": "/invoice-templates/freelancer-invoice-template",
+  "electrician-invoice-template": "/invoice-templates/electrician-invoice-template",
+  "plumber-invoice-template": "/invoice-templates/plumber-invoice-template",
   "gst-bill-format-sample-invoice": "/blog/gst-bill-format",
   "how-to-create-invoice-numbers": "/tools/invoice-number-generator",
   "professional-quotation-format-india": "/quotation-maker",

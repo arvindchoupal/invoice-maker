@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getIndexablePosts } from "@/lib/blog/posts";
 import { seoPages } from "@/lib/seo-pages";
 import { TOOLS_CATALOG } from "@/lib/tools-catalog";
+import { INVOICE_TEMPLATE_PAGES, invoiceTemplateImageUrl, invoiceTemplateUrl } from "@/lib/invoice-template-pages";
 
 const siteUrl = "https://invoicewala.shop";
 
@@ -24,6 +25,7 @@ const excludedSitemapHrefs = new Set([
   "/invoice-number-generator",
   "/pdf-to-invoice-ai",
   "/payment-reminder",
+  "/freelancer-invoice-template",
 ]);
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -39,6 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/tax-invoice-format",
     "/blog/gst-bill-format",
     "/tools/hsn-code-finder/methodology",
+    "/invoice-templates",
   ]
     .filter((path) => !excludedSitemapHrefs.has(path))
     .map((path) => ({
@@ -81,7 +84,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     }));
 
+  const invoiceTemplateRoutes = INVOICE_TEMPLATE_PAGES.map((page) => {
+    const path = invoiceTemplateUrl(page.slug);
+    return {
+      url: `${siteUrl}${path}`,
+      lastModified: new Date(page.updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.85,
+      images: [`${siteUrl}${invoiceTemplateImageUrl(page)}`],
+    };
+  });
+
   return Array.from(
-    new Map([...staticRoutes, ...seoRoutes, ...toolRoutes, ...blogRoutes].map((route) => [route.url, route])).values()
+    new Map([...staticRoutes, ...invoiceTemplateRoutes, ...seoRoutes, ...toolRoutes, ...blogRoutes].map((route) => [route.url, route])).values()
   );
 }

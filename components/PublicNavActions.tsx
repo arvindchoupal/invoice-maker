@@ -18,9 +18,12 @@ export function PublicNavActions({ showBlog = true }: { showBlog?: boolean }) {
 
   if (isLoggedIn) {
     return (
-      <div className="flex items-center gap- sm:gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <Link className={`${guestLinkClass} hidden md:inline-flex`} href="/tools">
           Free tools
+        </Link>
+        <Link className={guestLinkClass} href="/invoice-templates">
+          Templates
         </Link>
         <Link className={`hidden lg:inline-flex ${guestLinkClass}`} href="/free-invoice">
           Make invoice
@@ -42,8 +45,11 @@ export function PublicNavActions({ showBlog = true }: { showBlog?: boolean }) {
 
   return (
     <div className="flex items-center gap-2 sm:gap-3">
-      <Link className={guestLinkClass} href="/tools">
-        Free tools
+      <Link className={`${guestLinkClass} hidden sm:inline-flex`} href="/tools">
+        Tools
+      </Link>
+      <Link className={guestLinkClass} href="/invoice-templates">
+        Templates
       </Link>
       <Link className={`hidden lg:inline-flex ${guestLinkClass}`} href="/free-invoice">
         Make invoice

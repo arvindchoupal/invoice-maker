@@ -1,4 +1,17 @@
 User-Agent: *
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /invoices
+Disallow: /clients
+Disallow: /bookkeeping
+Disallow: /recurring
+Disallow: /payments
+Disallow: /reports
+Disallow: /settings
+Disallow: /documents
+Disallow: /ai-import
 
+Host: https://invoicewala.shop
 Sitemap: https://invoicewala.shop/sitemap.xml
