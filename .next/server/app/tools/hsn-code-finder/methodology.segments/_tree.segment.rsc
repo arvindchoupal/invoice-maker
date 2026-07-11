@@ -1,2 +1,0 @@
-:HL["/_next/static/chunks/0mdd7p193bc1~.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"tools","param":null,"prefetchHints":0,"slots":{"children":{"name":"hsn-code-finder","param":null,"prefetchHints":0,"slots":{"children":{"name":"methodology","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}}}},"staleTime":300,"buildId":"g_KfWGYbCohOhkpR8Ss9k"}
