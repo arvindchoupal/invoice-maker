@@ -191,6 +191,7 @@ export const INVOICE_TEMPLATE_BATCH_THREE: InvoiceTemplatePage[] = [
     required: ["Mention student, course, batch, instalment period and receipt reference.", "Break out course fee, test series, books and discounts.", "Add payment mode, balance due and tax details where required."],
     tips: ["Show instalment number.", "Mention batch or course code.", "Keep scholarship discounts visible."],
     relatedSlugs: ["tutor-invoice-template", "gym-invoice-template", "consultant-invoice-template"],
+    searchIntents: ["coaching invoice template", "coaching fee receipt", "coaching bill format", "tuition fee invoice", "course fee receipt"],
   }),
   makeTemplate({
     slug: "event-planner-invoice-template",

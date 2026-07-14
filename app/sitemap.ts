@@ -38,6 +38,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/about",
     "/contact",
     "/press-kit",
+    "/gst-invoice-format",
+    "/gst-invoice-format-in-excel",
     "/tax-invoice-format",
     "/blog/gst-bill-format",
     "/tools/hsn-code-finder/methodology",

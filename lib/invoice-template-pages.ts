@@ -1,4 +1,5 @@
 import { INVOICE_TEMPLATE_BATCH_THREE } from "@/lib/invoice-template-batch-three";
+import { INVOICE_TEMPLATE_BATCH_FOUR } from "@/lib/invoice-template-batch-four";
 import { INVOICE_TEMPLATE_BATCH_TWO } from "@/lib/invoice-template-batch-two";
 
 export type InvoiceTemplatePage = {
@@ -401,6 +402,7 @@ export const INVOICE_TEMPLATE_PAGES: InvoiceTemplatePage[] = [
   },
   ...INVOICE_TEMPLATE_BATCH_TWO,
   ...INVOICE_TEMPLATE_BATCH_THREE,
+  ...INVOICE_TEMPLATE_BATCH_FOUR,
 ];
 
 const templateBySlug = new Map(INVOICE_TEMPLATE_PAGES.map((page) => [page.slug, page]));

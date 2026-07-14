@@ -1,0 +1,16 @@
+Invoice Number,GST-2026-001
+Invoice Date,14-07-2026
+Supplier Name,InvoiceWala Demo Business
+Supplier GSTIN,29ABCDE1234F1Z5
+Buyer Name,Aarav Retail Pvt Ltd
+Buyer GSTIN,27ABCDE1234F1Z8
+Place of Supply,Karnataka
+
+Description,HSN/SAC,Qty,Rate,Taxable Value,GST Rate,CGST,SGST,IGST,Line Total
+Website development,998314,1,40000,40000,18%,3600,3600,0,47200
+Monthly support,998313,1,8000,8000,18%,720,720,0,9440
+Setup fee,998315,1,2000,2000,18%,180,180,0,2360
+
+Subtotal,,,,50000,,,,,
+Total GST,,,,,,4500,4500,0,9000
+Grand Total,,,,,,,,,59000
