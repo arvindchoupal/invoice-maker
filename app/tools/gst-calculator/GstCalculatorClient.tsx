@@ -8,7 +8,7 @@ import { PublicToolNavActions } from "@/components/PublicToolNavActions";
 import { ToolSeoContent } from "@/components/tools/ToolSeoContent";
 import { gstCalculatorSeoContent } from "@/lib/tool-seo-content";
 
-const rates = [0, 3, 5, 12, 18, ];
+const rates = [0, 3, 5, 12, 18, 28];
 const currencyFormatter = new Intl.NumberFormat("en-IN", {
   style: "currency",
   currency: "INR",
@@ -104,13 +104,13 @@ export default function GstCalculatorClient() {
 
         <div className="mx-auto grid max-w-7xl gap-8 py-10 sm:py-12 xl:grid-cols-[minmax(0,0.82fr)_minmax(620px,0.98fr)] xl:items-start">
           <div className="xl:sticky xl:top-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">GST calculator India</p>
-            <h1 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl xl:text-5xl">Calculate GST, split tax and create invoices faster.</h1>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">Free GST calculator India</p>
+            <h1 className="mt-5 max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl xl:text-5xl">Add or remove GST online before you create a bill.</h1>
             <p className="mt-5 max-w-xl text-lg leading-8 text-slate-300">
-              Work out inclusive or exclusive GST with CGST/SGST or IGST split, then move the result into InvoiceWala for branded invoices, payment links and reminders.
+              Calculate GST-inclusive or GST-exclusive prices with CGST/SGST or IGST split, then move the result into InvoiceWala for branded invoices, payment links and reminders.
             </p>
             <div className="mt-8 grid gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm text-slate-300">
-              {["Live calculation updates", "CSV download and shareable result", "Built for GST invoices, quotes and estimates"].map((item) => (
+              {["Add GST to a base price", "Remove GST from an inclusive price", "Built for GST bills, invoices and quotations"].map((item) => (
                 <div className="flex items-center gap-3" key={item}>
                   <span className="h-2 w-2 rounded-full bg-cyan-300" />
                   <span>{item}</span>
@@ -228,6 +228,9 @@ export default function GstCalculatorClient() {
                     />
                     <Link className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 px-4 text-center text-sm font-semibold text-white transition hover:bg-white/10" href="/tools/invoice-number-generator">
                       Generate invoice number
+                    </Link>
+                    <Link className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 px-4 text-center text-sm font-semibold text-white transition hover:bg-white/10 sm:col-span-2" href="/tools/gst-bill-format-generator">
+                      Create GST bill format
                     </Link>
                   </div>
                 </div>

@@ -19,6 +19,7 @@ export type InvoiceTemplatePage = {
   mistakes: Array<{ title: string; body: string }>;
   faqs: Array<[string, string]>;
   relatedSlugs: string[];
+  searchIntents?: string[];
   updatedAt: string;
 };
 
@@ -289,10 +290,10 @@ export const INVOICE_TEMPLATE_PAGES: InvoiceTemplatePage[] = [
     profession: "Gym",
     category: "Health and fitness",
     primaryKeyword: "gym invoice template",
-    title: "Free Gym Invoice Template | Membership Bill",
-    description: "Create a gym invoice for membership plans, personal training, joining fees and products. Add payment period, tax and make a professional PDF bill online.",
-    h1: "Gym Invoice Template for Memberships and Training",
-    intro: "Create a clear fitness invoice for a monthly or annual membership, joining fee, personal training and merchandise. Recording the exact membership period helps both the gym and member avoid renewal confusion.",
+    title: "Free Gym Invoice Template | Membership Bill Format",
+    description: "Create a gym invoice, gym bill format or membership invoice for plans, personal training, joining fees and GST. Make a professional PDF bill online.",
+    h1: "Gym Invoice Template for Membership Bills",
+    intro: "Create a clear gym bill format for monthly membership, annual plans, joining fees, personal training and fitness merchandise. Recording the exact membership period helps both the gym and member avoid renewal confusion.",
     billingModel: "Membership period + add-on services",
     sampleBusiness: "CoreFit Strength Club",
     sampleCustomer: "Arjun Mehta",
@@ -306,7 +307,7 @@ export const INVOICE_TEMPLATE_PAGES: InvoiceTemplatePage[] = [
       { title: "Member identification", body: "Add the member name and optional membership number for record matching." },
       { title: "Add-on sessions", body: "List personal training, classes or assessments separately from membership fees." },
     ],
-    tips: ["Show the plan duration and renewal date clearly.", "Track prepaid personal-training sessions as a separate package.", "Record the payment mode or transaction reference for reconciliation."],
+    tips: ["Show the plan duration and renewal date clearly.", "Track prepaid personal-training sessions as a separate package.", "Record the payment mode or transaction reference for reconciliation.", "Use a clear gym membership invoice line when the bill covers a fixed plan period."],
     mistakes: [
       { title: "No membership dates", body: "A payment amount without its coverage period creates renewal disputes." },
       { title: "Bundling add-ons", body: "Separate training sessions and merchandise from the base plan for cleaner records." },
@@ -317,8 +318,10 @@ export const INVOICE_TEMPLATE_PAGES: InvoiceTemplatePage[] = [
       ["How do I bill personal training?", "List the number of sessions, package period and rate separately from the gym membership."],
       ["Can annual membership be invoiced?", "Yes. State the full start and end date and any renewal conditions."],
       ["Can I add a joining fee?", "Yes. Add it as a one-time line item so it is not confused with recurring membership fees."],
+      ["Can this work as a gym bill format?", "Yes. Use the sample structure for gym membership bills, fitness invoices, joining fees and add-on training sessions."],
     ],
     relatedSlugs: ["salon-invoice-template", "consultant-invoice-template", "freelancer-invoice-template"],
+    searchIntents: ["gym bill format", "gym membership invoice", "gym membership bill", "gym invoice generator", "gym and fitness invoice template"],
     updatedAt: sharedDate,
   },
   {
@@ -355,7 +358,8 @@ export const INVOICE_TEMPLATE_PAGES: InvoiceTemplatePage[] = [
       ["Can freight be billed per kilometre?", "Yes. Enter kilometres as the quantity and the agreed per-kilometre rate."],
       ["How should GST be handled?", "Transport tax treatment can depend on the service and parties. Use the appropriate invoice details and confirm the exact treatment with a tax professional."],
     ],
-    relatedSlugs: ["contractor-invoice-template", "plumber-invoice-template", "freelancer-invoice-template"],
+    relatedSlugs: ["logistics-invoice-template", "courier-invoice-template", "travel-agency-invoice-template"],
+    searchIntents: ["transport invoice format", "transport bill format", "freight bill format", "how to make transport bill", "goods transport invoice"],
     updatedAt: sharedDate,
   },
   {

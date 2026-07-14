@@ -16,6 +16,7 @@ type TemplateSeed = {
   required: [string, string, string];
   tips: string[];
   relatedSlugs: string[];
+  searchIntents?: string[];
 };
 
 function makeTemplate(seed: TemplateSeed): InvoiceTemplatePage {
@@ -52,6 +53,7 @@ function makeTemplate(seed: TemplateSeed): InvoiceTemplatePage {
       ["Should I customise the sample items?", "Yes. Replace all sample names, descriptions, dates and amounts with your actual customer and job details before sending the invoice."],
     ],
     relatedSlugs: seed.relatedSlugs,
+    searchIntents: seed.searchIntents,
     updatedAt,
   };
 }
@@ -309,8 +311,8 @@ export const INVOICE_TEMPLATE_BATCH_THREE: InvoiceTemplatePage[] = [
     profession: "Logistics",
     category: "Travel and logistics",
     primaryKeyword: "logistics invoice template",
-    title: "Free Logistics Invoice Template | Freight Bill PDF",
-    h1: "Logistics Invoice Template for Freight and Delivery",
+    title: "Free Logistics Invoice Template | Freight Bill Format",
+    h1: "Logistics Invoice Template for Freight Bills",
     billingModel: "Consignment + freight + handling",
     sampleBusiness: "NorthRoute Logistics",
     sampleCustomer: "Evergreen Traders",
@@ -320,16 +322,17 @@ export const INVOICE_TEMPLATE_BATCH_THREE: InvoiceTemplatePage[] = [
       { name: "Waiting charge", detail: "Approved delay", amount: 1200 },
     ],
     required: ["Add LR/GR number, route, vehicle, consignment and delivery date.", "Show freight basis, handling, waiting, fuel surcharge and insurance separately.", "Add GST, e-way bill reference where needed and payment terms."],
-    tips: ["Mention route and weight.", "Reference consignment number.", "Separate detention or waiting charges."],
+    tips: ["Mention route and weight.", "Reference consignment number.", "Separate detention or waiting charges.", "Use logistics invoice sample lines for freight, handling, detention, insurance and fuel surcharge."],
     relatedSlugs: ["transport-invoice-template", "courier-invoice-template", "travel-agency-invoice-template"],
+    searchIntents: ["logistics invoice sample", "logistics bill format", "freight invoice template", "freight bill format", "transport logistics invoice"],
   }),
   makeTemplate({
     slug: "courier-invoice-template",
     profession: "Courier",
     category: "Travel and logistics",
     primaryKeyword: "courier invoice template",
-    title: "Free Courier Invoice Template | Delivery Bill PDF",
-    h1: "Courier Invoice Template for Parcel Deliveries",
+    title: "Free Courier Invoice Template | Delivery Bill Format",
+    h1: "Courier Invoice Template for Delivery Bills",
     billingModel: "Shipment + weight + delivery service",
     sampleBusiness: "SwiftBox Courier",
     sampleCustomer: "UrbanCart Sellers",
@@ -339,8 +342,9 @@ export const INVOICE_TEMPLATE_BATCH_THREE: InvoiceTemplatePage[] = [
       { name: "Packaging", detail: "Bubble mailers and labels", amount: 650 },
     ],
     required: ["Add shipment IDs, pickup/delivery locations, parcel count and service type.", "Show per-shipment rate, weight slabs, packaging and express charges.", "Mention tax, fuel surcharge, payment terms and delivery proof references."],
-    tips: ["Use shipment or AWB references.", "Separate packaging and express charges.", "Mention COD remittance if applicable."],
+    tips: ["Use shipment or AWB references.", "Separate packaging and express charges.", "Mention COD remittance if applicable.", "For courier bill format searches, show parcel count, shipment ID, weight slab and delivery service level clearly."],
     relatedSlugs: ["logistics-invoice-template", "transport-invoice-template", "ecommerce-seller-invoice-template"],
+    searchIntents: ["courier bill format", "courier invoice format", "delivery bill format", "parcel delivery invoice", "AWB invoice format"],
   }),
   makeTemplate({
     slug: "printing-invoice-template",

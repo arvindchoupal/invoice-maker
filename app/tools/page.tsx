@@ -44,6 +44,7 @@ const toolHubs = [
     links: [
       ["/free-invoice-generator", "Free invoice generator"],
       ["/gst-invoice-generator", "GST invoice generator"],
+      ["/tools/gst-bill-format-generator", "GST bill format generator"],
       ["/invoice-template-india", "Invoice template India"],
       ["/tools/invoice-number-generator", "Invoice number generator"],
     ],
@@ -64,6 +65,7 @@ const toolHubs = [
     links: [
       ["/tools/hsn-code-finder", "HSN and SAC code finder"],
       ["/tools/gst-calculator", "GST calculator"],
+      ["/tools/gst-bill-format-generator", "GST bill format generator"],
       ["/tools/profit-calculator", "Profit calculator"],
       ["/tools/margin-calculator", "Margin calculator"],
       ["/tools/discount-calculator", "Discount calculator"],

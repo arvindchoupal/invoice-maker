@@ -122,6 +122,7 @@ export const gstCalculatorSeoContent: ToolSeoContent = {
   ],
   internalLinks: [
     { href: "/gst-invoice-generator", label: "GST invoice generator", body: "Create a GST-ready invoice after calculating tax." },
+    { href: "/tools/gst-bill-format-generator", label: "GST bill format generator", body: "Preview a GST bill format with tax split and total." },
     { href: "/free-invoice-generator", label: "online invoice maker", body: "Make a professional invoice and download a PDF." },
     { href: "/free-invoice-generator", label: "free invoice generator", body: "Preview an invoice before signup." },
     { href: "/invoice-template-india", label: "invoice template India", body: "Use a practical Indian invoice format." },
@@ -133,6 +134,7 @@ export const gstCalculatorSeoContent: ToolSeoContent = {
     { href: "/tools/profit-calculator", label: "Profit calculator" },
     { href: "/tools/tax-calculator", label: "Tax calculator" },
     { href: "/tools/invoice-number-generator", label: "Invoice number generator" },
+    { href: "/tools/gst-bill-format-generator", label: "GST bill format generator" },
   ],
   keywords: [
     "GST calculator India",

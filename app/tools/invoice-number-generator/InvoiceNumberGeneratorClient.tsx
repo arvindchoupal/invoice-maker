@@ -12,18 +12,67 @@ const tool = toolByHref("/tools/invoice-number-generator")!;
 export default function InvoiceNumberGeneratorClient() {
   const [prefix, setPrefix] = useState("INV");
   const [next, setNext] = useState(1);
-  const number = `${prefix}-${String(next).padStart(5, "0")}`;
+  const [digits, setDigits] = useState(4);
+  const [copied, setCopied] = useState(false);
+  const cleanPrefix = prefix.trim().toUpperCase().replace(/\s+/g, "-") || "INV";
+  const safeNext = Number.isFinite(next) ? Math.max(0, next) : 1;
+  const number = `${cleanPrefix}-${String(safeNext).padStart(digits, "0")}`;
+
+  async function copyNumber() {
+    await navigator.clipboard.writeText(number);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
+  }
 
   return (
     <ToolPageLayout after={<InvoiceNumberSeoSections />} tool={tool}>
       <div className="rounded-2xl border border-white/10 bg-slate-950/80 p-5 sm:p-6">
-        <h2 className="text-xl font-semibold text-white">Invoice number generator</h2>
+        <h2 className="text-xl font-semibold text-white">Free invoice number generator</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-400">Create a copy-ready invoice ID for GST bills, freelancers, agencies and small businesses.</p>
         <div className="mt-6 grid gap-4">
-          <Field label="Prefix"><input className={inputClass} value={prefix} onChange={(e) => setPrefix(e.target.value.toUpperCase())} /></Field>
-          <Field label="Next number"><input className={inputClass} type="number" value={next} onChange={(e) => setNext(Number(e.target.value))} /></Field>
-          <p className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-2xl font-semibold text-white">{number}</p>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {[
+              ["INV", "Simple"],
+              ["FY26", "Financial year"],
+              ["GST-2026", "GST series"],
+              ["CLIENT", "Client-wise"],
+            ].map(([value, label]) => (
+              <button
+                className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-left text-sm text-slate-300 transition hover:border-cyan-300/40 hover:text-cyan-100"
+                key={value}
+                onClick={() => setPrefix(value)}
+                type="button"
+              >
+                <span className="block font-semibold text-white">{value}</span>
+                <span className="text-xs text-slate-500">{label}</span>
+              </button>
+            ))}
+          </div>
+          <Field label="Prefix">
+            <input className={inputClass} value={prefix} onChange={(e) => setPrefix(e.target.value.toUpperCase())} />
+          </Field>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Next number">
+              <input className={inputClass} min={0} type="number" value={next} onChange={(e) => setNext(Number(e.target.value))} />
+            </Field>
+            <Field label="Digits">
+              <select className={inputClass} value={digits} onChange={(e) => setDigits(Number(e.target.value))}>
+                {[3, 4, 5, 6].map((value) => <option className="bg-slate-950" key={value} value={value}>{value} digits</option>)}
+              </select>
+            </Field>
+          </div>
+          <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-cyan-200">Generated invoice number</p>
+            <p className="mt-2 break-all text-3xl font-semibold text-white">{number}</p>
+          </div>
+          <button className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 px-4 text-sm font-semibold text-white transition hover:bg-white/10" onClick={copyNumber} type="button">
+            {copied ? "Copied" : "Copy invoice number"}
+          </button>
           <Link className="inline-flex min-h-11 items-center justify-center rounded-xl bg-cyan-300 px-4 text-sm font-semibold text-slate-950" href="/invoices/new">
             Create invoice with this number
+          </Link>
+          <Link className="text-center text-sm font-semibold text-cyan-300 underline-offset-2 hover:underline" href="/tools/gst-bill-format-generator">
+            Need GST fields too? Open GST bill format generator
           </Link>
         </div>
       </div>

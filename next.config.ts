@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.invoicewala.shop" }],
+        destination: "https://invoicewala.shop/:path*",
+        permanent: true,
+      },
+      {
         source: "/blog/freelancer-invoice-guide",
         destination: "/invoice-templates/freelancer-invoice-template",
         permanent: true,

@@ -42,6 +42,16 @@ export function InvoiceTemplatePage({ page }: { page: InvoiceTemplatePageData })
               <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold text-slate-300">
                 {["Free preview", "GST-ready fields", "PDF after signup", "Mobile-friendly"].map((badge) => <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5" key={badge}>{badge}</span>)}
               </div>
+              {page.searchIntents && page.searchIntents.length > 0 ? (
+                <div className="mt-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Also useful for</p>
+                  <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold text-cyan-100">
+                    {page.searchIntents.map((intent) => (
+                      <span className="rounded-full border border-cyan-300/15 bg-cyan-300/10 px-3 py-1.5" key={intent}>{intent}</span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
             </div>
             <InvoiceTemplatePreview page={page} />
           </div>
