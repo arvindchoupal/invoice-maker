@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
@@ -6,7 +7,8 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
 import { PublicNavActions } from "@/components/PublicNavActions";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { seoPageBySlug, seoPages } from "@/lib/seo-pages";
+import { PeopleAlsoUse } from "@/components/seo/PeopleAlsoUse";
+import { seoPageBySlug, seoPageImageAlt, seoPageImageUrl, seoPages } from "@/lib/seo-pages";
 
 type PageProps = {
   params: Promise<{ seoSlug: string }>;
@@ -39,6 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { seoSlug } = await params;
   const page = seoPageBySlug(seoSlug);
   if (!page) return {};
+  const image = `${siteUrl}${seoPageImageUrl(page.slug)}`;
   return {
     title: page.title,
     description: page.description,
@@ -48,6 +51,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: page.description,
       url: `${siteUrl}/${page.slug}`,
       siteName: "InvoiceWala",
+      images: [{ url: image, alt: seoPageImageAlt(page), width: 1200, height: 1500 }],
     },
   };
 }
@@ -126,11 +130,11 @@ export default async function SeoLandingPage({ params }: PageProps) {
             <h1 className="mt-4 max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">{page.h1}</h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">{page.intro}</p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-5 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200" href={page.ctaHref}>
+              <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-5 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200" data-event="seo_cta_click" data-event-category="cta" data-event-label={`${page.slug} hero ${page.cta}`} href={page.ctaHref}>
                 {page.cta}
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/10" href="/pricing">
+              <Link className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/10" data-event="pricing_click" data-event-category="cta" data-event-label={`${page.slug} hero pricing`} href="/pricing">
                 See ₹199 Pro
               </Link>
             </div>
@@ -201,6 +205,34 @@ export default async function SeoLandingPage({ params }: PageProps) {
           </div>
         </section>
       ) : null}
+
+      <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6">
+        <div className="grid gap-7 rounded-[2rem] border border-white/10 bg-white/[0.035] p-5 sm:p-7 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-cyan-300">Invoice image sample</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight">{page.primaryKeyword} image preview</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-400">
+              This keyword-focused invoice preview gives Google Images and users a visual sample of the format before they create the real invoice.
+            </p>
+            <p className="mt-4 text-xs leading-5 text-slate-500">{seoPageImageAlt(page)}. Sample values only.</p>
+          </div>
+          <figure>
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-2xl shadow-black/25">
+              <Image
+                alt={seoPageImageAlt(page)}
+                className="h-auto w-full"
+                height={1500}
+                sizes="(max-width: 1024px) 100vw, 760px"
+                src={seoPageImageUrl(page.slug)}
+                width={1200}
+              />
+            </div>
+            <figcaption className="mt-3 text-center text-xs leading-5 text-slate-500">
+              {seoPageImageAlt(page)}
+            </figcaption>
+          </figure>
+        </div>
+      </section>
 
       {page.benefits?.length ? (
         <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6">
@@ -385,7 +417,7 @@ export default async function SeoLandingPage({ params }: PageProps) {
           <h2 className="text-xl font-semibold">Related InvoiceWala pages</h2>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {page.internalLinks.map((link) => (
-              <Link className="rounded-2xl border border-white/10 bg-slate-950/70 p-4 text-sm font-semibold text-slate-200 transition hover:border-cyan-300/30 hover:text-cyan-100" href={link.href} key={link.href}>
+              <Link className="rounded-2xl border border-white/10 bg-slate-950/70 p-4 text-sm font-semibold text-slate-200 transition hover:border-cyan-300/30 hover:text-cyan-100" data-event="seo_internal_link_click" data-event-category="engagement" data-event-label={`${page.slug} to ${link.href}`} href={link.href} key={link.href}>
                 {link.label}
               </Link>
             ))}
@@ -421,6 +453,8 @@ export default async function SeoLandingPage({ params }: PageProps) {
         </section>
       ) : null}
 
+      <PeopleAlsoUse eventLabel={`seo ${page.slug}`} />
+
       <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6">
         <h2 className="text-3xl font-semibold tracking-tight">FAQs</h2>
         <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -437,7 +471,7 @@ export default async function SeoLandingPage({ params }: PageProps) {
         <div className="rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-8 text-center">
           <h2 className="text-3xl font-semibold tracking-tight">Ready to create your invoice?</h2>
           <p className="mx-auto mt-3 max-w-2xl text-slate-300">Start with a free preview. Signup only when you want to save, download the PDF and track payment.</p>
-          <Link className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-5 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200" href={page.ctaHref}>
+          <Link className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-5 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200" data-event="seo_cta_click" data-event-category="cta" data-event-label={`${page.slug} bottom ${page.cta}`} href={page.ctaHref}>
             {page.cta}
             <ArrowRight className="h-4 w-4" />
           </Link>
@@ -450,6 +484,28 @@ export default async function SeoLandingPage({ params }: PageProps) {
           <PublicFooterLinks />
         </div>
       </footer>
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-slate-950/95 p-3 shadow-2xl shadow-black/40 backdrop-blur md:hidden">
+        <div className="mx-auto flex max-w-md gap-2">
+          <Link
+            className="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-4 text-sm font-bold text-slate-950"
+            data-event="mobile_sticky_seo_cta_click"
+            data-event-category="cta"
+            data-event-label={page.slug}
+            href={page.ctaHref}
+          >
+            {page.cta}
+          </Link>
+          <Link
+            className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/10 px-4 text-sm font-semibold text-white"
+            data-event="mobile_sticky_seo_tools_click"
+            data-event-category="engagement"
+            data-event-label={page.slug}
+            href="/tools"
+          >
+            Tools
+          </Link>
+        </div>
+      </div>
     </main>
   );
 }

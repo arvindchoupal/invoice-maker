@@ -26,7 +26,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FreeInvoicePage() {
+type FreeInvoicePageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+function firstParam(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+export default async function FreeInvoicePage({ searchParams }: FreeInvoicePageProps) {
+  const params = await searchParams;
   return (
     <>
       <JsonLd
@@ -43,7 +52,13 @@ export default function FreeInvoicePage() {
           faqSchema(faqs),
         ]}
       />
-      <FreeInvoiceClient />
+      <FreeInvoiceClient
+        initialItem={{
+          name: firstParam(params.item),
+          taxRate: firstParam(params.gstRate),
+          unitPrice: firstParam(params.amount),
+        }}
+      />
     </>
   );
 }

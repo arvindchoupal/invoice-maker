@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getIndexablePosts } from "@/lib/blog/posts";
-import { seoPages } from "@/lib/seo-pages";
+import { seoPageImageUrl, seoPages } from "@/lib/seo-pages";
 import { TOOLS_CATALOG } from "@/lib/tools-catalog";
 import { INVOICE_TEMPLATE_PAGES, invoiceTemplateImageUrl, invoiceTemplateUrl } from "@/lib/invoice-template-pages";
 
@@ -75,6 +75,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.85,
+      images: [`${siteUrl}${seoPageImageUrl(page.slug)}`],
     }));
 
   const blogRoutes = getIndexablePosts()

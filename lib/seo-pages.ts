@@ -1942,3 +1942,11 @@ export const seoPages = allSeoPages.filter((page) => !duplicateSeoSlugs.has(page
 export function seoPageBySlug(slug: string) {
   return seoPages.find((page) => page.slug === slug);
 }
+
+export function seoPageImageUrl(slug: string) {
+  return `/seo-images/${slug}.png`;
+}
+
+export function seoPageImageAlt(page: SeoPage) {
+  return `${page.h1} sample invoice preview with GST-ready fields`;
+}

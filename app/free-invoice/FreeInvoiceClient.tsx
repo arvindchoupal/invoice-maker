@@ -15,11 +15,32 @@ import type { Invoice, InvoiceItem } from "@/types";
 const today = new Date().toISOString().slice(0, 10);
 const defaultDueDate = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
 
-function blankItem(): InvoiceItem {
-  return { name: "", description: "", quantity: 1, unitPrice: 0, taxRate: 0, discountRate: 0 };
+function numericParam(value: string | undefined) {
+  if (!value) return 0;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
-export function FreeInvoiceClient() {
+function blankItem(initialItem?: FreeInvoiceClientProps["initialItem"]): InvoiceItem {
+  return {
+    name: initialItem?.name || "",
+    description: initialItem?.name ? "Imported from InvoiceWala calculator" : "",
+    quantity: 1,
+    unitPrice: numericParam(initialItem?.unitPrice),
+    taxRate: numericParam(initialItem?.taxRate),
+    discountRate: 0,
+  };
+}
+
+type FreeInvoiceClientProps = {
+  initialItem?: {
+    name?: string;
+    taxRate?: string;
+    unitPrice?: string;
+  };
+};
+
+export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [invoice, setInvoice] = useState<Invoice>({
@@ -36,7 +57,7 @@ export function FreeInvoiceClient() {
     notes: "",
     terms: "Payment is due by the invoice due date.",
     pdfStyle: "classic",
-    items: [blankItem()],
+    items: [blankItem(initialItem)],
   });
 
   const totals = useMemo(() => calculateInvoice(invoice.items), [invoice.items]);
@@ -78,8 +99,8 @@ export function FreeInvoiceClient() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
           <div className="flex items-center gap-2">
-            <Link className="rounded-xl border border-white/10 px-3 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10" href="/pricing">Pricing</Link>
-            <Link className="rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-950" href={isLoggedIn ? "/dashboard" : "/login"}>
+            <Link className="rounded-xl border border-white/10 px-3 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10" data-event="pricing_click" data-event-category="cta" data-event-label="free invoice header" href="/pricing">Pricing</Link>
+            <Link className="rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-950" data-event={isLoggedIn ? "dashboard_click" : "login_click"} data-event-category={isLoggedIn ? "navigation" : "auth"} data-event-label="free invoice header" href={isLoggedIn ? "/dashboard" : "/login"}>
               {isLoggedIn ? "Dashboard" : "Log in"}
             </Link>
           </div>
@@ -94,13 +115,18 @@ export function FreeInvoiceClient() {
             <p className="mt-4 text-base leading-7 text-slate-300">
               For freelancing, selling products, repair work, consulting or any simple customer bill. Fill only what matters, preview the invoice, then save it to your account.
             </p>
+            {initialItem?.unitPrice || initialItem?.taxRate ? (
+              <div className="mt-5 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-4 text-sm leading-6 text-cyan-50">
+                GST calculator result added: taxable amount ₹{Number(numericParam(initialItem.unitPrice)).toLocaleString("en-IN")} with {numericParam(initialItem.taxRate)}% GST. You can edit it before preview.
+              </div>
+            ) : null}
           </div>
 
           <div className="grid grid-cols-3 gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-2 text-sm">
             {["Business", "Items", "Preview"].map((label, index) => {
               const active = step === index + 1;
               return (
-                <button className={`rounded-xl px-3 py-2 font-semibold ${active ? "bg-cyan-300 text-slate-950" : "text-slate-300 hover:bg-white/10"}`} key={label} onClick={() => setStep(index + 1)}>
+                <button className={`rounded-xl px-3 py-2 font-semibold ${active ? "bg-cyan-300 text-slate-950" : "text-slate-300 hover:bg-white/10"}`} data-event="free_invoice_step_click" data-event-category="engagement" data-event-label={`step ${index + 1} ${label}`} key={label} onClick={() => setStep(index + 1)}>
                   {index + 1}. {label}
                 </button>
               );
@@ -119,7 +145,7 @@ export function FreeInvoiceClient() {
                   <Field label="Issue date"><input className={inputClass} type="date" value={invoice.issueDate} onChange={(event) => update("issueDate", event.target.value)} /></Field>
                   <Field label="Due date"><input className={inputClass} type="date" value={invoice.dueDate} onChange={(event) => update("dueDate", event.target.value)} /></Field>
                 </div>
-                <Button className="w-full" onClick={() => setStep(2)}>Next: add items <ArrowRight className="h-4 w-4" /></Button>
+                <Button className="w-full" data-event="free_invoice_business_completed" data-event-category="funnel" onClick={() => setStep(2)}>Next: add items <ArrowRight className="h-4 w-4" /></Button>
               </div>
             ) : null}
 
@@ -141,8 +167,8 @@ export function FreeInvoiceClient() {
                     </div>
                   </div>
                 ))}
-                <Button variant="secondary" onClick={addItem}><Plus className="h-4 w-4" />Add another item</Button>
-                <Button className="w-full" onClick={() => setStep(3)}>Preview invoice <ArrowRight className="h-4 w-4" /></Button>
+                <Button variant="secondary" data-event="free_invoice_add_item" data-event-category="engagement" onClick={addItem}><Plus className="h-4 w-4" />Add another item</Button>
+                <Button className="w-full" data-event="free_invoice_preview_click" data-event-category="funnel" onClick={() => setStep(3)}>Preview invoice <ArrowRight className="h-4 w-4" /></Button>
               </div>
             ) : null}
 
@@ -155,11 +181,11 @@ export function FreeInvoiceClient() {
                   <p className="mt-1 text-cyan-100/80">We will attach this invoice to your account automatically, so you don’t have to type it again.</p>
                 </div>
                 {isLoggedIn ? (
-                  <Button className="w-full" onClick={openInWorkspace}><FileText className="h-4 w-4" />Save this invoice to my workspace</Button>
+                  <Button className="w-full" data-event="free_invoice_save_click" data-event-category="funnel" onClick={openInWorkspace}><FileText className="h-4 w-4" />Save this invoice to my workspace</Button>
                 ) : (
                   <div className="grid gap-2 sm:grid-cols-2">
-                    <Button className="w-full" onClick={() => continueToAuth("/signup")}><Lock className="h-4 w-4" />Sign up to download</Button>
-                    <Button className="w-full" variant="secondary" onClick={() => continueToAuth("/login")}>Log in and attach</Button>
+                    <Button className="w-full" data-event="signup_click" data-event-category="auth" data-event-label="free invoice download gate" onClick={() => continueToAuth("/signup")}><Lock className="h-4 w-4" />Sign up to download</Button>
+                    <Button className="w-full" variant="secondary" data-event="login_click" data-event-category="auth" data-event-label="free invoice attach gate" onClick={() => continueToAuth("/login")}>Log in and attach</Button>
                   </div>
                 )}
               </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { AnalyticsEvents } from "@/components/AnalyticsEvents";
 import './globals.css'
 export const metadata: Metadata = {
   title: "InvoiceWala — GST invoices & billing",
@@ -28,6 +29,7 @@ export default function RootLayout({
             gtag('config', 'G-WVY8QGQWCV');
           `}
         </Script>
+        <AnalyticsEvents />
         {children}
       </body>
     </html>

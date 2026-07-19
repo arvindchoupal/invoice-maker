@@ -28,6 +28,10 @@ export default function InvoiceTemplatesPage() {
     groups.set(page.category, existing);
     return groups;
   }, new Map<string, typeof INVOICE_TEMPLATE_PAGES>());
+  const popularSlugs = ["advocate-invoice-template", "chartered-accountant-invoice-template", "gym-invoice-template", "contractor-invoice-template", "real-estate-agent-invoice-template", "logistics-invoice-template"];
+  const popularTemplates = popularSlugs
+    .map((slug) => INVOICE_TEMPLATE_PAGES.find((page) => page.slug === slug))
+    .filter((page): page is (typeof INVOICE_TEMPLATE_PAGES)[number] => Boolean(page));
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -55,7 +59,7 @@ export default function InvoiceTemplatesPage() {
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Invoice templates</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-6xl">Invoice formats built around how you actually bill</h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">Choose your profession to see realistic services, material charges, payment terms and tax-ready fields—then create the invoice in InvoiceWala.</p>
-            <Link className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-xl bg-cyan-300 px-5 text-sm font-bold text-slate-950 hover:bg-cyan-200" href="/free-invoice">
+            <Link className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-xl bg-cyan-300 px-5 text-sm font-bold text-slate-950 hover:bg-cyan-200" data-event="template_hub_create_invoice_click" data-event-category="cta" href="/free-invoice">
               Create a free invoice <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -63,13 +67,36 @@ export default function InvoiceTemplatesPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6">
+        <div className="mb-12 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/[0.06] p-5 sm:p-7">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-cyan-300">Popular this week</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight">Templates users are already finding from Google</h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
+                Start with these high-signal formats, then explore the full profession list below.
+              </p>
+            </div>
+            <Link className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 px-4 text-sm font-semibold hover:bg-white/10" data-event="template_hub_popular_cta_click" data-event-category="engagement" href="/tools/gst-calculator">
+              Calculate GST
+            </Link>
+          </div>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {popularTemplates.map((page) => (
+              <Link className="group rounded-2xl border border-white/10 bg-slate-950/70 p-5 transition hover:-translate-y-0.5 hover:border-cyan-300/30" data-event="popular_template_click" data-event-category="engagement" data-event-label={page.slug} href={invoiceTemplateUrl(page.slug)} key={page.slug}>
+                <p className="text-xs font-bold uppercase tracking-wide text-cyan-300">{page.category}</p>
+                <h3 className="mt-2 text-lg font-semibold group-hover:text-cyan-200">{page.profession} invoice template</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-400">{page.billingModel}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
         <div className="grid gap-12">
           {[...categories.entries()].map(([category, pages]) => (
             <div key={category}>
               <h2 className="text-2xl font-semibold tracking-tight">{category}</h2>
               <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {pages.map((page) => (
-                  <Link className="group rounded-3xl border border-white/10 bg-white/[0.04] p-5 transition hover:-translate-y-0.5 hover:border-cyan-300/30" href={invoiceTemplateUrl(page.slug)} key={page.slug}>
+                  <Link className="group rounded-3xl border border-white/10 bg-white/[0.04] p-5 transition hover:-translate-y-0.5 hover:border-cyan-300/30" data-event="template_hub_template_click" data-event-category="engagement" data-event-label={page.slug} href={invoiceTemplateUrl(page.slug)} key={page.slug}>
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-300/10 text-cyan-300"><FileText className="h-5 w-5" /></div>
                     <h3 className="mt-4 text-lg font-semibold group-hover:text-cyan-200">{page.profession} invoice template</h3>
                     <p className="mt-2 text-sm leading-6 text-slate-400">{page.billingModel}</p>

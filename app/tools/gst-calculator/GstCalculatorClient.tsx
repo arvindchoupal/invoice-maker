@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { PublicPrimaryCta } from "@/components/PublicPrimaryCta";
 import { PublicToolNavActions } from "@/components/PublicToolNavActions";
 import { ToolSeoContent } from "@/components/tools/ToolSeoContent";
 import { gstCalculatorSeoContent } from "@/lib/tool-seo-content";
@@ -55,6 +54,7 @@ export default function GstCalculatorClient() {
   }, [amount, mode, rate, supplyType]);
 
   const shareText = `InvoiceWala GST calculation: ${mode === "inclusive" ? "Inclusive" : "Exclusive"} GST at ${result.rate}% on ${money(result.amount)}. Taxable value ${money(result.taxable)}, GST ${money(result.tax)}, total ${money(result.total)}.`;
+  const invoiceHref = `/free-invoice?source=gst-calculator&amount=${encodeURIComponent(result.taxable.toFixed(2))}&gstRate=${encodeURIComponent(String(result.rate))}&item=${encodeURIComponent("GST taxable sale")}`;
 
   async function shareResult() {
     setCopied(false);
@@ -219,13 +219,15 @@ export default function GstCalculatorClient() {
                     Save this GST calculation into InvoiceWala to create a branded tax invoice, add payment links and track due reminders.
                   </p>
                   <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                    <PublicPrimaryCta
-                      guestHref="/signup?source=gst-calculator"
-                      guestLabel="Save as invoice"
-                      authedHref="/invoices/new"
-                      authedLabel="Create GST invoice"
+                    <Link
                       className="inline-flex min-h-11 items-center justify-center rounded-xl bg-white px-4 text-center text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-100"
-                    />
+                      data-event="gst_result_create_invoice_click"
+                      data-event-category="funnel"
+                      data-event-label={`${result.rate}% ${mode} ${supplyType}`}
+                      href={invoiceHref}
+                    >
+                      Use this in invoice
+                    </Link>
                     <Link className="inline-flex min-h-11 items-center justify-center rounded-xl border border-white/10 px-4 text-center text-sm font-semibold text-white transition hover:bg-white/10" href="/tools/invoice-number-generator">
                       Generate invoice number
                     </Link>
@@ -256,6 +258,28 @@ export default function GstCalculatorClient() {
       </section>
 
       <ToolSeoContent content={gstCalculatorSeoContent} />
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-slate-950/95 p-3 shadow-2xl shadow-black/40 backdrop-blur md:hidden">
+        <div className="mx-auto flex max-w-md gap-2">
+          <Link
+            className="inline-flex min-h-12 flex-1 items-center justify-center rounded-xl bg-cyan-300 px-4 text-sm font-bold text-slate-950"
+            data-event="mobile_sticky_gst_result_invoice_click"
+            data-event-category="funnel"
+            data-event-label={`${result.rate}% ${mode}`}
+            href={invoiceHref}
+          >
+            Use in invoice
+          </Link>
+          <button
+            className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/10 px-4 text-sm font-semibold text-white"
+            data-event="mobile_sticky_gst_share_click"
+            data-event-category="engagement"
+            onClick={shareResult}
+            type="button"
+          >
+            Share
+          </button>
+        </div>
+      </div>
     </main>
   );
 }

@@ -14,10 +14,10 @@ export function PublicHeroActions() {
     return (
       <>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link className="rounded-xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-200" href="/invoices/new">
+          <Link className="rounded-xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-200" data-event="create_invoice_click" data-event-category="cta" data-event-label="homepage hero authed" href="/invoices/new">
             Create invoice
           </Link>
-          <Link className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10" href="#demo">
+          <Link className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10" data-event="view_demo_click" data-event-category="engagement" data-event-label="homepage hero authed" href="#demo">
             View demo
           </Link>
         </div>
@@ -29,10 +29,10 @@ export function PublicHeroActions() {
   return (
     <>
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link className="rounded-xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-200" href="/free-invoice">
+        <Link className="rounded-xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-200" data-event="create_invoice_click" data-event-category="cta" data-event-label="homepage hero guest" href="/free-invoice">
           Create free invoice
         </Link>
-        <Link className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10" href="#demo">
+        <Link className="rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10" data-event="view_demo_click" data-event-category="engagement" data-event-label="homepage hero guest" href="#demo">
           View demo
         </Link>
       </div>

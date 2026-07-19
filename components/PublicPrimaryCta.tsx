@@ -28,7 +28,7 @@ export function PublicPrimaryCta({
   const label = isLoggedIn ? authedLabel : guestLabel;
 
   return (
-    <Link className={className} href={href}>
+    <Link className={className} data-event={isLoggedIn ? "dashboard_click" : "signup_click"} data-event-category={isLoggedIn ? "navigation" : "auth"} data-event-label={label} href={href}>
       {label}
     </Link>
   );
