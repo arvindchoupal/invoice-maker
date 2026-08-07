@@ -9,7 +9,7 @@ const authedLinkClass = "rounded-xl px-3 py-2 text-sm font-semibold text-slate-2
 const authedButtonClass =
   "rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-950/20 transition hover:-translate-y-0.5 hover:bg-cyan-100";
 
-export function PublicNavActions({ showBlog = true }: { showBlog?: boolean }) {
+export function PublicNavActions({ showBlog = true, hideTemplatesOnMobile = false }: { showBlog?: boolean; hideTemplatesOnMobile?: boolean }) {
   const { isLoggedIn, user, ready } = useAuthSession();
 
   if (!ready) {
@@ -22,7 +22,7 @@ export function PublicNavActions({ showBlog = true }: { showBlog?: boolean }) {
         <Link className={`${guestLinkClass} hidden md:inline-flex`} data-event="nav_tools_click" data-event-category="navigation" href="/tools">
           Free tools
         </Link>
-        <Link className={guestLinkClass} data-event="nav_templates_click" data-event-category="navigation" href="/invoice-templates">
+        <Link className={`${guestLinkClass} ${hideTemplatesOnMobile ? "hidden sm:inline-flex" : ""}`} data-event="nav_templates_click" data-event-category="navigation" href="/invoice-templates">
           Templates
         </Link>
         <Link className={`hidden lg:inline-flex ${guestLinkClass}`} data-event="create_invoice_click" data-event-category="cta" data-event-label="nav make invoice authed" href="/free-invoice">
@@ -48,7 +48,7 @@ export function PublicNavActions({ showBlog = true }: { showBlog?: boolean }) {
       <Link className={`${guestLinkClass} hidden sm:inline-flex`} data-event="nav_tools_click" data-event-category="navigation" href="/tools">
         Tools
       </Link>
-      <Link className={guestLinkClass} data-event="nav_templates_click" data-event-category="navigation" href="/invoice-templates">
+      <Link className={`${guestLinkClass} ${hideTemplatesOnMobile ? "hidden sm:inline-flex" : ""}`} data-event="nav_templates_click" data-event-category="navigation" href="/invoice-templates">
         Templates
       </Link>
       <Link className={`hidden lg:inline-flex ${guestLinkClass}`} data-event="create_invoice_click" data-event-category="cta" data-event-label="nav make invoice guest" href="/free-invoice">

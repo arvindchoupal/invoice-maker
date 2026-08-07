@@ -6,6 +6,7 @@ import { FreeInvoiceClient } from "./FreeInvoiceClient";
 const siteUrl = "https://invoicewala.shop";
 
 const faqs: Array<[string, string]> = [
+  ["Is this a free invoice generator?", "Yes. This free invoice generator lets you create and preview a professional invoice online before signup. Sign up only when you want to save it and download the PDF."],
   ["Can I create an invoice without signup?", "Yes. You can create and preview an invoice first. Signup or login is needed when you want to save it and download the PDF."],
   ["Can I download the invoice PDF?", "Yes. After signup or login, the invoice can be attached to your workspace and downloaded as a PDF."],
   ["Who is this free invoice page for?", "It is built for freelancers, contractors, consultants, local shops, service businesses and anyone who needs a simple customer invoice."],
@@ -13,14 +14,14 @@ const faqs: Array<[string, string]> = [
 ];
 
 export const metadata: Metadata = {
-  title: "Free Invoice Maker | Create Invoice Before Signup",
+  title: "Free Invoice Generator Tool | Create Invoice Before Signup",
   description:
-    "Create a free invoice online before signup. Add business details, customer details, items, tax and preview the invoice before saving PDF.",
+    "Use our free invoice generator to create a professional invoice online. Add business details, customer details, items and tax, then preview before saving a PDF.",
   alternates: { canonical: `${siteUrl}/free-invoice` },
   robots: { index: true, follow: true },
   openGraph: {
-    title: "Free Invoice Maker | InvoiceWala",
-    description: "Create an invoice first, then sign up only when you want to save and download the PDF.",
+    title: "Free Invoice Generator | InvoiceWala",
+    description: "Create a professional invoice online, then sign up only when you want to save and download the PDF.",
     url: `${siteUrl}/free-invoice`,
     siteName: "InvoiceWala",
   },
@@ -41,13 +42,13 @@ export default async function FreeInvoicePage({ searchParams }: FreeInvoicePageP
       <JsonLd
         data={[
           webApplicationSchema({
-            title: "InvoiceWala Free Invoice Maker",
+            title: "InvoiceWala Free Invoice Generator",
             metaDescription: metadata.description as string,
             href: "/free-invoice",
           }),
           breadcrumbSchema([
             { name: "Home", url: siteUrl },
-            { name: "Free Invoice Maker", url: `${siteUrl}/free-invoice` },
+            { name: "Free Invoice Generator", url: `${siteUrl}/free-invoice` },
           ]),
           faqSchema(faqs),
         ]}

@@ -6,20 +6,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/api/",
-          "/admin",
-          "/dashboard",
-          "/invoices",
-          "/clients",
-          "/bookkeeping",
-          "/recurring",
-          "/payments",
-          "/reports",
-          "/settings",
-          "/documents",
-          "/ai-import",
-        ],
+        // Authenticated workspace pages carry a noindex directive in the app
+        // layout. They must remain crawlable so search engines can read it.
+        disallow: ["/api/"],
       },
     ],
     host: "https://invoicewala.shop",

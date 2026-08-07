@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
-import { PublicFooterLinks } from "@/components/PublicFooterLinks";
 import { PublicHeroActions } from "@/components/PublicHeroActions";
-import { PublicNavActions } from "@/components/PublicNavActions";
 import { PublicPrimaryCta } from "@/components/PublicPrimaryCta";
+import { PublicSiteFooter } from "@/components/PublicSiteFooter";
+import { PublicSiteNav } from "@/components/PublicSiteNav";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TOOLS_CATALOG } from "@/lib/tools-catalog";
 import { faqSchema, organizationSchema, toolsItemListSchema, websiteSchema } from "@/lib/seo-schemas";
@@ -52,16 +51,6 @@ const userTypes = [
   ["GST businesses", "Use GST/VAT fields and tax-ready invoice layouts."],
 ];
 
-const footerSeoLinks = [
-  ["/free-invoice-generator", "Free invoice generator"],
-  ["/gst-invoice-generator", "GST invoice generator"],
-  ["/freelancer-invoice-generator", "Freelancer invoice"],
-  ["/contractor-invoice-generator", "Contractor invoice"],
-  ["/receipt-generator", "Receipt generator"],
-  ["/purchase-order-generator", "Purchase order generator"],
-  ["/tools/pdf-to-invoice-extractor", "PDF to invoice AI"],
-];
-
 const faqs: Array<[string, string]> = [
   ["Can I create an invoice without signup?", "Yes. You can create and preview an invoice for free. Signup or login is needed when you want to save it and download the PDF."],
   ["Does InvoiceWala support GST invoices?", "Yes. InvoiceWala supports GST/VAT fields, tax-ready invoice data and GST-focused tools for Indian businesses."],
@@ -72,18 +61,15 @@ const faqs: Array<[string, string]> = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen overflow-x-clip bg-slate-950 text-white">
       <JsonLd data={[organizationSchema(), websiteSchema(), toolsItemListSchema(), faqSchema(faqs)]} />
 
       <section className="mx-auto w-full max-w-7xl px-5 py-5 sm:px-6 sm:py-6">
-        <nav className="flex items-center justify-between">
-          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-          <PublicNavActions />
-        </nav>
+        <PublicSiteNav />
 
-        <div className="grid items-center gap-10 py-12 sm:py-16 lg:min-h-[720px] lg:grid-cols-[1fr_560px]">
-          <div>
-            <div className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-sm font-semibold text-cyan-100">
+        <div className="grid min-w-0 items-center gap-10 py-12 sm:py-16 lg:min-h-[720px] lg:grid-cols-[minmax(0,1fr)_560px]">
+          <div className="min-w-0">
+            <div className="inline-flex max-w-full whitespace-normal rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-sm font-semibold leading-5 text-cyan-100 sm:whitespace-nowrap">
               Free GST invoice generator for freelancers, contractors and small businesses
             </div>
             <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
@@ -96,19 +82,19 @@ export default function Home() {
             <p className="mt-4 text-sm text-slate-400">No credit card required. Preview your invoice before signup.</p>
           </div>
 
-          <div className="relative" id="demo">
+          <div className="relative min-w-0" id="demo">
             <div className="absolute -inset-4 rounded-[2rem] bg-cyan-400/10 blur-3xl" />
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl">
-              <div className="rounded-2xl bg-white p-5 text-slate-950 sm:p-7">
-                <div className="flex items-start justify-between gap-5">
+            <div className="relative w-full min-w-0 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] p-3 shadow-2xl shadow-cyan-950/30 backdrop-blur-xl sm:p-4">
+              <div className="min-w-0 rounded-2xl bg-white p-4 text-slate-950 sm:p-7">
+                <div className="flex min-w-0 items-start justify-between gap-3 sm:gap-5">
                   <div>
                     <div className="h-10 w-10 rounded-2xl bg-blue-600" />
-                    <p className="mt-4 text-2xl font-bold">Your Business</p>
+                    <p className="mt-4 text-xl font-bold sm:text-2xl">Your Business</p>
                     <p className="text-sm text-slate-500">business@email.com</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-4xl font-bold text-blue-600">INVOICE</p>
-                    <p className="mt-1 text-sm text-slate-500">Preview before signup</p>
+                    <p className="text-3xl font-bold text-blue-600 sm:text-4xl">INVOICE</p>
+                    <p className="mt-1 text-xs text-slate-500 sm:text-sm">Preview before signup</p>
                   </div>
                 </div>
 
@@ -124,16 +110,16 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200">
-                  <div className="grid grid-cols-[1fr_56px_90px_100px] bg-slate-950 px-3 py-2 text-xs font-semibold uppercase text-white">
+                <div className="mt-6 min-w-0 overflow-hidden rounded-2xl border border-slate-200">
+                  <div className="grid grid-cols-[minmax(0,1fr)_34px_56px_72px] bg-slate-950 px-2 py-2 text-xs font-semibold uppercase text-white sm:grid-cols-[minmax(0,1fr)_56px_90px_100px] sm:px-3">
                     <span>Item</span><span>Qty</span><span>Rate</span><span className="text-right">Total</span>
                   </div>
                   {[
                     ["Service work", "1", "5,000", "₹5,000"],
                     ["GST", "18%", "", "₹900"],
                   ].map(([item, qty, rate, total]) => (
-                    <div className="grid grid-cols-[1fr_56px_90px_100px] border-t border-slate-100 px-3 py-3 text-sm" key={item}>
-                      <span className="font-medium">{item}</span>
+                    <div className="grid grid-cols-[minmax(0,1fr)_34px_56px_72px] border-t border-slate-100 px-2 py-3 text-xs sm:grid-cols-[minmax(0,1fr)_56px_90px_100px] sm:px-3 sm:text-sm" key={item}>
+                      <span className="truncate font-medium">{item}</span>
                       <span>{qty}</span>
                       <span>{rate}</span>
                       <span className="text-right">{total}</span>
@@ -306,19 +292,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="border-t border-white/10 px-6 py-10">
-        <div className="mx-auto grid max-w-7xl gap-8 text-sm text-slate-400">
-          <div>
-            <p>InvoiceWala · invoicewala.shop</p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              {footerSeoLinks.map(([href, label]) => (
-                <Link className="hover:text-white" href={href} key={href}>{label}</Link>
-              ))}
-            </div>
-          </div>
-          <PublicFooterLinks />
-        </div>
-      </footer>
+      <PublicSiteFooter />
     </main>
   );
 }
