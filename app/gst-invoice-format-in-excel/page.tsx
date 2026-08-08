@@ -12,14 +12,14 @@ const siteUrl = "https://invoicewala.shop";
 const downloadUrl = "/downloads/gst-invoice-format-excel-sample.csv";
 
 export const metadata: Metadata = {
-  title: "GST Invoice Format in Excel | Free Download Sample",
+  title: "GST Invoice Template in Excel | Free Bill Format Download",
   description:
-    "Download a free GST invoice format in Excel-friendly CSV. See GST invoice Excel columns, formulas, CGST/SGST/IGST breakup and sample template.",
+    "Download a free GST invoice template in Excel-friendly CSV. See GST bill format columns, formulas, CGST/SGST/IGST breakup and sample template.",
   alternates: { canonical: `${siteUrl}/gst-invoice-format-in-excel` },
   openGraph: {
-    title: "GST Invoice Format in Excel | Free Download Sample",
+    title: "GST Invoice Template in Excel | Free Bill Format Download",
     description:
-      "Free GST invoice Excel format sample with taxable value, GST rate, CGST, SGST, IGST and total invoice value.",
+      "Free GST invoice template in Excel with taxable value, GST rate, CGST, SGST, IGST and total invoice value.",
     url: `${siteUrl}/gst-invoice-format-in-excel`,
     siteName: "InvoiceWala",
   },
@@ -27,6 +27,7 @@ export const metadata: Metadata = {
 
 const faqs: Array<[string, string]> = [
   ["Can I download GST invoice format in Excel?", "Yes. This page includes a free spreadsheet-friendly CSV sample that opens in Excel, Google Sheets and Numbers."],
+  ["Can I use this as a GST bill template in Excel?", "Yes. The downloadable sample is a GST bill template with the essential columns for items, taxable value, tax breakup and total."],
   ["What columns should a GST invoice Excel format include?", "Useful columns include description, HSN/SAC, quantity, rate, taxable value, GST rate, CGST, SGST, IGST and line total."],
   ["Is CSV the same as Excel?", "CSV is a spreadsheet format that opens in Excel. It is simpler than XLSX but useful for a clean downloadable invoice sample."],
   ["What formula calculates GST in Excel?", "For exclusive GST, GST Amount = Taxable Value x GST Rate. Line Total = Taxable Value + GST Amount."],
@@ -75,7 +76,7 @@ function articleSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: "GST Invoice Format in Excel: Free Download Sample",
+    headline: "GST Invoice Template in Excel: Free Bill Format Download Sample",
     description:
       "Download and understand a free GST invoice format in Excel-friendly CSV with GST columns, formulas and tax breakup.",
     author: { "@type": "Organization", name: "InvoiceWala" },
@@ -86,7 +87,7 @@ function articleSchema() {
     },
     mainEntityOfPage: `${siteUrl}/gst-invoice-format-in-excel`,
     datePublished: "2026-07-14",
-    dateModified: "2026-07-14",
+    dateModified: "2026-08-08",
     inLanguage: "en-IN",
   };
 }
@@ -114,12 +115,12 @@ export default function GstInvoiceFormatInExcelPage() {
 
         <div className="mx-auto grid max-w-7xl gap-10 py-12 lg:grid-cols-[1fr_0.82fr] lg:items-center">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">GST invoice Excel template</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">GST invoice and bill template in Excel</p>
             <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-              GST Invoice Format in Excel
+              GST Invoice Template in Excel
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-              Download a free GST invoice format in Excel-friendly CSV and learn the columns, formulas, CGST/SGST/IGST breakup and common mistakes before creating a customer-ready invoice.
+              Download a free GST invoice template in Excel-friendly CSV and learn the GST bill format columns, formulas, CGST/SGST/IGST breakup and common mistakes before creating a customer-ready invoice.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-5 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200" href={downloadUrl}>

@@ -9,6 +9,8 @@ type TemplateSeed = {
   primaryKeyword: string;
   title: string;
   h1: string;
+  description?: string;
+  intro?: string;
   billingModel: string;
   sampleBusiness: string;
   sampleCustomer: string;
@@ -17,6 +19,8 @@ type TemplateSeed = {
   tips: string[];
   relatedSlugs: string[];
   searchIntents?: string[];
+  faqs?: Array<[string, string]>;
+  updatedAt?: string;
 };
 
 function makeTemplate(seed: TemplateSeed): InvoiceTemplatePage {
@@ -28,9 +32,9 @@ function makeTemplate(seed: TemplateSeed): InvoiceTemplatePage {
     category: seed.category,
     primaryKeyword: seed.primaryKeyword,
     title: seed.title,
-    description: `Create a ${professionLower} invoice with itemised services, charges, GST-ready fields and payment terms. Use this free bill format and make a PDF invoice online.`,
+    description: seed.description ?? `Create a ${professionLower} invoice with itemised services, charges, GST-ready fields and payment terms. Use this free bill format and make a PDF invoice online.`,
     h1: seed.h1,
-    intro: `Use this ${professionLower} invoice format to turn real work into a clear, professional bill. It includes practical line items, customer-ready descriptions and GST-ready fields so the customer can understand what was delivered and what they need to pay.`,
+    intro: seed.intro ?? `Use this ${professionLower} invoice format to turn real work into a clear, professional bill. It includes practical line items, customer-ready descriptions and GST-ready fields so the customer can understand what was delivered and what they need to pay.`,
     billingModel: seed.billingModel,
     sampleBusiness: seed.sampleBusiness,
     sampleCustomer: seed.sampleCustomer,
@@ -45,7 +49,7 @@ function makeTemplate(seed: TemplateSeed): InvoiceTemplatePage {
       { title: "Using a generic service line", body: `Avoid writing only ${professionLower} services. Add enough detail for the customer to match the invoice with the actual work.` },
       { title: "Missing approval context", body: "Include dates, location, order reference, package or milestone details when they affect payment approval." },
     ],
-    faqs: [
+    faqs: seed.faqs ?? [
       [`What should a ${professionLower} invoice include?`, `Include business and customer details, invoice number, date, service description, quantities, rate, taxes, total amount and payment instructions.`],
       [`Can I use this as a ${professionLower} bill format?`, "Yes. The page is structured as a practical bill format with sample line items that you can recreate in InvoiceWala."],
       ["Can I add GST details?", "Yes. Add GSTIN, place of supply, HSN/SAC, tax rate and the correct tax split when they apply to your transaction."],
@@ -54,7 +58,7 @@ function makeTemplate(seed: TemplateSeed): InvoiceTemplatePage {
     ],
     relatedSlugs: seed.relatedSlugs,
     searchIntents: seed.searchIntents,
-    updatedAt,
+    updatedAt: seed.updatedAt ?? updatedAt,
   };
 }
 
@@ -254,9 +258,11 @@ export const INVOICE_TEMPLATE_BATCH_THREE: InvoiceTemplatePage[] = [
     slug: "restaurant-invoice-template",
     profession: "Restaurant",
     category: "Events and hospitality",
-    primaryKeyword: "restaurant invoice template",
-    title: "Free Restaurant Invoice Template | Food GST Bill",
-    h1: "Restaurant Invoice Template for Food Bills",
+    primaryKeyword: "restaurant bill format",
+    title: "Restaurant Bill Format & Invoice Template | Word, Excel, PDF",
+    h1: "Restaurant Bill Format and Invoice Template",
+    description: "Use this restaurant bill format and invoice template for food, beverage, service charge and GST billing. See Word, Excel and PDF layout guidance for restaurant bills.",
+    intro: "Use this restaurant invoice format to create a clear food bill for dine-in, takeaway, delivery, cafe sales, catering and party orders. The practical template shows the fields to use whether you prepare the restaurant bill in Word, Excel or PDF.",
     billingModel: "Food items + service + tax",
     sampleBusiness: "Copper Bowl Restaurant",
     sampleCustomer: "Table 14 Guest",
@@ -268,14 +274,26 @@ export const INVOICE_TEMPLATE_BATCH_THREE: InvoiceTemplatePage[] = [
     required: ["Add bill number, table/order reference, date and customer details if required.", "List food items, quantities, discounts and service charges clearly.", "Apply the correct GST breakup and show paid or due status."],
     tips: ["Mention takeaway or dine-in where useful.", "Show discounts before tax.", "Keep service charge transparent."],
     relatedSlugs: ["catering-invoice-template", "hotel-invoice-template", "salon-invoice-template"],
+    searchIntents: ["restaurant invoice generator", "restaurant bill maker", "restaurant bill format", "restaurant bill template", "restaurant invoice template", "online restaurant bill maker", "restaurant bill format in word", "restaurant bill format in excel"],
+    faqs: [
+      ["What should a restaurant bill format include?", "A restaurant bill format should include restaurant details, bill number, table or order reference, date, itemised food and beverage charges, discounts, tax, service charges, total and payment status."],
+      ["Can I use this as a restaurant bill format in Word?", "Yes. In Word, place restaurant details and bill information at the top, then use an item table for food, drinks, quantity, rate, tax and total."],
+      ["Can I use this restaurant bill template in Excel?", "Yes. Excel is useful for calculating quantities, discounts, tax, service charges and final totals. Export the completed bill as PDF before sharing."],
+      ["What is an online restaurant bill maker?", "An online restaurant bill maker helps create itemised food bills by adding menu items, quantities, rates, tax and customer details, then previewing the final bill."],
+      ["Can I use this for takeaway and catering orders?", "Yes. Add the order type, event or delivery details, itemised menu items, quantity, charges and payment terms as needed."],
+      ["Can I download a restaurant invoice PDF?", "Yes. Create and preview the invoice in InvoiceWala, then save it and download a professional PDF after signup or login."],
+    ],
+    updatedAt: "2026-08-08",
   }),
   makeTemplate({
     slug: "hotel-invoice-template",
     profession: "Hotel",
     category: "Events and hospitality",
-    primaryKeyword: "hotel invoice template",
-    title: "Free Hotel Invoice Template | Room Bill Format",
-    h1: "Hotel Invoice Template for Room and Service Bills",
+    primaryKeyword: "hotel bill format",
+    title: "Hotel Bill Format & Invoice Template | Word, Excel, PDF",
+    h1: "Hotel Bill Format and Invoice Template for Room Bills",
+    description: "Use this hotel bill format and invoice template for room stays, food, laundry and other services. See Word, Excel and PDF layout guidance for hotel invoices.",
+    intro: "Use this hotel invoice format to create a clear room bill for stays, restaurant charges, laundry, minibar and other guest services. The practical template shows the fields to use whether you prepare a hotel bill in Word, Excel or PDF.",
     billingModel: "Room stay + services + tax",
     sampleBusiness: "Hotel Azure Grand",
     sampleCustomer: "Rajat Kapoor",
@@ -287,6 +305,16 @@ export const INVOICE_TEMPLATE_BATCH_THREE: InvoiceTemplatePage[] = [
     required: ["Mention guest name, room number, check-in/check-out dates and booking reference.", "Break out room tariff, food, laundry, minibar and other services.", "Show tax, deposit, balance due and payment mode clearly."],
     tips: ["Include stay dates in every room invoice.", "Separate food and room charges.", "Use booking ID for online reservations."],
     relatedSlugs: ["travel-agency-invoice-template", "restaurant-invoice-template", "catering-invoice-template"],
+    searchIntents: ["hotel bill format", "hotel bill format in word", "hotel bill format in excel", "hotel invoice format", "hotel invoice format in word", "hotel invoice format in excel", "hotel invoice pdf", "hotel bill format pdf", "hotel room bill format", "hotel bill template word", "hotel invoice template excel"],
+    faqs: [
+      ["What should a hotel bill format include?", "A hotel bill format should include hotel details, guest name, room number, booking reference, check-in and check-out dates, room tariff, other service charges, tax, deposit, balance due and payment mode."],
+      ["Can I use this as a hotel bill format in Word?", "Yes. Use the same structure in Word: hotel and guest details at the top, stay details and an itemised table for room, food, laundry, tax and total."],
+      ["Can I use this as a hotel bill format in Excel?", "Yes. Excel is useful when you need formulas for room nights, service charges, tax, deposits and balance. Export the completed hotel invoice as PDF before sharing."],
+      ["What is a hotel room bill format?", "A hotel room bill format is a hotel invoice focused on stay details such as room type, room number, check-in and check-out dates, number of nights, tariff, taxes and final payable amount."],
+      ["Can I send a hotel invoice as PDF?", "Yes. PDF keeps the hotel invoice layout stable for email, WhatsApp, corporate accounts teams and guest records."],
+      ["Should hotel food and laundry charges be separate?", "Yes. Separate room tariff, restaurant, laundry, minibar, transport and other charges so the guest or company can verify the final bill easily."],
+    ],
+    updatedAt: "2026-08-08",
   }),
   makeTemplate({
     slug: "travel-agency-invoice-template",

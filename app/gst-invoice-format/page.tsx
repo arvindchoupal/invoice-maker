@@ -10,14 +10,14 @@ import { breadcrumbSchema, faqSchema } from "@/lib/seo-schemas";
 const siteUrl = "https://invoicewala.shop";
 
 export const metadata: Metadata = {
-  title: "GST Invoice Format in India | PDF, Excel & Word Sample",
+  title: "GST Invoice Format & Template India | PDF, Excel & Word",
   description:
-    "Learn GST invoice format in India with mandatory fields, sample GST invoice, CGST/SGST/IGST breakup, Excel, Word and PDF format notes.",
+    "Use this GST invoice format and template guide for India. See mandatory fields, sample GST invoice, CGST/SGST/IGST breakup, PDF, Excel and Word notes.",
   alternates: { canonical: `${siteUrl}/gst-invoice-format` },
   openGraph: {
-    title: "GST Invoice Format in India | PDF, Excel & Word Sample",
+    title: "GST Invoice Format & Template India | PDF, Excel & Word",
     description:
-      "Complete GST invoice format guide with sample layout, mandatory fields, tax breakup, Excel, Word and PDF notes.",
+      "GST invoice template guide with sample layout, mandatory fields, tax breakup, Excel, Word and PDF notes.",
     url: `${siteUrl}/gst-invoice-format`,
     siteName: "InvoiceWala",
   },
@@ -25,6 +25,7 @@ export const metadata: Metadata = {
 
 const faqs: Array<[string, string]> = [
   ["What is GST invoice format?", "GST invoice format is the structure used to issue GST-ready invoices with supplier details, buyer details, GSTIN, invoice number, HSN/SAC, taxable value, GST rate, tax amount and total invoice value."],
+  ["What is a GST invoice template?", "A GST invoice template is a reusable GST bill format with fields for supplier details, customer details, invoice number, item rows, HSN/SAC, taxable value, GST breakup and total amount."],
   ["Is GST invoice format and GST bill format the same?", "In common usage, both phrases often refer to the same document. Under GST, the formal document for taxable supply is generally called a tax invoice."],
   ["What fields are required in a GST invoice?", "Important fields include supplier name, GSTIN, invoice number, date, buyer details, item or service description, HSN/SAC, taxable value, GST rate, CGST/SGST or IGST and total value."],
   ["Can I use GST invoice format in Excel?", "Yes, but Excel requires manual formulas and formatting checks. Online invoice tools reduce calculation and PDF layout mistakes."],
@@ -82,7 +83,7 @@ function articleSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: "GST Invoice Format in India: PDF, Excel and Word Sample Guide",
+    headline: "GST Invoice Format and Template India: PDF, Excel and Word Sample Guide",
     description:
       "A complete GST invoice format guide for Indian businesses with sample fields, tax breakup, PDF, Excel and Word format notes.",
     author: { "@type": "Organization", name: "InvoiceWala" },
@@ -93,7 +94,7 @@ function articleSchema() {
     },
     mainEntityOfPage: `${siteUrl}/gst-invoice-format`,
     datePublished: "2026-07-14",
-    dateModified: "2026-07-14",
+    dateModified: "2026-08-08",
     inLanguage: "en-IN",
   };
 }
@@ -120,12 +121,12 @@ export default function GstInvoiceFormatPage() {
 
         <div className="mx-auto grid max-w-7xl gap-10 py-12 lg:grid-cols-[1fr_0.82fr] lg:items-center">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">GST invoice format</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">GST invoice format and template</p>
             <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-              GST Invoice Format in India
+              GST Invoice Format and Template in India
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-              Learn the GST invoice format used by Indian businesses, freelancers, contractors, consultants and agencies. See mandatory fields, a sample GST invoice table, CGST/SGST/IGST breakup, and PDF, Excel and Word format notes.
+              Use this GST invoice template guide for Indian businesses, freelancers, contractors, consultants and agencies. See mandatory fields, a sample GST invoice table, CGST/SGST/IGST breakup, and PDF, Excel and Word format notes.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-5 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-200" href="/gst-invoice-generator">
@@ -137,7 +138,7 @@ export default function GstInvoiceFormatPage() {
               </Link>
             </div>
             <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold text-cyan-100">
-              {["GST invoice format PDF", "GST invoice format Excel", "GST invoice format Word", "CGST SGST IGST sample"].map((item) => (
+              {["GST invoice template", "GST invoice format PDF", "GST invoice format Excel", "CGST SGST IGST sample"].map((item) => (
                 <span className="rounded-full border border-cyan-300/15 bg-cyan-300/10 px-3 py-1.5" key={item}>{item}</span>
               ))}
             </div>
@@ -183,12 +184,12 @@ export default function GstInvoiceFormatPage() {
       <article className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
           <div className="space-y-8">
-            <Section title="What is GST invoice format?">
+            <Section title="What is GST invoice format and template?">
               <p>
                 GST invoice format is the standard invoice structure used to show GST details on a sale of goods or services in India. A practical GST invoice includes supplier details, buyer details, GSTIN, invoice number, invoice date, item or service description, HSN or SAC code, taxable value, GST rate, CGST/SGST or IGST amount and total invoice value.
               </p>
               <p>
-                Many users search for GST invoice format, GST invoice format in Excel, GST invoice format in Word, GST invoice format PDF, GST tax invoice format and GST bill format because they want a reliable sample before creating their own invoice. This page explains the structure and links to InvoiceWala tools when you want to create the actual PDF.
+                A GST invoice template is the same practical structure in reusable form. Many users search for GST invoice template, GST invoice format in Excel, GST invoice format in Word, GST invoice format PDF, GST tax invoice format and GST bill format because they want a reliable sample before creating their own invoice. This page explains the structure and links to InvoiceWala tools when you want to create the actual PDF.
               </p>
             </Section>
 

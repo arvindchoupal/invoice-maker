@@ -9,14 +9,14 @@ import { TOOLS_CATALOG } from "@/lib/tools-catalog";
 import { faqSchema, organizationSchema, toolsItemListSchema, websiteSchema } from "@/lib/seo-schemas";
 
 export const metadata: Metadata = {
-  title: "InvoiceWala - Free GST Invoice Generator for Indian Businesses",
+  title: "Invoice Generator | Create Free GST Invoices Online | InvoiceWala",
   description:
-    "Create GST-ready invoices, download professional PDFs, track payments, and send reminders. Free invoice generator for freelancers, contractors, agencies, and small businesses in India.",
+    "Use InvoiceWala's online invoice generator to create free GST-ready invoices, download professional PDFs, track payments and send reminders. Built for Indian businesses.",
   metadataBase: new URL("https://invoicewala.shop"),
   alternates: { canonical: "https://invoicewala.shop" },
   openGraph: {
-    title: "InvoiceWala - Free GST Invoice Generator",
-    description: "Create GST invoices fast, send PDFs, track payments, and get paid faster.",
+    title: "Invoice Generator | Create Free GST Invoices Online",
+    description: "Create free, GST-ready invoices online, send PDFs and track payments with InvoiceWala.",
     url: "https://invoicewala.shop",
     siteName: "InvoiceWala",
   },
@@ -70,13 +70,13 @@ export default function Home() {
         <div className="grid min-w-0 items-center gap-10 py-12 sm:py-16 lg:min-h-[720px] lg:grid-cols-[minmax(0,1fr)_560px]">
           <div className="min-w-0">
             <div className="inline-flex max-w-full whitespace-normal rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-sm font-semibold leading-5 text-cyan-100 sm:whitespace-nowrap">
-              Free GST invoice generator for freelancers, contractors and small businesses
+              Free online invoice generator for freelancers, contractors and small businesses
             </div>
             <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-7xl">
-              Create invoices fast. Send GST-ready PDFs. Get paid faster.
+              Create invoices online. Send GST-ready PDFs. Get paid faster.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-              InvoiceWala helps Indian freelancers, contractors, agencies and small businesses create professional invoices, track payments and send reminders without accounting complexity.
+              InvoiceWala is an online invoice maker for Indian freelancers, contractors, agencies and small businesses. Create professional invoices, track payments and send reminders without accounting complexity.
             </p>
             <PublicHeroActions />
             <p className="mt-4 text-sm text-slate-400">No credit card required. Preview your invoice before signup.</p>

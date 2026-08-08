@@ -10,14 +10,14 @@ import { breadcrumbSchema, faqSchema } from "@/lib/seo-schemas";
 const siteUrl = "https://invoicewala.shop";
 
 export const metadata: Metadata = {
-  title: "GST Bill Format India | Sample GST Invoice",
+  title: "GST Bill Format & Template India | Sample GST Invoice",
   description:
-    "Learn GST bill format in India with mandatory fields, sample table, GST invoice rules, mistakes, FAQs and free invoice format links.",
+    "Use this GST bill format and template guide for India. See mandatory fields, sample table, GST invoice rules, common mistakes, FAQs and invoice links.",
   alternates: { canonical: `${siteUrl}/blog/gst-bill-format` },
   openGraph: {
-    title: "GST Bill Format India | Sample GST Invoice",
+    title: "GST Bill Format & Template India | Sample GST Invoice",
     description:
-      "Complete GST bill format guide for Indian businesses, freelancers, contractors and small business owners.",
+      "GST bill template guide for Indian businesses, freelancers, contractors and small business owners.",
     url: `${siteUrl}/blog/gst-bill-format`,
     siteName: "InvoiceWala",
   },
@@ -25,6 +25,7 @@ export const metadata: Metadata = {
 
 const faqs: Array<[string, string]> = [
   ["What is a GST bill format?", "A GST bill format is the structure used to create a GST-compliant bill or invoice with supplier details, buyer details, GSTIN, invoice number, item details, taxable value, GST rate and total amount."],
+  ["What is a GST bill template?", "A GST bill template is a reusable bill format with space for seller and buyer details, GSTIN, invoice number, item rows, taxable value, GST breakup and final total."],
   ["Is GST bill format and GST invoice format the same?", "In common business language, people often use both terms for the same document. Under GST, the correct term for taxable supply is usually tax invoice."],
   ["What details are mandatory in a GST bill?", "A GST bill should include supplier name, address, GSTIN, invoice number, date, buyer details, item description, HSN or SAC, taxable value, GST rate, tax amount and total value."],
   ["Can freelancers create GST bills?", "Yes. GST-registered freelancers can create GST invoices for taxable services when GST rules apply to their business."],
@@ -80,7 +81,7 @@ function articleSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: "GST Bill Format in India: Sample GST Invoice Format and Rules",
+    headline: "GST Bill Format and Template India: Sample GST Invoice Format and Rules",
     description:
       "A complete GST bill format guide for Indian businesses, freelancers, contractors, consultants and small business owners.",
     author: { "@type": "Organization", name: "InvoiceWala" },
@@ -91,7 +92,7 @@ function articleSchema() {
     },
     mainEntityOfPage: `${siteUrl}/blog/gst-bill-format`,
     datePublished: "2026-05-29",
-    dateModified: "2026-05-29",
+    dateModified: "2026-08-08",
     inLanguage: "en-IN",
   };
 }
@@ -121,7 +122,7 @@ export default function GstBillFormatPage() {
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">GST bill format</p>
             <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-              GST Bill Format in India
+              GST Bill Format and Template in India
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
               Learn the GST bill format used by Indian businesses, freelancers, contractors, consultants and small business owners. See mandatory fields, sample table, GST invoice rules, common mistakes and links to create a GST-ready PDF invoice.
