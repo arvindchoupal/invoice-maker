@@ -32,7 +32,7 @@ export const INVOICE_TEMPLATE_PAGES: InvoiceTemplatePage[] = [
     profession: "Plumber",
     category: "Home services",
     primaryKeyword: "plumber invoice template",
-    title: "Free Plumber Invoice Template | GST Bill Format",
+    title: "Plumber Bill Format & Invoice Template | Free PDF",
     description: "Create a plumber invoice with labour, materials, visit charges and GST. Use realistic line items, preview the bill and make a professional PDF online.",
     h1: "Plumber Invoice Template for Labour and Materials",
     intro: "Build a clear plumbing bill that separates the service visit, labour, replacement parts and taxes. The sample format works for repairs, installations and maintenance jobs, and can be recreated in InvoiceWala when you are ready to bill a customer.",

@@ -109,7 +109,7 @@ export const TOOLS_CATALOG: ToolCatalogEntry[] = [
     body: "Calculate discount amount, final sale price and total savings from original price and discount percentage.",
     tag: "Sales",
     intent: "Best for retail pricing",
-    metaTitle: "Discount Calculator | Calculate Sale Price Online",
+    metaTitle: "Free Discount Calculator | Find Sale Price & Savings",
     metaDescription:
       "Use InvoiceWala's free discount calculator to calculate discount amount, final price and savings for shopping, ecommerce, retail and GST billing.",
     headline: "Discount Calculator",

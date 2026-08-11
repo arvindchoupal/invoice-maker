@@ -124,7 +124,7 @@ export const INVOICE_TEMPLATE_BATCH_FOUR: InvoiceTemplatePage[] = [
     profession: "Physiotherapist",
     category: "Healthcare services",
     primaryKeyword: "physiotherapist invoice template",
-    title: "Free Physiotherapist Invoice Template | Therapy Bill",
+    title: "Physiotherapy Bill Format & Invoice Template | Free PDF",
     h1: "Physiotherapist Invoice Template for Therapy Sessions",
     billingModel: "Session package + assessment + home visit",
     sampleBusiness: "MoveWell Physiotherapy",

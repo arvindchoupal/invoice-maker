@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { PublicSiteSearch } from "@/components/PublicSiteSearch";
 import { useAuthSession } from "@/hooks/useAuthSession";
 
 const guestLinkClass = "rounded-xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10";
@@ -19,6 +20,7 @@ export function PublicNavActions({ showBlog = true, hideTemplatesOnMobile = fals
   if (isLoggedIn) {
     return (
       <div className="flex items-center gap-2 sm:gap-3">
+        <PublicSiteSearch />
         <Link className={`${guestLinkClass} hidden md:inline-flex`} data-event="nav_tools_click" data-event-category="navigation" href="/tools">
           Free tools
         </Link>
@@ -45,6 +47,7 @@ export function PublicNavActions({ showBlog = true, hideTemplatesOnMobile = fals
 
   return (
     <div className="flex items-center gap-2 sm:gap-3">
+      <PublicSiteSearch />
       <Link className={`${guestLinkClass} hidden sm:inline-flex`} data-event="nav_tools_click" data-event-category="navigation" href="/tools">
         Tools
       </Link>
