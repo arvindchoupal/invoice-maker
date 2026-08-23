@@ -36,7 +36,7 @@ export function PublicHeroActions() {
           View demo
         </Link>
       </div>
-      <p className="mt-4 text-sm text-slate-400">No credit card required. Save your first invoice in minutes.</p>
+      <p className="mt-4 text-sm text-slate-400">First 1,000 customers get a free founding account. No card required.</p>
     </>
   );
 }

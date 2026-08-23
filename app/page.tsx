@@ -26,7 +26,7 @@ const trustMetrics = [
   ["Free preview", "create before signup"],
   ["GST-ready", "tax invoice fields"],
   ["WhatsApp", "share invoice links"],
-  ["₹199 Pro", "early access pricing"],
+  ["First 1,000", "free founding accounts"],
 ];
 
 const features = [
@@ -258,14 +258,14 @@ export default function Home() {
         <div className="rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-8">
           <div className="grid gap-8 lg:grid-cols-[1fr_420px]">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Simple pricing</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Start free. Upgrade to Pro for ₹199/month when you need more.</h2>
-              <p className="mt-4 text-slate-300">Create and preview invoices free. Pro unlocks saved invoices, PDF templates, reminders, GST reports, AI imports and business tracking features at early access pricing.</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Founding customer offer</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">The first 1,000 customers get InvoiceWala Pro free.</h2>
+              <p className="mt-4 text-slate-300">Create a founding account with saved invoices, PDF templates, reminders, GST reports, AI imports and business tracking. No card, subscription fee or automatic charge.</p>
             </div>
             <div className="grid gap-3">
               {[
-                ["Free", "Preview invoices and use free tools", "/free-invoice"],
-                ["Pro ₹199", "PDFs, reminders, GST reports and AI imports", "/pricing"],
+                ["Free tools", "Preview invoices before signup", "/free-invoice"],
+                ["Founding Pro ₹0", "Limited to the first 1,000 accounts", "/pricing"],
               ].map(([plan, body, href]) => (
                 <div className="flex items-center justify-between rounded-2xl bg-slate-950 p-4" key={plan}>
                   <div>

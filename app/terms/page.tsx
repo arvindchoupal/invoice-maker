@@ -23,7 +23,7 @@ export default function TermsPage() {
       <article className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Terms</p>
         <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">Terms of Service</h1>
-        <p className="mt-4 text-sm text-slate-500">Last updated: 11 June 2026</p>
+        <p className="mt-4 text-sm text-slate-500">Last updated: 19 August 2026</p>
         <div className="mt-8 space-y-6 text-sm leading-7 text-slate-300">
           <p>By using InvoiceWala, you agree to use the product responsibly for lawful invoice, billing, document and business record workflows.</p>
           <h2 className="text-2xl font-semibold text-white">Product Use</h2>
@@ -32,6 +32,8 @@ export default function TermsPage() {
           <p>InvoiceWala is not a replacement for a chartered accountant, tax advisor or legal advisor. Confirm GST, tax, filing and compliance decisions with a qualified professional.</p>
           <h2 className="text-2xl font-semibold text-white">Accounts and Security</h2>
           <p>You are responsible for keeping account access secure and for activity performed through your account.</p>
+          <h2 className="text-2xl font-semibold text-white">Founding Customer Offer</h2>
+          <p>The first 1,000 eligible, genuine customer accounts receive free access to current Founding Pro features. The offer is limited to one spot per user and may exclude duplicate, abusive or automated registrations. Future optional add-ons may have separate terms, but InvoiceWala will not automatically charge or silently convert a founding account into a paid subscription.</p>
           <h2 className="text-2xl font-semibold text-white">Availability</h2>
           <p>We aim to keep InvoiceWala reliable, but access may occasionally be affected by maintenance, infrastructure issues or third-party service interruptions.</p>
           <h2 className="text-2xl font-semibold text-white">Contact</h2>

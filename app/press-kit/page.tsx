@@ -21,7 +21,7 @@ const facts = [
   ["Category", "Invoicing and small-business utilities"],
   ["Status", "Early access"],
   ["Platform", "Web"],
-  ["Pricing", "Free plan; Pro currently ₹199/month in India"],
+  ["Launch offer", "First 1,000 customers receive a free Founding Pro account"],
   ["Audience", "Freelancers, contractors, agencies and small businesses"],
 ];
 
@@ -31,7 +31,7 @@ const links = [
   ["/free-invoice-generator", "Free invoice generator"],
   ["/tools/gst-calculator", "GST calculator"],
   ["/tools/payment-reminder-generator", "Payment reminder generator"],
-  ["/pricing", "Pricing"],
+  ["/pricing", "Founding customer offer"],
 ];
 
 export default function PressKitPage() {

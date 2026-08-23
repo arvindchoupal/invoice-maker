@@ -66,9 +66,9 @@ export function PublicFooterLinks() {
       <div className="flex flex-wrap gap-x-5 gap-y-3 text-slate-300">
         <Link className="transition hover:text-white" href="/tools">Tools</Link>
         <Link className="transition hover:text-white" href="/blog">Blog</Link>
-        <Link className="transition hover:text-white" href="/pricing">Pricing</Link>
+        <Link className="transition hover:text-white" href="/pricing">Founding offer</Link>
         <Link className="transition hover:text-white" href="/login">Log in</Link>
-        <Link className="transition hover:text-white" href="/signup">Start free</Link>
+        <Link className="transition hover:text-white" href="/signup?source=founding-1000">Claim free account</Link>
       </div>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
         {footerGroups.map((group) => (

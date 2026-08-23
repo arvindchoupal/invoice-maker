@@ -27,7 +27,6 @@ function statusTone(status: string) {
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState<PaymentRow[]>([]);
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
   async function load() {
@@ -40,19 +39,11 @@ export default function PaymentsPage() {
     api<PaymentRow[]>("/payments").then(setPayments).finally(() => setLoading(false));
   }, []);
 
-  async function action(provider: "stripe" | "razorpay" | "mark-paid", form: HTMLFormElement) {
-    const id = new FormData(form).get("invoiceId");
-    const path = provider === "mark-paid" ? `/payments/${id}/mark-paid` : `/payments/${id}/${provider}`;
-    const data = await api(path, { method: "POST" });
-    setMessage(JSON.stringify(data, null, 2));
-    load();
-  }
-
   async function manualPayment(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const id = form.get("invoiceId");
-    const data = await api(`/payments/${id}/manual`, {
+    await api(`/payments/${id}/manual`, {
       method: "POST",
       body: JSON.stringify({
         amount: Number(form.get("amount")),
@@ -60,7 +51,6 @@ export default function PaymentsPage() {
         note: form.get("note"),
       }),
     });
-    setMessage(JSON.stringify(data, null, 2));
     event.currentTarget.reset();
     load();
   }
@@ -74,22 +64,10 @@ export default function PaymentsPage() {
     <div className="grid gap-6">
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">Payments</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Payment sessions, manual payments, partial payments, refunds, and status history from the backend.</p>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Record payments received directly from customers and keep invoice status up to date.</p>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-2">
-        <Card className="p-5">
-          <h2 className="text-lg font-semibold">Provider actions</h2>
-          <form className="mt-4" onSubmit={(event) => event.preventDefault()}>
-            <Field label="Invoice ID"><input className={inputClass} name="invoiceId" placeholder="1" required /></Field>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <Button onClick={(e) => action("stripe", e.currentTarget.form!)}>Stripe checkout</Button>
-              <Button variant="secondary" onClick={(e) => action("razorpay", e.currentTarget.form!)}>Razorpay order</Button>
-              <Button className="bg-emerald-600 hover:bg-emerald-500" onClick={(e) => action("mark-paid", e.currentTarget.form!)}>Mark as paid</Button>
-            </div>
-          </form>
-        </Card>
-
+      <div className="grid gap-6 xl:grid-cols-[1fr_0.7fr]">
         <Card className="p-5">
           <h2 className="text-lg font-semibold">Record manual or partial payment</h2>
           <form onSubmit={manualPayment} className="mt-4 grid gap-4 md:grid-cols-2">
@@ -100,9 +78,13 @@ export default function PaymentsPage() {
             <Button className="md:col-span-2"><CreditCard className="h-4 w-4" />Record payment</Button>
           </form>
         </Card>
+        <Card className="border-amber-200 bg-amber-50 p-5 dark:border-amber-300/15 dark:bg-amber-300/[0.06]">
+          <h2 className="text-lg font-semibold">Online collection paused</h2>
+          <p className="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+            InvoiceWala is not creating Stripe or Razorpay payment sessions during the free founding launch. You can still record bank, UPI, cash or other payments received directly from your customer.
+          </p>
+        </Card>
       </div>
-
-      {message ? <pre className="overflow-auto rounded-2xl border border-slate-200 bg-slate-950 p-5 text-sm text-slate-100">{message}</pre> : null}
 
       <Card className="overflow-hidden">
         <div className="border-b border-slate-200 p-5 dark:border-white/10">

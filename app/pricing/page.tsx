@@ -6,21 +6,21 @@ import { PricingClient } from "./PricingClient";
 const siteUrl = "https://invoicewala.shop";
 
 const faqs: Array<[string, string]> = [
-  ["How much does InvoiceWala Pro cost?", "InvoiceWala Pro is currently priced at ₹199/month during the early growth phase."],
-  ["Is there a free plan?", "Yes. InvoiceWala has a free plan for trying invoices and free tools before upgrading."],
-  ["Who should use the Pro plan?", "Freelancers, shops, contractors, agencies and small businesses that need unlimited invoices, branding removal and stronger workflows should use Pro."],
-  ["Can I use InvoiceWala before paying?", "Yes. You can start free, create invoices and use public tools before upgrading."],
+  ["Who gets a free InvoiceWala account?", "The first 1,000 genuine customers who register during the founding offer receive free access to all current Pro account features."],
+  ["Do I need a card or UPI?", "No. InvoiceWala is not collecting subscription payments during the founding offer."],
+  ["Will InvoiceWala charge me automatically later?", "No. The founding offer does not collect a payment method and will not turn into an automatic paid subscription."],
+  ["What happens after 1,000 accounts?", "Terms for new accounts may change after the founding spots are claimed. Any future paid offer will be announced separately."],
 ];
 
 export const metadata: Metadata = {
-  title: "InvoiceWala Pricing | ₹199 Pro Invoice Plan",
+  title: "InvoiceWala Free Founding Account | First 1,000 Customers",
   description:
-    "Simple InvoiceWala pricing for freelancers, GST businesses and small teams. Start free and upgrade to Pro at ₹199/month during early access.",
+    "The first 1,000 InvoiceWala customers get a free founding account with all current Pro features. No card, subscription fee or automatic charge.",
   alternates: { canonical: `${siteUrl}/pricing` },
   robots: { index: true, follow: true },
   openGraph: {
-    title: "InvoiceWala Pricing | ₹199 Pro Plan",
-    description: "Start free, then upgrade to Pro for invoices, GST workflows, reminders and reports.",
+    title: "InvoiceWala Free Founding Account | First 1,000",
+    description: "Claim a free InvoiceWala founding account with current Pro features. Limited to the first 1,000 customers.",
     url: `${siteUrl}/pricing`,
     siteName: "InvoiceWala",
   },
@@ -30,12 +30,12 @@ function productSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: "InvoiceWala Pro",
+    name: "InvoiceWala Founding Pro Account",
     description: metadata.description,
     brand: { "@type": "Brand", name: "InvoiceWala" },
     offers: {
       "@type": "Offer",
-      price: "199",
+      price: "0",
       priceCurrency: "INR",
       availability: "https://schema.org/InStock",
       url: `${siteUrl}/pricing`,
@@ -51,7 +51,7 @@ export default function PricingPage() {
           productSchema(),
           breadcrumbSchema([
             { name: "Home", url: siteUrl },
-            { name: "Pricing", url: `${siteUrl}/pricing` },
+            { name: "Founding offer", url: `${siteUrl}/pricing` },
           ]),
           faqSchema(faqs),
         ]}

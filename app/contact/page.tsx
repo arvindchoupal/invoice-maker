@@ -42,7 +42,7 @@ export default function ContactPage() {
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link className="rounded-xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950" href="/free-invoice">Create free invoice</Link>
-          <Link className="rounded-xl border border-white/15 px-5 py-3 text-sm font-semibold text-white" href="/pricing">View pricing</Link>
+          <Link className="rounded-xl border border-white/15 px-5 py-3 text-sm font-semibold text-white" href="/pricing">View founding offer</Link>
         </div>
       </section>
       <footer className="border-t border-white/10 px-6 py-10">

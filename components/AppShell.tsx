@@ -31,7 +31,7 @@ const nav = [
   { href: "/recurring", label: "Recurring", icon: CreditCard },
   { href: "/reports", label: "Reports", icon: Download },
   { href: "/settings", label: "Settings", icon: Settings },
-  { href: "/pricing", label: "Pricing", icon: Shield },
+  { href: "/pricing", label: "Founding plan", icon: Shield },
 ];
 
 const adminNav = { href: "/admin", label: "Admin", icon: Shield };

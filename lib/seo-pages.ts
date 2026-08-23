@@ -33,7 +33,7 @@ export type SeoPage = {
 
 const defaultLinks = [
   { href: "/free-invoice", label: "Create a free invoice" },
-  { href: "/pricing", label: "View ₹199 Pro pricing" },
+  { href: "/pricing", label: "First 1,000 accounts free" },
   { href: "/tools/gst-calculator", label: "GST calculator" },
   { href: "/tools/invoice-number-generator", label: "Invoice number generator" },
 ];
@@ -234,7 +234,7 @@ const allSeoPages: SeoPage[] = [
       { href: "/free-invoice-generator", label: "Free invoice generator" },
       { href: "/gst-invoice-generator", label: "GST invoice generator" },
       { href: "/invoice-template-india", label: "Invoice template India" },
-      { href: "/pricing", label: "View ₹199 Pro pricing" },
+      { href: "/pricing", label: "First 1,000 accounts free" },
       { href: "/blog", label: "InvoiceWala blog" },
     ],
     comparisonKeywords: ["free invoice maker vs Excel", "free invoice generator vs paid invoice software", "online invoice maker without signup"],
@@ -409,7 +409,7 @@ const allSeoPages: SeoPage[] = [
       { href: "/free-invoice-generator", label: "Online invoice maker" },
       { href: "/invoice-template-india", label: "Invoice template India" },
       { href: "/blog/freelancer-invoice-template", label: "Freelancer invoice guide" },
-      { href: "/pricing", label: "View ₹199 Pro pricing" },
+      { href: "/pricing", label: "First 1,000 accounts free" },
     ],
     comparisonKeywords: ["freelancer invoice template vs Excel", "freelancer invoice maker vs Word invoice", "free freelancer invoice generator"],
     longTailKeywords: [
@@ -672,12 +672,12 @@ const allSeoPages: SeoPage[] = [
     sections: [
       { title: "Choose simplicity first", body: "InvoiceWala is positioned around creating invoices fast, previewing PDFs and tracking payments without a heavy setup journey." },
       { title: "GST and Indian small business focus", body: "InvoiceWala keeps language and flows focused on Indian freelancers, contractors, agencies, local shops and GST businesses." },
-      { title: "Early-stage pricing", body: "Pro is priced at ₹199/month during early access so small users can adopt it without a high commitment." },
+      { title: "Founding customer access", body: "The first 1,000 customers receive current InvoiceWala Pro account features free, with no card or automatic charge." },
     ],
     comparisons: [
       { title: "Setup", invoiceWala: "Create invoice first, signup when saving/downloading.", alternative: "Zoho can feel broader and setup-heavy for simple users." },
       { title: "Positioning", invoiceWala: "Invoice-first with optional AI and bookkeeping.", alternative: "Larger business software ecosystem." },
-      { title: "Pricing feel", invoiceWala: "₹199/month early access Pro.", alternative: "May feel more than needed for early users depending on needs." },
+      { title: "Launch offer", invoiceWala: "Free Founding Pro access for the first 1,000 customers.", alternative: "Free tiers and paid-plan terms vary by provider." },
     ],
     faqs: [
       ["Is InvoiceWala a full Zoho replacement?", "No. InvoiceWala is simpler and invoice-first. It is best if you want fast invoices, PDFs and basic business tracking."],

@@ -135,7 +135,7 @@ export default async function SeoLandingPage({ params }: PageProps) {
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/15 px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/10" data-event="pricing_click" data-event-category="cta" data-event-label={`${page.slug} hero pricing`} href="/pricing">
-                See ₹199 Pro
+                First 1,000 free
               </Link>
             </div>
             <p className="mt-4 text-sm text-slate-400">Preview invoices free. Download and save after signup or login.</p>

@@ -65,8 +65,8 @@ export function PublicNavActions({ showBlog = true, hideTemplatesOnMobile = fals
       <Link className={`hidden sm:inline-flex ${guestLinkClass}`} data-event="login_click" data-event-category="auth" href="/login">
         Log in
       </Link>
-      <Link className={guestButtonClass} data-event="signup_click" data-event-category="auth" data-event-label="nav start free" href="/signup">
-        Start free
+      <Link className={guestButtonClass} data-event="signup_click" data-event-category="auth" data-event-label="nav founding account" href="/signup?source=founding-1000">
+        Claim free
       </Link>
     </div>
   );

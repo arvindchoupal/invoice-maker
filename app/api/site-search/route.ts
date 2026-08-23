@@ -17,7 +17,7 @@ const staticPages: SearchItem[] = [
   { title: "Invoice templates", href: "/invoice-templates", description: "Browse invoice formats for businesses and professions.", type: "Template", keywords: ["bill format", "invoice format", "template"] },
   { title: "GST invoice format", href: "/gst-invoice-format", description: "GST invoice format, template and sample guidance for India.", type: "Guide", keywords: ["gst bill format", "gst template"] },
   { title: "Tax invoice format", href: "/tax-invoice-format", description: "Tax invoice format, sample and GST field guide.", type: "Guide", keywords: ["tax bill", "gst invoice"] },
-  { title: "Pricing", href: "/pricing", description: "InvoiceWala pricing and plan details.", type: "Page" },
+  { title: "Founding offer", href: "/pricing", description: "First 1,000 InvoiceWala customer accounts free.", type: "Page" },
   { title: "Contact InvoiceWala", href: "/contact", description: "Get in touch with the InvoiceWala team.", type: "Page" },
 ];
 

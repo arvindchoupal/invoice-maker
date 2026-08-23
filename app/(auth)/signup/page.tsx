@@ -10,7 +10,7 @@ import { Button, Field, inputClass } from "@/components/ui";
 
 const onboardingBenefits = [
   ["Create", "Invoice, receipt, quotation or estimate"],
-  ["Send", "PDF, payment link or WhatsApp message"],
+  ["Send", "PDF, WhatsApp message or direct payment details"],
   ["Track", "Paid, pending and overdue invoices"],
 ];
 
@@ -49,10 +49,10 @@ export default function SignupPage() {
           <BrandLogo href="/" imageClassName="h-10 w-10" tagline="" />
           <div className="flex flex-1 items-center">
             <div className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Start free</p>
-              <h2 className="mt-4 text-5xl font-semibold tracking-tight">Simple for today. Serious when your business grows.</h2>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Founding customer offer</p>
+              <h2 className="mt-4 text-5xl font-semibold tracking-tight">The first 1,000 customers get InvoiceWala Pro free.</h2>
               <p className="mt-5 text-lg leading-8 text-slate-300">
-                Start by giving a customer a proper invoice. Keep going with AI import, GST summaries, payment reminders, PDF themes and reports.
+                Claim a founding account with invoices, AI import, GST summaries, payment reminders, PDF themes and reports. No card or subscription fee.
               </p>
               <div className="mt-8 grid gap-3">
                 {onboardingBenefits.map(([title, body]) => (
@@ -77,10 +77,10 @@ export default function SignupPage() {
 
             <form className="rounded-3xl border border-white/10 bg-white/[0.06] p-6 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-8" onSubmit={submit}>
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Start free</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Free for the first 1,000 customers</p>
                 <h1 className="mt-3 text-3xl font-semibold tracking-tight">Create your InvoiceWala workspace</h1>
                 <p className="mt-2 text-sm leading-6 text-slate-400">
-                  Make your first invoice, import bills and track payments from one premium finance workspace.
+                  Get all current Pro account features with no card, subscription fee or automatic charge.
                 </p>
               </div>
 
@@ -115,12 +115,12 @@ export default function SignupPage() {
 
                 {error ? <p className="rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-100">{error}</p> : null}
                 <Button className="min-h-12 w-full !bg-cyan-300 !text-slate-950 shadow-lg shadow-cyan-950/30 hover:!bg-cyan-200" disabled={loading}>
-                  {loading ? "Creating workspace..." : "Create free workspace"}
+                  {loading ? "Creating workspace..." : "Claim free founding account"}
                 </Button>
               </div>
 
               <p className="mt-5 text-center text-xs leading-5 text-slate-500">
-                By continuing, you can create invoices, save clients and manage your InvoiceWala workspace.
+                One founding spot per genuine user. Future optional add-ons may have separate terms; this account will never be charged automatically.
               </p>
             </form>
           </div>
