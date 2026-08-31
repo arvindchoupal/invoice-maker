@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 const trustMetrics = [
-  ["Free preview", "create before signup"],
+  ["First PDF free", "no signup required"],
   ["GST-ready", "tax invoice fields"],
   ["WhatsApp", "share invoice links"],
   ["First 1,000", "free founding accounts"],
@@ -52,7 +52,7 @@ const userTypes = [
 ];
 
 const faqs: Array<[string, string]> = [
-  ["Can I create an invoice without signup?", "Yes. You can create and preview an invoice for free. Signup or login is needed when you want to save it and download the PDF."],
+  ["Can I create an invoice without signup?", "Yes. You can create an invoice and download your first PDF free without signup. Create a free account only when you want to save invoice history, reuse customers and track payments."],
   ["Does InvoiceWala support GST invoices?", "Yes. InvoiceWala supports GST/VAT fields, tax-ready invoice data and GST-focused tools for Indian businesses."],
   ["Is InvoiceWala accounting software?", "No. InvoiceWala is a simple invoicing and business tracking tool. AI import, expenses and reports are optional automation after the invoice flow."],
   ["Can I send invoices on WhatsApp?", "Yes. InvoiceWala supports direct WhatsApp sharing links for invoices without needing a WhatsApp API provider."],
@@ -79,7 +79,7 @@ export default function Home() {
               InvoiceWala is an online invoice maker for Indian freelancers, contractors, agencies and small businesses. Create professional invoices, track payments and send reminders without accounting complexity.
             </p>
             <PublicHeroActions />
-            <p className="mt-4 text-sm text-slate-400">No credit card required. Preview your invoice before signup.</p>
+            <p className="mt-4 text-sm text-slate-400">Download your first invoice PDF free. No signup or credit card required.</p>
           </div>
 
           <div className="relative min-w-0" id="demo">
@@ -94,7 +94,7 @@ export default function Home() {
                   </div>
                   <div className="text-right">
                     <p className="text-3xl font-bold text-blue-600 sm:text-4xl">INVOICE</p>
-                    <p className="mt-1 text-xs text-slate-500 sm:text-sm">Preview before signup</p>
+                    <p className="mt-1 text-xs text-slate-500 sm:text-sm">First PDF free</p>
                   </div>
                 </div>
 
@@ -133,7 +133,7 @@ export default function Home() {
                 </div>
 
                 <div className="mt-6 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-800">
-                  No credit card required · PDF download after free signup
+                  First PDF download free · No signup required
                 </div>
               </div>
             </div>

@@ -10,14 +10,14 @@ import { breadcrumbSchema, faqSchema } from "@/lib/seo-schemas";
 const siteUrl = "https://invoicewala.shop";
 
 export const metadata: Metadata = {
-  title: "GST Bill Format & Template India | Sample GST Invoice",
+  title: "Free GST Bill Format India | Invoice Template & Sample",
   description:
-    "Use this GST bill format and template guide for India. See mandatory fields, sample table, GST invoice rules, common mistakes, FAQs and invoice links.",
+    "Use a free GST bill format for India with a sample invoice, mandatory fields, GST rules and a ready-to-use invoice template for PDF billing.",
   alternates: { canonical: `${siteUrl}/blog/gst-bill-format` },
   openGraph: {
-    title: "GST Bill Format & Template India | Sample GST Invoice",
+    title: "Free GST Bill Format India | Invoice Template & Sample",
     description:
-      "GST bill template guide for Indian businesses, freelancers, contractors and small business owners.",
+      "Free GST bill format, sample invoice and template guide for Indian businesses, freelancers and small business owners.",
     url: `${siteUrl}/blog/gst-bill-format`,
     siteName: "InvoiceWala",
   },

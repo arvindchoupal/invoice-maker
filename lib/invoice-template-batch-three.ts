@@ -360,7 +360,7 @@ export const INVOICE_TEMPLATE_BATCH_THREE: InvoiceTemplatePage[] = [
     profession: "Courier",
     category: "Travel and logistics",
     primaryKeyword: "courier invoice template",
-    title: "Courier Bill Format & Invoice Template | Free PDF",
+    title: "Free Courier Invoice Template & Bill Format | PDF",
     h1: "Courier Invoice Template for Delivery Bills",
     billingModel: "Shipment + weight + delivery service",
     sampleBusiness: "SwiftBox Courier",

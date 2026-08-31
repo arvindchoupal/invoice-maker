@@ -157,7 +157,7 @@ export function InvoiceTemplatePage({ page }: { page: InvoiceTemplatePageData })
               <Link className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-white/10 px-4 text-sm font-semibold hover:bg-white/[0.05]" data-event="template_tool_click" data-event-category="engagement" data-event-label={`${page.slug} business expense calculator`} href="/tools/business-expense-calculator">
                 Calculate business expenses
               </Link>
-              <p className="mt-3 text-center text-xs text-slate-500">Preview first. Sign in to save and download PDF.</p>
+              <p className="mt-3 text-center text-xs text-slate-500">Download your first PDF free. Sign in only to save history and track payments.</p>
             </div>
           </aside>
         </div>

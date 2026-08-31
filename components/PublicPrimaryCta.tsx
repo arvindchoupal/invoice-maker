@@ -26,9 +26,10 @@ export function PublicPrimaryCta({
 
   const href = isLoggedIn ? authedHref : guestHref;
   const label = isLoggedIn ? authedLabel : guestLabel;
+  const guestEvent = guestHref.startsWith("/free-invoice") ? "create_invoice_click" : "signup_click";
 
   return (
-    <Link className={className} data-event={isLoggedIn ? "dashboard_click" : "signup_click"} data-event-category={isLoggedIn ? "navigation" : "auth"} data-event-label={label} href={href}>
+    <Link className={className} data-event={isLoggedIn ? "dashboard_click" : guestEvent} data-event-category={isLoggedIn ? "navigation" : guestEvent === "signup_click" ? "auth" : "cta"} data-event-label={label} href={href}>
       {label}
     </Link>
   );

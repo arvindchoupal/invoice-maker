@@ -1,22 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-
-type GtagParams = Record<string, string | number | boolean | undefined>;
-
-declare global {
-  interface Window {
-    gtag?: (command: "event", eventName: string, params?: GtagParams) => void;
-  }
-}
-
-function sendEvent(eventName: string, params: GtagParams = {}) {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") return;
-  window.gtag("event", eventName, {
-    page_path: window.location.pathname,
-    ...params,
-  });
-}
+import { trackAnalyticsEvent } from "@/lib/client-analytics";
 
 function textLabel(element: HTMLElement) {
   return element.getAttribute("aria-label") || element.getAttribute("title") || element.textContent?.trim().replace(/\s+/g, " ").slice(0, 120) || "";
@@ -30,12 +15,12 @@ export function AnalyticsEvents() {
 
     const engagementTimer30 = window.setTimeout(() => {
       engaged30Sent = true;
-      sendEvent("engaged_30_seconds");
+      trackAnalyticsEvent("engaged_30_seconds");
     }, 30000);
 
     const engagementTimer60 = window.setTimeout(() => {
       engaged60Sent = true;
-      sendEvent("engaged_60_seconds");
+      trackAnalyticsEvent("engaged_60_seconds");
     }, 60000);
 
     const onClick = (event: MouseEvent) => {
@@ -44,7 +29,7 @@ export function AnalyticsEvents() {
 
       const trackedElement = target.closest<HTMLElement>("[data-event]");
       if (trackedElement) {
-        sendEvent(trackedElement.dataset.event || "cta_click", {
+        trackAnalyticsEvent(trackedElement.dataset.event || "cta_click", {
           event_category: trackedElement.dataset.eventCategory || "engagement",
           event_label: trackedElement.dataset.eventLabel || textLabel(trackedElement),
           link_url: trackedElement instanceof HTMLAnchorElement ? trackedElement.href : trackedElement.dataset.eventHref,
@@ -60,7 +45,7 @@ export function AnalyticsEvents() {
       const isPrimaryPath = ["/free-invoice", "/signup", "/login", "/pricing", "/invoice-templates", "/tools"].some((path) => url.pathname === path || url.pathname.startsWith(`${path}/`));
 
       if (isInternal && isPrimaryPath) {
-        sendEvent("important_link_click", {
+        trackAnalyticsEvent("important_link_click", {
           event_category: "navigation",
           event_label: textLabel(link),
           link_url: `${url.pathname}${url.search}`,
@@ -76,7 +61,7 @@ export function AnalyticsEvents() {
       for (const mark of [50, 90]) {
         if (depth >= mark && !trackedScrollDepths.has(mark)) {
           trackedScrollDepths.add(mark);
-          sendEvent(`scroll_${mark}_percent`);
+          trackAnalyticsEvent(`scroll_${mark}_percent`);
         }
       }
     };
