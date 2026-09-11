@@ -39,7 +39,7 @@
 }
 
 .hero { position: relative; min-height: 100svh; display: grid; place-items: center; background: var(--deep); isolation: isolate; }
-.heroImage { object-fit: cover; object-position: center 29%; z-index: -3; transform: scale(1.025); animation: heroDrift 14s ease-in-out infinite alternate; }
+.heroImage { object-fit: cover; object-position: center 28%; z-index: -3; transform: scale(1.025); animation: heroDrift 14s ease-in-out infinite alternate; }
 .heroShade { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, rgba(4, 24, 17, .72) 0%, rgba(7, 29, 21, .25) 38%, rgba(4, 21, 15, .82) 100%), linear-gradient(90deg, rgba(2, 20, 13, .28), transparent 36%, transparent 64%, rgba(2, 20, 13, .28)); }
 .arch { position: absolute; inset: 4.8rem 3rem 2rem; z-index: -1; border: 1px solid rgba(237, 214, 157, .46); border-radius: 48% 48% 0 0 / 25% 25% 0 0; }
 .arch::before { content: ""; position: absolute; inset: 8px; border: 1px solid rgba(237, 214, 157, .2); border-radius: inherit; }
@@ -71,6 +71,7 @@
 .coupleGrid { width: min(1080px, 100%); margin: 4.5rem auto 0; display: grid; grid-template-columns: 1fr 100px 1fr; gap: clamp(1rem, 4vw, 4rem); align-items: center; }
 .portraitWrap { position: relative; width: min(100%, 350px); aspect-ratio: 4/5; margin: 0 auto 1.7rem; overflow: hidden; border-radius: 49% 49% 1rem 1rem / 28% 28% 1rem 1rem; box-shadow: 0 22px 60px rgba(28, 62, 45, .17); }
 .portrait { object-fit: cover; object-position: center 16%; transition: transform .7s ease; }
+.personCard:last-child .portrait { object-position: center top; }
 .personCard:hover .portrait { transform: scale(1.035); }
 .personCard > p { color: var(--gold); text-transform: uppercase; letter-spacing: .28em; font: 700 .64rem Arial, sans-serif; }
 .personCard h3 { margin: .45rem 0 .3rem; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 400; }
@@ -111,6 +112,13 @@
 .eventCard > span { display: block; color: #6b786f; font: .88rem/1.7 Arial, sans-serif; }
 .featuredEvent > span { color: rgba(255,255,255,.67); }
 
+.momentsSection { padding: clamp(5.5rem, 10vw, 9rem) 5vw clamp(7rem, 12vw, 11rem); background: var(--paper); }
+.momentsGrid { width: min(1040px, 100%); margin: 4rem auto 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+.momentCard { position: relative; aspect-ratio: 4/5; overflow: hidden; border-radius: 48% 48% 1rem 1rem / 20% 20% 1rem 1rem; box-shadow: 0 24px 60px rgba(28,62,45,.14); }
+.momentCardOffset { transform: translateY(3rem); }
+.momentImage { object-fit: cover; object-position: center 25%; transition: transform .8s ease; }
+.momentCard:hover .momentImage { transform: scale(1.035); }
+
 .photoStory { display: grid; grid-template-columns: 1.08fr .92fr; min-height: 740px; background: #e9dfcc; }
 .photoFrame { position: relative; min-height: 620px; overflow: hidden; }
 .storyImage { object-fit: cover; object-position: center 30%; }
@@ -141,11 +149,11 @@
 .footer button { margin: 2rem auto 4rem; display: flex; align-items: center; gap: .55rem; padding: .8rem 1.1rem; border: 1px solid rgba(255,255,255,.3); border-radius: 999px; color: white; background: transparent; cursor: pointer; text-transform: uppercase; letter-spacing: .12em; font: 600 .62rem Arial, sans-serif; }
 .footer small { display: block; color: rgba(255,255,255,.4); font: .62rem Arial, sans-serif; letter-spacing: .08em; }
 
-.inviteGate { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; overflow: hidden; background: var(--deep); color: white; transition: opacity .8s .45s, visibility .8s .45s; }
+.inviteGate { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; overflow: hidden; background: linear-gradient(180deg, rgba(4,26,18,.3), rgba(4,26,18,.78)), url("/wedding/hero-wedding.jpg") center 24% / cover; color: white; transition: opacity .8s .45s, visibility .8s .45s; }
 .isOpen .inviteGate { opacity: 0; visibility: hidden; pointer-events: none; }
 .gatePattern { position: absolute; inset: -40px; opacity: .16; background-image: radial-gradient(circle at center, transparent 0 14px, var(--gold) 15px 16px, transparent 17px), linear-gradient(45deg, transparent 46%, var(--gold) 47% 49%, transparent 50%); background-size: 72px 72px; transform: scale(1.08); transition: transform 1.2s; }
 .isOpen .gatePattern { transform: scale(1.25) rotate(4deg); }
-.gateContent { position: relative; width: min(520px, 88vw); min-height: min(670px, 84vh); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem; border: 1px solid rgba(236,215,156,.55); background: rgba(8,39,28,.88); box-shadow: 0 25px 80px rgba(0,0,0,.35); text-align: center; }
+.gateContent { position: relative; width: min(520px, 88vw); min-height: min(670px, 84vh); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem; border: 1px solid rgba(236,215,156,.62); background: rgba(6,34,24,.64); backdrop-filter: blur(2px); box-shadow: 0 25px 80px rgba(0,0,0,.35); text-align: center; }
 .gateContent::before { content: ""; position: absolute; inset: 9px; border: 1px solid rgba(236,215,156,.18); pointer-events: none; }
 .gateKicker { margin-top: 2.2rem; color: rgba(255,255,255,.62); text-transform: uppercase; letter-spacing: .32em; font: 600 .62rem Arial, sans-serif; }
 .gateMonogram { margin: 1.5rem 0 1rem; font-size: clamp(4.2rem, 14vw, 7rem); line-height: 1; }
@@ -181,6 +189,10 @@
   .eventsGrid { grid-template-columns: 1fr; gap: 1rem; }
   .eventCard, .featuredEvent { min-height: 380px; transform: none; }
   .featuredEvent:hover, .eventCard:hover { transform: translateY(-5px); }
+  .momentsSection { padding-bottom: 5.5rem; }
+  .momentsGrid { grid-template-columns: 1fr; gap: 1rem; }
+  .momentCard { aspect-ratio: 4/4.8; }
+  .momentCardOffset { transform: none; }
   .photoStory { grid-template-columns: 1fr; }
   .photoFrame { min-height: 76svh; }
   .storyCopy { padding: 5rem 1.5rem; }

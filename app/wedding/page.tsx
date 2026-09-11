@@ -8,14 +8,21 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Kalam & Farhan are getting married",
     description: "4 November 2026 · Kasia, Kushinagar",
+    type: "website",
     images: [
       {
-        url: "/wedding/couple-portrait.png",
-        width: 1066,
-        height: 1600,
+        url: "/wedding/hero-wedding.jpg",
+        width: 1145,
+        height: 1374,
         alt: "Kalam and Farhan wedding portrait",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kalam & Farhan are getting married",
+    description: "4 November 2026 · Kasia, Kushinagar",
+    images: ["/wedding/hero-wedding.jpg"],
   },
 };
 

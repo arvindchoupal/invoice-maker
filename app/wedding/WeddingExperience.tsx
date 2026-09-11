@@ -56,7 +56,7 @@ function getCountdown() {
 
 export default function WeddingExperience() {
   const [opened, setOpened] = useState(false);
-  const [countdown, setCountdown] = useState(getCountdown);
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const petals = useMemo(
     () =>
       Array.from({ length: 15 }, (_, index) => ({
@@ -69,6 +69,7 @@ export default function WeddingExperience() {
   );
 
   useEffect(() => {
+    setCountdown(getCountdown());
     const timer = window.setInterval(() => setCountdown(getCountdown()), 1000);
     return () => window.clearInterval(timer);
   }, []);
@@ -114,7 +115,7 @@ export default function WeddingExperience() {
       <section className={styles.hero} id="home">
         <Image
           className={styles.heroImage}
-          src="/wedding/couple-portrait.png"
+          src="/wedding/hero-wedding.jpg"
           alt="Kalam and Farhan in their wedding attire"
           fill
           priority
@@ -173,16 +174,16 @@ export default function WeddingExperience() {
           <article className={styles.personCard}>
             <div className={styles.portraitWrap}>
               <Image
-                src="/wedding/kalam.png"
+                src="/wedding/farhan.png"
                 alt="Kalam Ansari"
                 fill
                 sizes="(max-width: 720px) 75vw, 360px"
                 className={styles.portrait}
               />
             </div>
-            <p>The Bride</p>
+            <p>The Groom</p>
             <h3>Kalam Ansari</h3>
-            <span>Daughter of Hanif Ansari</span>
+            <span>Son of Hanif Ansari</span>
           </article>
 
           <div className={styles.heartSeal} aria-hidden="true">
@@ -193,16 +194,16 @@ export default function WeddingExperience() {
           <article className={styles.personCard}>
             <div className={styles.portraitWrap}>
               <Image
-                src="/wedding/farhan.png"
+                src="/wedding/farhan-bride.png"
                 alt="Farhan Ansari"
                 fill
                 sizes="(max-width: 720px) 75vw, 360px"
                 className={styles.portrait}
               />
             </div>
-            <p>The Groom</p>
+            <p>The Bride</p>
             <h3>Farhan Ansari</h3>
-            <span>Son of Wahid Ansari</span>
+            <span>Daughter of Wahid Ansari</span>
           </article>
         </div>
       </section>
@@ -260,11 +261,39 @@ export default function WeddingExperience() {
         </div>
       </section>
 
+      <section className={styles.momentsSection} aria-labelledby="moments-title">
+        <div className={styles.sectionHeading}>
+          <p className={styles.kicker}>A little glimpse of us</p>
+          <h2 id="moments-title">Our moments</h2>
+          <p>Small moments, held close forever.</p>
+        </div>
+        <div className={styles.momentsGrid}>
+          <div className={styles.momentCard}>
+            <Image
+              src="/wedding/couple-garden.jpg"
+              alt="Kalam and Farhan together in the garden"
+              fill
+              sizes="(max-width: 760px) 92vw, 44vw"
+              className={styles.momentImage}
+            />
+          </div>
+          <div className={`${styles.momentCard} ${styles.momentCardOffset}`}>
+            <Image
+              src="/wedding/couple-evening.jpg"
+              alt="Kalam and Farhan dressed for an evening together"
+              fill
+              sizes="(max-width: 760px) 92vw, 44vw"
+              className={styles.momentImage}
+            />
+          </div>
+        </div>
+      </section>
+
       <section className={styles.photoStory}>
         <div className={styles.photoFrame}>
           <Image
-            src="/wedding/couple-ring.png"
-            alt="Kalam and Farhan celebrating their union"
+            src="/wedding/couple-sunset.jpg"
+            alt="Kalam and Farhan together at sunset"
             fill
             sizes="(max-width: 900px) 92vw, 52vw"
             className={styles.storyImage}
@@ -289,13 +318,13 @@ export default function WeddingExperience() {
         </div>
         <div className={styles.addressGrid}>
           <article>
-            <span>BRIDE&apos;S FAMILY</span>
+            <span>GROOM&apos;S FAMILY</span>
             <h3>Ansari Residence</h3>
             <p>Ward No. 4, Ambedkar Nagar, Bharauli<br />Kasia, Kushinagar, Uttar Pradesh</p>
           </article>
           <div className={styles.pinSeal}><MapPin size={25} /></div>
           <article>
-            <span>GROOM&apos;S FAMILY</span>
+            <span>BRIDE&apos;S FAMILY</span>
             <h3>Ansari Residence</h3>
             <p>Ward No. 9, Balasaheb Deoras Nagar, Shahpur<br />Kasia, Kushinagar, Uttar Pradesh</p>
           </article>
