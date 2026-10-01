@@ -57,9 +57,9 @@ export const TOOLS_CATALOG: ToolCatalogEntry[] = [
     body: "Create polite overdue invoice reminder messages for WhatsApp, email and SMS in English or Hinglish.",
     tag: "Payments",
     intent: "Best for overdue invoices",
-    metaTitle: "Payment Reminder Message Generator | Free Templates",
+    metaTitle: "Free Payment Reminder Generator | WhatsApp, Email & SMS",
     metaDescription:
-      "Free payment reminder message generator and templates for overdue invoices. Create polite WhatsApp reminders, payment follow-up emails and SMS in English or Hinglish.",
+      "Create a polite payment reminder for WhatsApp, email or SMS. Add invoice details, choose a tone and generate a ready-to-send message in English or Hinglish.",
     headline: "Write a polite payment reminder without the awkwardness.",
     highlights: ["WhatsApp, email and SMS templates", "Friendly, firm and final reminder tones", "English and Hinglish payment messages"],
     signupSource: "payment-reminder-generator",
