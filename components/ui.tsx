@@ -3,8 +3,8 @@ import type { ReactNode } from "react";
 
 const variants = {
   primary: "bg-blue-600 text-white shadow-lg shadow-blue-950/20 hover:bg-blue-500",
-  secondary: "border border-slate-200 bg-white text-slate-800 hover:bg-slate-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-100 dark:hover:bg-white/[0.08]",
-  ghost: "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/[0.06]",
+  secondary: "border border-slate-200 bg-white text-slate-800 hover:bg-slate-50 dark:border-[#2a313a] dark:bg-[#151a20] dark:text-slate-100 dark:hover:bg-[#1d242c]",
+  ghost: "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-[#1d242c]",
   danger: "bg-red-600 text-white shadow-lg shadow-red-950/20 hover:bg-red-500",
 };
 
@@ -55,7 +55,7 @@ export function Card({
   className?: string;
 }) {
   return (
-    <section className={`rounded-2xl border border-slate-200/80 bg-white/85 shadow-sm shadow-slate-950/[0.03] backdrop-blur-xl transition-all duration-200 dark:border-white/10 dark:bg-white/[0.045] dark:shadow-black/20 ${className}`}>
+    <section className={`rounded-2xl border border-slate-200/80 bg-white/85 shadow-sm shadow-slate-950/[0.03] backdrop-blur-xl transition-all duration-200 dark:border-[#2a313a] dark:bg-[#151a20] dark:shadow-none ${className}`}>
       {children}
     </section>
   );
@@ -92,7 +92,7 @@ export function Field({ label, children, hint }: { label: string; children: Reac
 }
 
 export const inputClass =
-  "min-h-11 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-950 shadow-sm transition-all duration-200 placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-white/10 dark:bg-white/[0.04] dark:text-white dark:placeholder:text-slate-500";
+  "min-h-11 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-950 shadow-sm transition-all duration-200 placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-[#2a313a] dark:bg-[#11161c] dark:text-white dark:placeholder:text-slate-500";
 
 export function StatCard({
   label,

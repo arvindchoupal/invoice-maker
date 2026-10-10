@@ -171,7 +171,7 @@ Add new entries at the top of this section.
 - Expected outcome: Establish one informational page and one transactional tool for the cluster, improve informational rankings and send qualified users from the article to the generator.
 - Early review: 15 October 2026, directional only.
 - Primary review: 29 October 2026 using URL-level and query-level 28-day comparisons.
-- Validation: `git diff --check` passed. Route/content checks confirmed one existing article slug, no duplicate proposed slug, and the expected direct-answer/SMS sections. Full Next.js build remains unavailable because dependencies are not installed in this checkout.
+- Validation: `git diff --check` passed. Route/content checks confirmed one existing article slug, no duplicate proposed slug, and the expected direct-answer/SMS sections. On 1 October 2026, the missing Tailwind native package was restored; the Next.js production build passed and the article/tool URLs returned HTTP 200 in local development.
 - Next action: Run validation/build, deploy, request indexing for both canonical URLs, and record deployment details here.
 
 ### 1 October 2026 — Invoice generated/ generator Hindi intent alignment
@@ -185,7 +185,7 @@ Add new entries at the top of this section.
 - Expected outcome: Better query-message match, improved CTR, and stronger top-five potential without creating a competing URL.
 - Early review: 15 October 2026, directional only.
 - Primary review: 29 October 2026 using URL-level and query-level 28-day comparisons.
-- Validation: `git diff --check` passed. A full Next.js build could not run because dependencies are not installed in this checkout (`next: command not found`); this is an environment limitation, not a confirmed code failure.
+- Validation: `git diff --check` passed. On 1 October 2026, the missing Tailwind native package was restored; the Next.js production build passed and the updated article returned HTTP 200 in local development.
 - Next action: Run validation/build, deploy the controlled batch, request indexing for the canonical URL, and record the deployment commit/date here.
 
 ### 1 October 2026 — Reporting system created

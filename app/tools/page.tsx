@@ -121,22 +121,22 @@ export default function ToolsPage() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-4 shadow-2xl shadow-black/30 backdrop-blur">
-            <div className="rounded-2xl border border-white/10 bg-slate-950/80 p-5">
-              <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
+          <div className="rounded-3xl border border-[#dbe5f1] bg-white p-4 shadow-2xl shadow-blue-950/10 backdrop-blur dark:border-white/10 dark:bg-white/[0.05] dark:shadow-black/30">
+            <div className="rounded-2xl border border-[#dbe5f1] bg-[#f2f6fc] p-5 dark:border-white/10 dark:bg-[#11161c]">
+              <div className="flex items-center justify-between gap-4 border-b border-[#dbe5f1] pb-4 dark:border-white/10">
                 <div>
-                  <p className="text-sm font-semibold text-white">Tool-to-invoice workflow</p>
-                  <p className="mt-1 text-xs text-slate-400">Useful public tools, connected to the Finance OS.</p>
+                  <p className="text-sm font-semibold text-slate-950 dark:text-white">Tool-to-invoice workflow</p>
+                  <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Useful public tools, connected to the Finance OS.</p>
                 </div>
-                <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-200 ring-1 ring-emerald-400/20">No login needed</span>
+                <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200 dark:bg-emerald-400/10 dark:text-emerald-200 dark:ring-emerald-400/20">No login needed</span>
               </div>
               <div className="mt-5 grid gap-3">
                 {workflows.map((item, index) => (
-                  <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3" key={item}>
-                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-cyan-300/12 text-sm font-semibold text-cyan-200 ring-1 ring-cyan-300/20">
+                  <div className="flex items-center gap-3 rounded-2xl border border-[#dbe5f1] bg-white p-3 dark:border-white/10 dark:bg-white/[0.04]" key={item}>
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-blue-50 text-sm font-semibold text-blue-600 ring-1 ring-blue-100 dark:bg-cyan-300/12 dark:text-cyan-200 dark:ring-cyan-300/20">
                       {index + 1}
                     </span>
-                    <p className="text-sm text-slate-200">{item}</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-200">{item}</p>
                   </div>
                 ))}
               </div>

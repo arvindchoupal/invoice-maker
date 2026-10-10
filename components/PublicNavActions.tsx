@@ -4,17 +4,17 @@ import Link from "next/link";
 import { PublicSiteSearch } from "@/components/PublicSiteSearch";
 import { useAuthSession } from "@/hooks/useAuthSession";
 
-const guestLinkClass = "rounded-xl px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10";
-const guestButtonClass = "rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-slate-200";
-const authedLinkClass = "rounded-xl px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-white/10";
+const guestLinkClass = "rounded-xl px-3 py-2 text-sm text-slate-700 transition hover:bg-blue-50 hover:text-blue-700 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white";
+const guestButtonClass = "rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-950/15 transition hover:bg-blue-700 dark:bg-white dark:text-slate-950 dark:hover:bg-blue-100";
+const authedLinkClass = "rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white";
 const authedButtonClass =
-  "rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-950/20 transition hover:-translate-y-0.5 hover:bg-cyan-100";
+  "rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-950/20 transition hover:-translate-y-0.5 hover:bg-blue-700 dark:bg-white dark:text-slate-950 dark:hover:bg-blue-100";
 
 export function PublicNavActions({ showBlog = true, hideTemplatesOnMobile = false }: { showBlog?: boolean; hideTemplatesOnMobile?: boolean }) {
   const { isLoggedIn, user, ready } = useAuthSession();
 
   if (!ready) {
-    return <div className="h-10 w-40 animate-pulse rounded-xl bg-white/10" aria-hidden />;
+    return <div className="h-10 w-40 animate-pulse rounded-xl bg-slate-200 dark:bg-white/10" aria-hidden />;
   }
 
   if (isLoggedIn) {

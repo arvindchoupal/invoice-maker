@@ -13,6 +13,7 @@ const footerGroups = [
     title: "Invoice tools",
     links: [
       { href: "/invoice-templates", label: "Invoice templates" },
+      { href: "/bill-format", label: "Free bill formats" },
       { href: "/free-invoice-generator", label: "Free invoice generator" },
       { href: "/gst-invoice-generator", label: "GST invoice generator" },
       { href: "/freelancer-invoice-generator", label: "Freelancer invoice generator" },
@@ -62,7 +63,7 @@ const footerGroups = [
 
 export function PublicFooterLinks() {
   return (
-    <div className="grid w-full gap-8 text-sm">
+    <div className="grid w-full gap-10 text-sm">
       <div className="flex flex-wrap gap-x-5 gap-y-3 text-slate-300">
         <Link className="transition hover:text-white" href="/tools">Tools</Link>
         <Link className="transition hover:text-white" href="/blog">Blog</Link>
@@ -70,11 +71,11 @@ export function PublicFooterLinks() {
         <Link className="transition hover:text-white" href="/login">Log in</Link>
         <Link className="transition hover:text-white" href="/signup?source=founding-1000">Claim free account</Link>
       </div>
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
+      <div className="grid gap-x-12 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
         {footerGroups.map((group) => (
           <div key={group.title}>
-            <p className="font-semibold text-slate-200">{group.title}</p>
-            <div className="mt-3 grid gap-2 text-slate-500">
+            <p className="text-base font-semibold text-slate-100">{group.title}</p>
+            <div className="mt-4 grid gap-3 leading-6 text-slate-400">
               {group.links.map((link) => (
                 <Link className="transition hover:text-slate-200" href={link.href} key={link.href}>
                   {link.label}
@@ -84,8 +85,8 @@ export function PublicFooterLinks() {
           </div>
         ))}
         <div>
-          <p className="font-semibold text-slate-200">Comparisons</p>
-          <div className="mt-3 grid gap-2 text-slate-500">
+          <p className="text-base font-semibold text-slate-100">Comparisons</p>
+          <div className="mt-4 grid gap-3 leading-6 text-slate-400">
             {comparisonLinks.map((link) => (
               <Link className="transition hover:text-slate-200" href={link.href} key={link.href}>
                 {link.label}

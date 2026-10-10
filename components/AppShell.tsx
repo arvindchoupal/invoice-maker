@@ -73,7 +73,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="invoicewala-shell min-h-screen text-slate-950 dark:text-white">
       <aside
-        className={`fixed inset-y-3 left-3 z-30 hidden rounded-3xl border border-slate-200/80 bg-white/85 p-3 shadow-2xl shadow-slate-950/[0.06] backdrop-blur-2xl transition-[width] duration-300 dark:border-white/10 dark:bg-slate-950/72 dark:shadow-black/30 lg:block ${
+        className={`fixed inset-y-3 left-3 z-30 hidden rounded-3xl border border-slate-200/80 bg-white/85 p-3 shadow-2xl shadow-slate-950/[0.06] backdrop-blur-2xl transition-[width] duration-300 dark:border-[#2a313a] dark:bg-[#11161c]/95 dark:shadow-none lg:block ${
           compactSidebar ? "w-[76px]" : "w-[272px]"
         }`}
       >
@@ -86,7 +86,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           />
 
           <button
-            className={`mt-3 flex w-full items-center rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-left transition hover:border-blue-200 hover:bg-blue-50/60 dark:border-white/10 dark:bg-white/[0.04] dark:hover:bg-white/[0.07] ${
+            className={`mt-3 flex w-full items-center rounded-2xl border border-slate-200 bg-slate-50/80 p-3 text-left transition hover:border-blue-200 hover:bg-blue-50/60 dark:border-[#2a313a] dark:bg-[#151a20] dark:hover:bg-[#1d242c] ${
               compactSidebar ? "justify-center" : "justify-between"
             }`}
             title={compactSidebar ? companyName : undefined}
@@ -110,8 +110,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <Link
                   className={`group relative flex items-center rounded-2xl px-3 py-2.5 text-sm font-semibold transition-all duration-200 ${compactSidebar ? "justify-center" : "gap-3"} ${
                     active
-                      ? "bg-slate-950 text-white shadow-lg shadow-slate-950/10 dark:bg-white dark:text-slate-950"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/[0.06] dark:hover:text-white"
+                      ? "bg-slate-950 text-white shadow-lg shadow-slate-950/10 dark:bg-blue-600 dark:text-white dark:shadow-blue-950/30"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-[#1d242c] dark:hover:text-white"
                   }`}
                   href={href}
                   key={href}
@@ -133,7 +133,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="mt-3 grid grid-cols-2 gap-2">
               {quickActions.map(({ href, label, icon: Icon }) => (
                 <Link
-                  className="grid gap-1 rounded-xl bg-white/70 p-2 text-center text-xs font-semibold text-slate-700 ring-1 ring-slate-200/70 transition hover:-translate-y-0.5 hover:bg-white dark:bg-white/[0.07] dark:text-slate-200 dark:ring-white/10"
+                  className="grid gap-1 rounded-xl bg-white/70 p-2 text-center text-xs font-semibold text-slate-700 ring-1 ring-slate-200/70 transition hover:-translate-y-0.5 hover:bg-white dark:bg-[#151a20] dark:text-slate-200 dark:ring-[#2a313a] dark:hover:bg-[#1d242c]"
                   href={href}
                   key={label}
                 >
@@ -145,7 +145,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="mt-auto grid gap-3">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-3 dark:border-white/10 dark:bg-white/[0.04]">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-3 dark:border-[#2a313a] dark:bg-[#151a20]">
               <div className={`flex items-center ${compactSidebar ? "justify-center" : "gap-3"}`}>
                 <div className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-slate-800 to-slate-600 text-sm font-bold text-white">{initials}</div>
                 <div className={`min-w-0 ${compactSidebar ? "hidden" : ""}`}>
@@ -154,7 +154,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
               <button
-                className={`mt-3 flex w-full items-center justify-center rounded-xl px-3 py-2 text-xs font-semibold text-slate-500 transition hover:bg-slate-200/60 hover:text-slate-950 dark:hover:bg-white/[0.06] dark:hover:text-white ${compactSidebar ? "" : "gap-2"}`}
+                className={`mt-3 flex w-full items-center justify-center rounded-xl px-3 py-2 text-xs font-semibold text-slate-500 transition hover:bg-slate-200/60 hover:text-slate-950 dark:hover:bg-[#1d242c] dark:hover:text-white ${compactSidebar ? "" : "gap-2"}`}
                 onClick={signOut}
                 title={compactSidebar ? "Sign out" : undefined}
               >
@@ -167,7 +167,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div className={`transition-[padding] duration-300 ${compactSidebar ? "lg:pl-[104px]" : "lg:pl-[304px]"}`}>
-        <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-white/78 px-4 py-3 backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/72 lg:px-8">
+        <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-white/78 px-4 py-3 backdrop-blur-2xl dark:border-[#2a313a] dark:bg-[#0b0f14]/95 lg:px-8">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3 lg:hidden">
               <BrandLogo href="/dashboard" imageClassName="h-9 w-9" showText={false} />
@@ -178,28 +178,28 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="hidden min-w-0 flex-1 items-center gap-3 lg:flex">
-              <div className="flex w-full max-w-md items-center gap-2 rounded-2xl border border-slate-200 bg-white/70 px-3 py-2 text-sm text-slate-500 shadow-sm dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-400">
+              <div className="flex w-full max-w-md items-center gap-2 rounded-2xl border border-slate-200 bg-white/70 px-3 py-2 text-sm text-slate-500 shadow-sm dark:border-[#2a313a] dark:bg-[#151a20] dark:text-slate-400">
                 <Search className="h-4 w-4" />
                 <span>Search invoices, clients, GSTIN...</span>
-                <kbd className="ml-auto rounded-lg border border-slate-200 px-2 py-0.5 text-[10px] font-semibold dark:border-white/10">⌘K</kbd>
+                <kbd className="ml-auto rounded-lg border border-slate-200 px-2 py-0.5 text-[10px] font-semibold dark:border-[#2a313a]">⌘K</kbd>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <Link
                 href="/reports"
-                className="hidden items-center gap-2 rounded-xl border border-slate-200 bg-white/70 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-white dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200 sm:flex"
+                className="hidden items-center gap-2 rounded-xl border border-slate-200 bg-white/70 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-white dark:border-[#2a313a] dark:bg-[#151a20] dark:text-slate-200 dark:hover:bg-[#1d242c] sm:flex"
               >
                 <Download className="h-4 w-4" />
                 Reports
               </Link>
-              <button className="hidden h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white/70 text-slate-600 transition hover:bg-white dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 sm:grid">
+              <button className="hidden h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white/70 text-slate-600 transition hover:bg-white dark:border-[#2a313a] dark:bg-[#151a20] dark:text-slate-300 dark:hover:bg-[#1d242c] sm:grid">
                 <Bell className="h-4 w-4" />
               </button>
               <button
                 type="button"
                 onClick={signOut}
-                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/70 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-white dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-200"
+                className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/70 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-white dark:border-[#2a313a] dark:bg-[#151a20] dark:text-slate-200 dark:hover:bg-[#1d242c]"
                 title="Sign out"
               >
                 <LogOut className="h-4 w-4" />
@@ -216,13 +216,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <main className={`px-4 pb-24 pt-6 lg:py-8 ${compactSidebar ? "lg:px-4" : "lg:px-8"}`}>{children}</main>
       </div>
 
-      <nav className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-5 gap-1 rounded-3xl border border-slate-200/80 bg-white/90 p-2 shadow-2xl shadow-slate-950/15 backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/90 lg:hidden">
+      <nav className="fixed inset-x-3 bottom-3 z-40 grid grid-cols-5 gap-1 rounded-3xl border border-slate-200/80 bg-white/90 p-2 shadow-2xl shadow-slate-950/15 backdrop-blur-2xl dark:border-[#2a313a] dark:bg-[#11161c]/95 lg:hidden">
         {mobileNav.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
           return (
             <Link
               className={`grid min-h-12 place-items-center rounded-2xl text-xs font-semibold transition ${
-                active ? "bg-blue-600 text-white shadow-lg shadow-blue-950/25" : "text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/[0.06]"
+                active ? "bg-blue-600 text-white shadow-lg shadow-blue-950/25" : "text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-[#1d242c]"
               }`}
               href={href}
               key={href}

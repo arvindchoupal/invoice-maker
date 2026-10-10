@@ -33,6 +33,8 @@ export default function SettingsPage() {
   async function save(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const requestedTheme = form.get("theme");
+    const theme = requestedTheme === "dark" || requestedTheme === "light" ? requestedTheme : "system";
     await api("/settings", {
       method: "PUT",
       body: JSON.stringify({
@@ -43,11 +45,17 @@ export default function SettingsPage() {
         currency: form.get("currency"),
         taxName: form.get("taxName"),
         taxRate: Number(form.get("taxRate")),
-        theme: form.get("theme"),
+        theme,
         invoicePrefix: form.get("invoicePrefix"),
         defaultPdfStyle,
       }),
     });
+    window.localStorage.setItem("invoicewala-theme", theme);
+    const resolvedDark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    document.documentElement.classList.toggle("dark", resolvedDark);
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = resolvedDark ? "dark" : "light";
+    window.dispatchEvent(new Event("invoicewala-theme-change"));
     setMessage("Settings saved.");
   }
 
@@ -80,8 +88,8 @@ export default function SettingsPage() {
         <Field label="Tax rate"><input className={inputClass} name="taxRate" type="number" step="0.01" defaultValue={String(settings.tax_rate ?? 0)} /></Field>
         <Field label="Invoice prefix"><input className={inputClass} name="invoicePrefix" defaultValue={String(settings.invoice_prefix ?? "INV")} /></Field>
         <Field label="Theme">
-          <select className={inputClass} name="theme" defaultValue={String(settings.theme ?? "system")}>
-            <option value="system">System</option>
+          <select className={inputClass} name="theme" defaultValue={settings.theme === "dark" || settings.theme === "light" ? settings.theme : "system"}>
+            <option value="system">System default</option>
             <option value="light">Light</option>
             <option value="dark">Dark</option>
           </select>

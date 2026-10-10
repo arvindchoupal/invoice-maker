@@ -41,6 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/gst-invoice-format",
     "/gst-invoice-format-in-excel",
     "/tax-invoice-format",
+    "/bill-format",
     "/blog/gst-bill-format",
     "/tools/hsn-code-finder/methodology",
     "/invoice-templates",
@@ -50,7 +51,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${siteUrl}${path}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
-      priority: path === "" ? 1 : 0.8,
+      priority: path === "" ? 1 : path === "/bill-format" ? 0.95 : 0.8,
+      ...(path === "/bill-format" ? { images: [
+        `${siteUrl}/bill-formats/simple-bill-format.webp`,
+        `${siteUrl}/bill-formats/gst-bill-format.webp`,
+        `${siteUrl}/bill-formats/service-bill-format.webp`,
+        `${siteUrl}/bill-formats/retail-shop-bill-format.webp`,
+        `${siteUrl}/bill-formats/bill-book-format.webp`,
+        `${siteUrl}/bill-formats/freelancer-bill-format.webp`,
+      ] } : {}),
     }));
 
   const toolRoutes = TOOLS_CATALOG

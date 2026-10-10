@@ -12,31 +12,25 @@ export function PublicHeroActions() {
 
   if (isLoggedIn) {
     return (
-      <>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Link className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-200 sm:w-auto" data-event="create_invoice_click" data-event-category="cta" data-event-label="homepage hero authed" href="/invoices/new">
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Link className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-950/15 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 sm:w-auto" data-event="create_invoice_click" data-event-category="cta" data-event-label="homepage hero authed" href="/invoices/new">
             Create invoice
           </Link>
-          <Link className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 sm:w-auto" data-event="view_demo_click" data-event-category="engagement" data-event-label="homepage hero authed" href="#demo">
-            View demo
+          <Link className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-blue-300 bg-white px-5 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-50 dark:border-white/20 dark:bg-transparent dark:text-white dark:hover:bg-white/10 sm:w-auto" data-event="view_demo_click" data-event-category="engagement" data-event-label="homepage hero authed" href="#workflow">
+            See how it works
           </Link>
-        </div>
-        <p className="mt-4 text-sm text-slate-400">Welcome back — pick up invoices, clients and payments where you left off.</p>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <Link className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-200 sm:w-auto" data-event="create_invoice_click" data-event-category="cta" data-event-label="homepage hero guest first PDF free" href="/free-invoice">
+    <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <Link className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-950/15 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 sm:w-auto" data-event="create_invoice_click" data-event-category="cta" data-event-label="homepage hero guest first PDF free" href="/free-invoice">
           Create & download free
         </Link>
-        <Link className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-white/20 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10 sm:w-auto" data-event="view_demo_click" data-event-category="engagement" data-event-label="homepage hero guest" href="#demo">
-          View demo
+        <Link className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-blue-300 bg-white px-5 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-50 dark:border-white/20 dark:bg-transparent dark:text-white dark:hover:bg-white/10 sm:w-auto" data-event="view_demo_click" data-event-category="engagement" data-event-label="homepage hero guest" href="#workflow">
+          See how it works
         </Link>
-      </div>
-      <p className="mt-4 text-sm text-slate-400">Your first PDF is free without signup. Save history with a free founding account.</p>
-    </>
+    </div>
   );
 }

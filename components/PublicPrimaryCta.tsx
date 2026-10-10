@@ -16,12 +16,12 @@ export function PublicPrimaryCta({
   guestLabel = "Start free",
   authedHref = "/dashboard",
   authedLabel = "Open dashboard",
-  className = "inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-5 text-sm font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-100",
+  className = "inline-flex min-h-12 items-center justify-center rounded-xl bg-blue-600 px-5 text-sm font-semibold text-white shadow-lg shadow-blue-950/15 transition hover:-translate-y-0.5 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400",
 }: PublicPrimaryCtaProps) {
   const { isLoggedIn, ready } = useAuthSession();
 
   if (!ready) {
-    return <span className={`${className} animate-pulse bg-white/20`} aria-hidden />;
+    return <span className={`${className} animate-pulse opacity-60`} aria-hidden />;
   }
 
   const href = isLoggedIn ? authedHref : guestHref;

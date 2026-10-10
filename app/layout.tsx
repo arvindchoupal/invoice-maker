@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { AnalyticsEvents } from "@/components/AnalyticsEvents";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import './globals.css'
 export const metadata: Metadata = {
   title: "InvoiceWala — GST invoices & billing",
@@ -18,8 +19,12 @@ export default function RootLayout({
     <html
       lang="en"
       className="h-full antialiased"
+      suppressHydrationWarning
     >
-      <body className="min-h-full bg-slate-50 text-slate-950 antialiased dark:bg-slate-950 dark:text-slate-50">
+      <body className="min-h-full bg-slate-50 text-slate-950 antialiased transition-colors duration-200 dark:bg-[#0b0f14] dark:text-slate-50">
+        <Script id="invoicewala-theme" strategy="beforeInteractive">
+          {`try{var t=localStorage.getItem('invoicewala-theme')||'system';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d);document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=d?'dark':'light'}catch(e){document.documentElement.dataset.theme='system'}`}
+        </Script>
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-WVY8QGQWCV" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
@@ -31,6 +36,7 @@ export default function RootLayout({
         </Script>
         <AnalyticsEvents />
         {children}
+        <ThemeToggle />
       </body>
     </html>
   );
