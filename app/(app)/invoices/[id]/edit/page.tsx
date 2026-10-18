@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
 import type { Invoice } from "@/types";
 import { InvoiceForm } from "@/components/InvoiceForm";
+import { PageHeader } from "@/components/ui";
 
 export default function EditInvoicePage() {
   const params = useParams<{ id: string }>();
@@ -44,11 +45,8 @@ export default function EditInvoicePage() {
   if (!invoice) return <p className="text-sm text-slate-500">Loading invoice...</p>;
 
   return (
-    <div className="grid gap-6 bg">
-      <div>
-        <h1 className="text-3xl font-semibold">Edit invoice</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Update invoice details and line items.</p>
-      </div>
+    <div className="grid gap-5">
+      <PageHeader title="Edit invoice" description="Update invoice details and line items." />
       <InvoiceForm initial={invoice} invoiceId={params.id} />
     </div>
   );

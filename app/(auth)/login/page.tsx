@@ -7,6 +7,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { api, setSession } from "@/lib/api";
 import { attachPublicInvoiceDraft } from "@/lib/public-invoice-draft";
 import { Button, Field, inputClass } from "@/components/ui";
+import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 
 const trustPoints = [
   "Invoice, GST, payment and client data in one workspace",
@@ -19,6 +20,27 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  async function finishLogin(data: { token: string; user: unknown }) {
+    setSession(data.token, data.user);
+    const savedDraft = await attachPublicInvoiceDraft().catch(() => null);
+    router.push(savedDraft?.id ? `/invoices/${savedDraft.id}/edit` : "/dashboard");
+  }
+
+  async function loginWithGoogle(credential: string) {
+    setLoading(true);
+    setError("");
+    try {
+      const data = await api<{ token: string; user: unknown }>("/auth/google", {
+        method: "POST",
+        body: JSON.stringify({ credential }),
+      });
+      await finishLogin(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to log in with Google");
+      setLoading(false);
+    }
+  }
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
@@ -29,9 +51,7 @@ export default function LoginPage() {
         method: "POST",
         body: JSON.stringify({ email: form.get("email"), password: form.get("password") }),
       });
-      setSession(data.token, data.user);
-      const savedDraft = await attachPublicInvoiceDraft().catch(() => null);
-      router.push(savedDraft?.id ? `/invoices/${savedDraft.id}/edit` : "/dashboard");
+      await finishLogin(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to log in");
     } finally {
@@ -80,6 +100,12 @@ export default function LoginPage() {
               </div>
 
               <div className="mt-7 grid gap-4">
+                <GoogleSignInButton disabled={loading} onCredential={loginWithGoogle} />
+                <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.16em] text-slate-500">
+                  <span className="h-px flex-1 bg-white/10" />
+                  or use email
+                  <span className="h-px flex-1 bg-white/10" />
+                </div>
                 <Field label="Email">
                   <input autoComplete="email" className={inputClass} name="email" required type="email" />
                 </Field>

@@ -44,7 +44,7 @@ function getSnapshot() {
   return `${currentPreference()}|${document.documentElement.classList.contains("dark") ? "dark" : "light"}`;
 }
 
-export function ThemeToggle() {
+export function ThemeToggle({ inline = false, showLabel = true }: { inline?: boolean; showLabel?: boolean } = {}) {
   const snapshot = useSyncExternalStore(subscribe, getSnapshot, () => "system|light");
   const [preference, resolved] = snapshot.split("|") as [ThemePreference, "light" | "dark"];
   const dark = resolved === "dark";
@@ -59,13 +59,15 @@ export function ThemeToggle() {
   return (
     <button
       aria-label={`Theme: ${preference}. Switch theme mode`}
-      className="fixed bottom-20 right-4 z-[70] inline-flex h-11 items-center gap-2 rounded-2xl border border-blue-200 bg-white/92 px-3 text-blue-700 shadow-xl shadow-blue-950/15 backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-blue-50 dark:border-[#2a313a] dark:bg-[#151a20] dark:text-blue-300 dark:shadow-black/35 dark:hover:bg-[#1d242c] lg:bottom-5 lg:right-5"
+      className={inline
+        ? "inline-flex h-9 items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-slate-300 dark:hover:bg-[#1c2229]"
+        : "theme-toggle-global fixed bottom-20 right-4 z-[70] inline-flex h-11 items-center gap-2 rounded-xl border border-blue-200 bg-white/92 px-3 text-blue-700 shadow-xl shadow-blue-950/15 backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-blue-50 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-blue-300 dark:shadow-black/35 dark:hover:bg-[#1c2229] lg:bottom-5 lg:right-5"}
       onClick={toggleTheme}
       title={`Theme mode: ${preference}`}
       type="button"
     >
       {preference === "system" ? <Monitor className="h-5 w-5" /> : dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-      <span className="text-xs font-bold capitalize">{preference === "system" ? "Auto" : preference}</span>
+      {showLabel ? <span className="text-xs font-semibold capitalize">{preference === "system" ? "Auto" : preference}</span> : null}
     </button>
   );
 }

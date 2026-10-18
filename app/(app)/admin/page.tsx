@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { currency } from "@/lib/invoice";
-import { EmptyState, StatCard } from "@/components/ui";
+import { EmptyState, PageHeader, StatCard } from "@/components/ui";
 
 export default function AdminPage() {
   const [analytics, setAnalytics] = useState<Record<string, number> | null>(null);
   const [users, setUsers] = useState<Array<Record<string, string | number>>>([]);
   const [error, setError] = useState("");
-console.log(error)
   useEffect(() => {
     Promise.all([api<Record<string, number>>("/admin/analytics"), api<Array<Record<string, string | number>>>("/admin/users")])
       .then(([a, u]) => {
@@ -20,11 +19,8 @@ console.log(error)
   }, []);
 
   return (
-    <div className="grid gap-6">
-      <div>
-        <h1 className="text-3xl font-semibold">Admin</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Manage users and platform-level analytics.</p>
-      </div>
+    <div className="grid gap-5">
+      <PageHeader title="Admin" description="Manage users and platform-level analytics." />
       {error ? <EmptyState title="Admin access required" body={error} /> : null}
       <div className="grid gap-4 md:grid-cols-4">
         <StatCard label="Users" value={String(analytics?.users ?? "...")} />

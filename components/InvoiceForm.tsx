@@ -16,7 +16,7 @@ import {
   Save,
   Trash2,
 } from "lucide-react";
-import { API_URL, api, getToken } from "@/lib/api";
+import { API_URL, api, apiBlob, downloadApiFile } from "@/lib/api";
 import { calculateInvoice, currency } from "@/lib/invoice";
 import { previewFamily, previewStructure, type PdfStyleMeta, type PreviewFamily } from "@/lib/pdf-styles";
 import type { Client, Invoice, InvoiceItem, InvoiceStatus } from "@/types";
@@ -157,6 +157,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
   const [autosaveState, setAutosaveState] = useState<"saved" | "saving" | "idle">("idle");
   const [branding, setBranding] = useState<BrandingSettings>({});
   const [failedLogoSrc, setFailedLogoSrc] = useState("");
+  const [pdfPreviewObjectUrl, setPdfPreviewObjectUrl] = useState("");
   const [invoice, setInvoice] = useState<BuilderInvoice>(() => {
     const key = `invoicewala-draft-${invoiceId ?? "new"}`;
     if (typeof window !== "undefined") {
@@ -206,6 +207,10 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
       if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
     };
   }, [invoice, invoiceId, pdfStyle]);
+
+  useEffect(() => () => {
+    if (pdfPreviewObjectUrl) URL.revokeObjectURL(pdfPreviewObjectUrl);
+  }, [pdfPreviewObjectUrl]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -375,7 +380,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
   function whatsappShareUrl() {
     if (!invoiceId) return "";
-    const text = `Hi, here is invoice ${invoice.invoiceNumber || ""} for ${currency(totals.total, invoice.currency)}. Download PDF: ${pdfDownloadUrl()}`;
+    const text = `Hi, invoice ${invoice.invoiceNumber || ""} for ${currency(totals.total, invoice.currency)} is ready. Please reply here if you would like me to send the PDF.`;
     return `https://wa.me/?text=${encodeURIComponent(text)}`;
   }
 
@@ -395,26 +400,56 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
   async function uploadLogo(file: File | null) {
     if (!file) return;
-    const form = new FormData();
-    form.append("logo", file);
-    const data = await api<{ logoUrl: string }>("/settings/logo", { method: "POST", body: form });
-    setBranding((current) => ({ ...current, logo_url: data.logoUrl }));
+    try {
+      const form = new FormData();
+      form.append("logo", file);
+      const data = await api<{ logoUrl: string }>("/settings/logo", { method: "POST", body: form });
+      setBranding((current) => ({ ...current, logo_url: data.logoUrl }));
+      setShareMessage("Logo uploaded.");
+    } catch (err) {
+      setShareMessage(err instanceof Error ? err.message : "Could not upload logo.");
+    }
   }
 
   async function removeLogo() {
-    const data = await api<{ logoUrl: string }>("/settings/logo", { method: "DELETE" });
-    setBranding((current) => ({ ...current, logo_url: data.logoUrl }));
-    setFailedLogoSrc("");
+    try {
+      const data = await api<{ logoUrl: string }>("/settings/logo", { method: "DELETE" });
+      setBranding((current) => ({ ...current, logo_url: data.logoUrl }));
+      setFailedLogoSrc("");
+      setShareMessage("Logo removed.");
+    } catch (err) {
+      setShareMessage(err instanceof Error ? err.message : "Could not remove logo.");
+    }
   }
 
-  function pdfDownloadUrl(style = pdfStyle) {
-    if (!invoiceId) return "";
-    return `${API_URL}/invoices/${invoiceId}/pdf?token=${getToken()}&style=${encodeURIComponent(style)}`;
+  async function downloadPdf(style = pdfStyle) {
+    if (!invoiceId) return;
+    try {
+      await downloadApiFile(`/invoices/${invoiceId}/pdf?style=${encodeURIComponent(style)}`, `${invoice.invoiceNumber || "invoice"}-${style}.pdf`);
+      setShareMessage("PDF downloaded securely.");
+    } catch (err) {
+      setShareMessage(err instanceof Error ? err.message : "Could not download PDF.");
+    }
   }
 
-  function pdfPreviewUrl() {
-    if (!invoiceId) return "";
-    return `${API_URL}/invoices/${invoiceId}/pdf2?token=${getToken()}&style=${encodeURIComponent(pdfStyle)}`;
+  async function showPdfPreview() {
+    if (!invoiceId) {
+      setShareMessage("Save the invoice first to preview the final PDF.");
+      return;
+    }
+    setShareMessage("Loading PDF preview…");
+    try {
+      const blob = await apiBlob(`/invoices/${invoiceId}/pdf2?style=${encodeURIComponent(pdfStyle)}`);
+      const url = URL.createObjectURL(blob);
+      setPdfPreviewObjectUrl((current) => {
+        if (current) URL.revokeObjectURL(current);
+        return url;
+      });
+      setPreviewMode("pdf");
+      setShareMessage("");
+    } catch (err) {
+      setShareMessage(err instanceof Error ? err.message : "Could not load PDF preview.");
+    }
   }
 
   function sectionShell(id: SectionId, children: React.ReactNode) {
@@ -552,7 +587,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
   return (
     <div className="relative grid gap-4">
-      <Card className="p-4">
+      <Card className="p-5">
         <div className="grid gap-4 xl:grid-cols-[1fr_auto] xl:items-center">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
             <Badge tone={autosaveState === "saved" ? "green" : autosaveState === "saving" ? "amber" : "slate"}>
@@ -604,7 +639,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
           }}
           onDownload={invoiceId ? (id) => {
             setPdfStyle(id);
-            window.location.href = pdfDownloadUrl(id);
+            void downloadPdf(id);
           } : undefined}
         />
       ) : null}
@@ -630,7 +665,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
             </div>
           </Card>
           {sectionOrder.map(renderSection)}
-          <Card className="p-4">
+          <Card className="p-5">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="grid grid-cols-3 gap-3 text-sm">
                 <div><p className="text-xs text-slate-500">Subtotal</p><strong>{currency(totals.subtotal, invoice.currency)}</strong></div>
@@ -667,16 +702,16 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <div className="flex rounded-xl border border-slate-200 p-0.5 dark:border-white/10">
-                  <button type="button" className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${previewMode === "live" ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-600"}`} onClick={() => setPreviewMode("live")}>Live</button>
-                  <button type="button" className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${previewMode === "pdf" ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-600"}`} onClick={() => setPreviewMode("pdf")} disabled={!invoiceId}>PDF</button>
+                  <button type="button" className={`min-h-10 rounded-lg px-3 py-1.5 text-xs font-semibold ${previewMode === "live" ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-600"}`} onClick={() => setPreviewMode("live")}>Live</button>
+                  <button type="button" className={`min-h-10 rounded-lg px-3 py-1.5 text-xs font-semibold ${previewMode === "pdf" ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-600"}`} onClick={() => void showPdfPreview()} disabled={!invoiceId} title={!invoiceId ? "Save the invoice first" : "Preview final PDF"}>PDF</button>
                 </div>
                 <Badge tone="blue">{styleMeta?.label ?? pdfStyle}</Badge>
                 <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600 dark:bg-white/[0.06] dark:text-slate-300">{previewStructure(pdfStyle)}</span>
               </div>
             </div>
 
-            {previewMode === "pdf" && invoiceId ? (
-              <iframe className="min-h-[80vh] w-full flex-1 bg-slate-100 dark:bg-slate-950/60" src={pdfPreviewUrl()} title="Invoice PDF preview" />
+            {previewMode === "pdf" && invoiceId && pdfPreviewObjectUrl ? (
+              <iframe className="min-h-[80vh] w-full flex-1 bg-slate-100 dark:bg-slate-950/60" src={pdfPreviewObjectUrl} title="Invoice PDF preview" />
             ) : (
             <div className="premium-scrollbar flex-1 overflow-auto bg-slate-100 p-2 dark:bg-slate-950/60">
               <div className="mx-auto min-h-[800px] w-full max-w-[920px] border-t-8 bg-white p-5 text-slate-950 shadow-2xl sm:p-7" style={{ borderTopColor: styleMeta?.accent ?? "#2563eb" }}>

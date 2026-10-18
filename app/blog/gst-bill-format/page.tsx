@@ -136,6 +136,10 @@ export default function GstBillFormatPage() {
                 Open GST calculator
               </Link>
             </div>
+            <Link className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-200 transition hover:text-white" href="/bill-format">
+              Compare free shop, simple, Excel, Word and PDF bill formats
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
           <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-4 shadow-2xl shadow-black/30">

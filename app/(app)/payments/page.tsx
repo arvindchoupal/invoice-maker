@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { CreditCard, RotateCcw } from "lucide-react";
 import { api } from "@/lib/api";
 import { currency } from "@/lib/invoice";
-import { Badge, Button, Card, EmptyState, Field, Skeleton, inputClass } from "@/components/ui";
+import { Badge, Button, Card, EmptyState, Field, PageHeader, Skeleton, inputClass } from "@/components/ui";
 
 interface PaymentRow {
   id: number;
@@ -61,13 +61,10 @@ export default function PaymentsPage() {
   }
 
   return (
-    <div className="grid gap-6">
-      <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Payments</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Record payments received directly from customers and keep invoice status up to date.</p>
-      </div>
+    <div className="grid gap-5">
+      <PageHeader title="Payments" description="Record payments received directly from customers and keep invoice status up to date." />
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_0.7fr]">
+      <div className="grid gap-5 xl:grid-cols-[1fr_0.7fr]">
         <Card className="p-5">
           <h2 className="text-lg font-semibold">Record manual or partial payment</h2>
           <form onSubmit={manualPayment} className="mt-4 grid gap-4 md:grid-cols-2">
@@ -118,7 +115,7 @@ export default function PaymentsPage() {
             </table>
           </div>
         ) : (
-          <div className="p-5"><EmptyState title="No payments recorded" body="Record a manual payment or mark an invoice paid to populate payment history." /></div>
+          <EmptyState contained title="No payments recorded" body="Record a manual payment or mark an invoice paid to populate payment history." />
         )}
       </Card>
     </div>

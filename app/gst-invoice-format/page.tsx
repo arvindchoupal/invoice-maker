@@ -70,6 +70,7 @@ const formatCards = [
 ];
 
 const internalLinks = [
+  { href: "/bill-format", label: "Free Bill Format Samples", body: "Compare simple, shop, GST, Excel, Word and PDF bill formats." },
   { href: "/gst-invoice-generator", label: "GST Invoice Generator", body: "Create a GST-ready invoice and download a clean PDF." },
   { href: "/gst-invoice-format-in-excel", label: "GST Invoice Format in Excel", body: "Download a spreadsheet-friendly GST invoice sample." },
   { href: "/tools/gst-calculator", label: "GST Calculator", body: "Calculate taxable value, GST amount, CGST, SGST or IGST." },

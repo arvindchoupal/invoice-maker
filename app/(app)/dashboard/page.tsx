@@ -16,8 +16,9 @@ import {
   Users,
 } from "lucide-react";
 import { api } from "@/lib/api";
+import { getStoredUser } from "@/lib/session";
 import { currency } from "@/lib/invoice";
-import { Badge, Button, Card, EmptyState, LinkButton, SectionHeader, Skeleton, StatCard } from "@/components/ui";
+import { Badge, Card, EmptyState, LinkButton, SectionHeader, Skeleton, StatCard } from "@/components/ui";
 
 interface User {
   name: string;
@@ -87,42 +88,49 @@ function activityTone(status: string) {
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const [user] = useState<User | null>(() => getStoredUser());
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    Promise.all([api<DashboardData>("/reports/dashboard"), api<User>("/auth/me").catch(() => null)])
-      .then(([dashboard, currentUser]) => {
-        setData(dashboard);
-        setUser(currentUser);
-      })
-      .catch(() => setData(null))
-      .finally(() => setLoading(false));
-  }, []);
+  async function loadDashboard() {
+    setLoading(true);
+    setError("");
+    try {
+      setData(await api<DashboardData>("/reports/dashboard"));
+    } catch (err) {
+      setData(null);
+      setError(err instanceof Error ? err.message : "Could not load dashboard data.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { void loadDashboard(); }, []);
 
   const summary = data?.summary;
   const collectionHealth = useMemo(() => {
-    const total = Number(summary?.total_invoices ?? 0);
+    const total = Number(summary?.paid_revenue ?? 0) + Number(summary?.outstanding_amount ?? 0);
     if (!total) return 0;
-    return Math.round((Number(summary?.paid_invoices ?? 0) / total) * 100);
+    return Math.round((Number(summary?.paid_revenue ?? 0) / total) * 100);
   }, [summary]);
   const maxRevenue = Math.max(...(data?.monthlyRevenue.map((m) => Number(m.revenue)) ?? [1]), 1);
   const maxPayments = Math.max(...(data?.paymentTrends.map((m) => Number(m.amount)) ?? [1]), 1);
   const primaryInsight = data?.insights[0];
 
   return (
-    <div className="grid gap-6">
-      <section className="overflow-hidden rounded-3xl border border-slate-200/80 bg-slate-950 p-6 text-white shadow-2xl shadow-slate-950/10 dark:border-white/10">
-        <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+    <div className="grid gap-5">
+      <section className="relative overflow-hidden rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-[#2b3138] dark:bg-[#171b20]">
+        <div className="pointer-events-none absolute -right-24 -top-32 hidden h-80 w-80 rounded-full bg-blue-500/10 blur-3xl dark:block" aria-hidden="true" />
+        <div className="relative grid gap-5 lg:grid-cols-[1fr_320px]">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-blue-100 ring-1 ring-white/10">
+            <div className="inline-flex items-center gap-2 rounded-md bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-100 dark:bg-blue-500/10 dark:text-blue-300 dark:ring-blue-500/20">
               <Sparkles className="h-3.5 w-3.5" />
-              Live finance command center
+              Finance overview
             </div>
-            <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-tight md:text-5xl">
+            <h1 className="mt-5 max-w-3xl text-3xl font-semibold tracking-tight text-slate-950 dark:text-white md:text-[2rem]">
               {user?.name ? `Good to see you, ${user.name}.` : "Your finance workspace is ready."}
             </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-300">
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500 dark:text-slate-400">
               These numbers are pulled from your invoices, clients, payments, GST totals, and notification activity.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -130,40 +138,40 @@ export default function DashboardPage() {
                 <FilePlus2 className="h-4 w-4" />
                 New invoice
               </LinkButton>
-              <LinkButton href="/ai-import" variant="secondary" className="border-white/10 bg-white/10 text-white hover:bg-white/15">
+              <LinkButton href="/ai-import" variant="secondary">
                 <Sparkles className="h-4 w-4" />
                 Import with AI
               </LinkButton>
-              <LinkButton href="/invoices" variant="ghost" className="text-slate-200 hover:bg-white/10">
+              <LinkButton href="/invoices" variant="ghost">
                 <ReceiptText className="h-4 w-4" />
                 Review invoices
               </LinkButton>
             </div>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 dark:border-[#2b3138] dark:bg-[#12161b]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-300">Collection health</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Revenue collected</p>
                 <p className="mt-1 text-3xl font-semibold">{loading ? "..." : `${collectionHealth}%`}</p>
               </div>
-              <div className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-400/15 text-emerald-200">
+              <div className="grid h-10 w-10 place-items-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-300">
                 <TrendingUp className="h-6 w-6" />
               </div>
             </div>
-            <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/10">
-              <div className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-cyan-300" style={{ width: `${collectionHealth}%` }} />
+            <div className="mt-5 h-1.5 overflow-hidden rounded-full bg-slate-200 dark:bg-white/10">
+              <div className="h-full rounded-full bg-emerald-500" style={{ width: `${collectionHealth}%` }} />
             </div>
             <div className="mt-5 grid grid-cols-3 gap-3 text-center">
-              <div className="rounded-2xl bg-white/[0.06] p-3">
+              <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-[#2b3138] dark:bg-[#171b20]">
                 <p className="text-lg font-semibold">{summary?.paid_invoices ?? 0}</p>
                 <p className="text-xs text-slate-400">Paid</p>
               </div>
-              <div className="rounded-2xl bg-white/[0.06] p-3">
+              <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-[#2b3138] dark:bg-[#171b20]">
                 <p className="text-lg font-semibold">{summary?.pending_invoices ?? 0}</p>
                 <p className="text-xs text-slate-400">Pending</p>
               </div>
-              <div className="rounded-2xl bg-white/[0.06] p-3">
+              <div className="rounded-lg border border-slate-200 bg-white p-3 dark:border-[#2b3138] dark:bg-[#171b20]">
                 <p className="text-lg font-semibold">{summary?.overdue_invoices ?? 0}</p>
                 <p className="text-xs text-slate-400">Overdue</p>
               </div>
@@ -171,6 +179,8 @@ export default function DashboardPage() {
           </div>
         </div>
       </section>
+
+      {error ? <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-500/20 dark:bg-red-950/30 dark:text-red-200" role="alert">Dashboard data could not be loaded: {error} <button className="ml-2 font-semibold underline" onClick={() => void loadDashboard()}>Retry</button></div> : null}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {loading ? (
@@ -190,7 +200,7 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">
+      <div className="grid gap-5 xl:grid-cols-[1.4fr_0.8fr]">
         <Card className="p-5">
           <SectionHeader title="Monthly revenue" eyebrow="Invoices" action={<Badge tone="blue">Database values</Badge>} />
           {data?.monthlyRevenue.length ? (
@@ -209,13 +219,13 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="mt-6">
-              <EmptyState title="No revenue yet" body="Create invoices to populate revenue trends from the database." action={<LinkButton href="/invoices/new">Create invoice</LinkButton>} />
+              <EmptyState contained title="No revenue yet" body="Create invoices to populate revenue trends from the database." action={<LinkButton href="/invoices/new">Create invoice</LinkButton>} />
             </div>
           )}
         </Card>
 
         <Card className="p-5">
-          <SectionHeader title="AI insights" eyebrow="Computed from data" action={<Brain className="h-5 w-5 text-blue-500" />} />
+          <SectionHeader title="Business insights" eyebrow="Based on your records" action={<Brain className="h-5 w-5 text-blue-500" />} />
           <div className="mt-5 grid gap-3">
             {data?.insights.map((insight) => (
               <div className="rounded-2xl border border-slate-200/70 bg-slate-50/80 p-4 transition hover:-translate-y-0.5 hover:bg-white dark:border-white/10 dark:bg-white/[0.04]" key={`${insight.type}-${insight.message}`}>
@@ -234,7 +244,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-3">
+      <div className="grid gap-5 xl:grid-cols-3">
         <Card className="p-5">
           <SectionHeader title="Payment trends" eyebrow="Payments" />
           {data?.paymentTrends.length ? (
@@ -252,7 +262,7 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <EmptyState title="No payments yet" body="Payment trends will appear after invoices are marked paid or payments are recorded." />
+            <EmptyState contained title="No payments yet" body="Payment trends will appear after invoices are marked paid or payments are recorded." />
           )}
         </Card>
 
@@ -277,7 +287,7 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <EmptyState title="No clients yet" body="Create clients and invoices to see account-level revenue." />
+            <EmptyState contained title="No clients yet" body="Create clients and invoices to see account-level revenue." />
           )}
         </Card>
 
@@ -304,7 +314,7 @@ export default function DashboardPage() {
               })}
             </div>
           ) : (
-            <EmptyState title="No activity yet" body="Invoices, payments, and reminder events will appear here." />
+            <EmptyState contained title="No activity yet" body="Invoices, payments, and reminder events will appear here." />
           )}
         </Card>
       </div>
@@ -334,10 +344,11 @@ export default function DashboardPage() {
           <div className="rounded-2xl border border-slate-200 bg-slate-950 p-5 text-white dark:border-white/10">
             <p className="text-sm text-slate-300">Next best action</p>
             <p className="mt-3 text-2xl font-semibold tracking-tight">{primaryInsight?.message ?? "Create your first invoice to unlock business guidance."}</p>
-            <Button className="mt-5 w-full" disabled={!summary?.overdue_invoices}>
+            <LinkButton href="/invoices" className="mt-5 w-full">
               <Mail className="h-4 w-4" />
-              Review reminders
-            </Button>
+              {summary?.overdue_invoices ? "Review overdue invoices" : "Review all invoices"}
+            </LinkButton>
+            {!summary?.overdue_invoices ? <p className="mt-2 text-xs text-slate-400">No overdue invoices need a reminder right now.</p> : null}
           </div>
         </div>
       </Card>

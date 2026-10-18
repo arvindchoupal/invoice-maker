@@ -22,6 +22,15 @@ const defaultRelatedLinks: RelatedLink[] = [
 
 const topicRelatedLinks: Array<{ test: (post: BlogPost) => boolean; links: RelatedLink[] }> = [
   {
+    test: (post) => /project-report-for-bank-loan/.test(post.slug),
+    links: [
+      { href: "/tools/business-loan-project-report-generator", label: "Business loan project report generator", body: "Build linked projections and download a PDF and Excel report." },
+      { href: "/tools/emi-calculator", label: "Loan EMI calculator", body: "Explore monthly repayment, interest and tenure." },
+      { href: "/tools/business-expense-calculator", label: "Business expense calculator", body: "Organise operating costs before forecasting." },
+      { href: "/tools/profit-calculator", label: "Profit calculator", body: "Check sales, costs and profit assumptions." },
+    ],
+  },
+  {
     test: (post) => /gst|tax invoice|cgst|sgst|igst|bill format/i.test(`${post.title} ${post.slug} ${post.tags.join(" ")}`),
     links: [
       { href: "/gst-invoice-generator", label: "GST invoice generator", body: "Create GST invoices with GSTIN, tax rows and PDF output." },
@@ -85,7 +94,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPostBySlug(slug);
   if (!post) return {};
   return {
-    title: `${post.title} | InvoiceWala Blog`,
+    title: post.metaTitle ?? `${post.title} | InvoiceWala Blog`,
     description: post.description,
     alternates: { canonical: `https://invoicewala.shop/blog/${post.slug}` },
     robots: isNoindexBlogSlug(post.slug) ? { index: false, follow: true } : undefined,

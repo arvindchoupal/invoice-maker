@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { currency } from "@/lib/invoice";
-import { Badge, Card, EmptyState, Skeleton } from "@/components/ui";
+import { Badge, Card, EmptyState, PageHeader, Skeleton } from "@/components/ui";
 
 interface DocumentRow {
   id: number;
@@ -25,11 +25,8 @@ export default function DocumentsPage() {
   }, []);
 
   return (
-    <div className="grid gap-6">
-      <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Finance documents</h1>
-        <p className="mt-1 text-sm text-slate-500">Invoices, receipts, quotations, estimates, purchase orders, credit notes, expense reports, and delivery challans.</p>
-      </div>
+    <div className="grid gap-5">
+      <PageHeader title="Finance documents" description="Invoices, receipts, quotations, estimates, purchase orders, credit notes, expense reports, and delivery challans." />
       <Card className="overflow-hidden">
         {loading ? <div className="p-5"><Skeleton className="h-14" /></div> : documents.length ? (
           <div className="overflow-x-auto">
@@ -38,7 +35,7 @@ export default function DocumentsPage() {
             <tbody>{documents.map((doc) => <tr className="border-t border-slate-100 dark:border-white/5" key={doc.id}><td className="p-4 capitalize">{doc.document_type.replaceAll("_", " ")}</td><td className="p-4 font-semibold">{doc.document_number}</td><td className="p-4">{doc.party_name}</td><td className="p-4">{String(doc.issue_date).slice(0, 10)}</td><td className="p-4">{currency(Number(doc.total), doc.currency)}</td><td className="p-4"><Badge>{doc.status}</Badge></td></tr>)}</tbody>
           </table>
           </div>
-        ) : <div className="p-5"><EmptyState title="No finance documents yet" body="Create or import documents to manage quotes, receipts, purchase orders and more." /></div>}
+        ) : <EmptyState contained title="No finance documents yet" body="Create or import documents to manage quotes, receipts, purchase orders and more." />}
       </Card>
     </div>
   );

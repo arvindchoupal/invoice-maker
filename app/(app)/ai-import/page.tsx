@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { FileUp, Sparkles } from "lucide-react";
 import { api } from "@/lib/api";
-import { Badge, Button, Card, Field, inputClass } from "@/components/ui";
+import { Badge, Button, Card, Field, PageHeader, inputClass } from "@/components/ui";
 
 interface ExtractionResult {
   text?: string;
@@ -17,56 +18,46 @@ interface ExtractionResult {
 export default function AiImportPage() {
   const [result, setResult] = useState<ExtractionResult | null>(null);
   const [saveMessage, setSaveMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loadingAction, setLoadingAction] = useState<"upload" | "text" | "save" | "">("");
+  const [error, setError] = useState("");
 
   async function upload(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setLoading(true);
-    const form = new FormData(event.currentTarget);
-    const data = await api<ExtractionResult>("/ai/upload", { method: "POST", body: form });
-    setResult(data);
-    setLoading(false);
+    setLoadingAction("upload"); setError(""); setSaveMessage("");
+    try { const form = new FormData(event.currentTarget); const file = form.get("file"); if (file instanceof File && file.size > 10 * 1024 * 1024) throw new Error("File must be smaller than 10 MB."); setResult(await api<ExtractionResult>("/ai/upload", { method: "POST", body: form })); }
+    catch (err) { setError(err instanceof Error ? err.message : "Could not scan this file."); } finally { setLoadingAction(""); }
   }
 
   async function saveExtraction(options: { createExpense?: boolean; createPurchase?: boolean }) {
     if (!result) return;
-    const data = await api<Record<string, number | null>>("/ai/save-extraction", {
-      method: "POST",
-      body: JSON.stringify({ invoice: result.invoice, createClient: true, ...options }),
-    });
-    setSaveMessage(JSON.stringify(data, null, 2));
+    setLoadingAction("save"); setError("");
+    try { const data = await api<Record<string, number | null>>("/ai/save-extraction", { method: "POST", body: JSON.stringify({ invoice: result.invoice, createClient: true, ...options }) }); const created = [data.invoiceId ? `invoice #${data.invoiceId}` : "", data.clientId ? `client #${data.clientId}` : "", data.expenseId ? `expense #${data.expenseId}` : "", data.purchaseId ? `purchase #${data.purchaseId}` : ""].filter(Boolean); setSaveMessage(created.length ? `Created ${created.join(", ")}.` : "Import saved successfully."); }
+    catch (err) { setError(err instanceof Error ? err.message : "Could not save this import."); } finally { setLoadingAction(""); }
   }
 
   async function convert(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setLoading(true);
-    const form = new FormData(event.currentTarget);
-    const data = await api<ExtractionResult>("/ai/text-to-invoice", {
-      method: "POST",
-      body: JSON.stringify({ text: form.get("text") }),
-    });
-    setResult(data);
-    setLoading(false);
+    setLoadingAction("text"); setError(""); setSaveMessage("");
+    try { const form = new FormData(event.currentTarget); setResult(await api<ExtractionResult>("/ai/text-to-invoice", { method: "POST", body: JSON.stringify({ text: form.get("text") }) })); }
+    catch (err) { setError(err instanceof Error ? err.message : "Could not convert this text."); } finally { setLoadingAction(""); }
   }
 
   return (
-    <div className="grid gap-6">
-      <div>
-        <h1 className="text-3xl font-semibold tracking-tight">AI import</h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Extract editable invoice fields from real OCR/text responses returned by the backend.</p>
-      </div>
+    <div className="grid gap-5">
+      <PageHeader title="AI import" description="Extract editable invoice fields from real OCR/text responses returned by the backend." />
+      {error ? <p className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-500/20 dark:bg-red-950/30 dark:text-red-200" role="alert">{error}</p> : null}
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-5 lg:grid-cols-2">
         <Card className="p-5">
           <form onSubmit={upload}>
             <h2 className="mb-4 text-lg font-semibold">OCR extraction</h2>
             <label className="grid min-h-48 place-items-center rounded-2xl border border-dashed border-blue-300 bg-blue-50/60 p-6 text-center transition hover:bg-blue-50 dark:border-blue-400/20 dark:bg-blue-500/10">
               <FileUp className="mb-3 h-8 w-8 text-blue-500" />
-              <span className="font-semibold">Drop or choose invoice image/PDF</span>
-              <span className="mt-1 text-sm text-slate-500">The backend OCR endpoint processes the file.</span>
+              <span className="font-semibold">Choose an invoice image or PDF</span>
+              <span className="mt-1 text-sm text-slate-500">PNG, JPG, WebP or PDF · maximum 10 MB.</span>
               <input className="sr-only" name="file" type="file" accept="image/*,application/pdf" required />
             </label>
-            <Button className="mt-4" disabled={loading}>{loading ? "Scanning..." : "Extract fields"}</Button>
+            <Button className="mt-4" disabled={Boolean(loadingAction)}>{loadingAction === "upload" ? "Scanning..." : "Extract fields"}</Button>
           </form>
         </Card>
 
@@ -74,22 +65,22 @@ export default function AiImportPage() {
           <form onSubmit={convert}>
             <h2 className="mb-4 text-lg font-semibold">Text to invoice</h2>
             <Field label="Invoice text"><textarea className={`${inputClass} min-h-48`} name="text" required /></Field>
-            <Button className="mt-4" disabled={loading}>{loading ? "Converting..." : "Convert text"}</Button>
+            <Button className="mt-4" disabled={Boolean(loadingAction)}>{loadingAction === "text" ? "Converting..." : "Convert text"}</Button>
           </form>
         </Card>
       </div>
 
-      {loading ? (
-        <Card className="overflow-hidden p-6">
+      {loadingAction === "upload" || loadingAction === "text" ? (
+        <Card className="overflow-hidden p-5">
           <div className="relative min-h-40 rounded-2xl border border-blue-500/20 bg-slate-950 p-5 text-blue-100">
             <div className="absolute inset-x-0 top-0 h-1 animate-pulse bg-gradient-to-r from-transparent via-cyan-300 to-transparent" />
             <Sparkles className="h-6 w-6" />
-            <p className="mt-4 font-semibold">Scanning document and extracting fields...</p>
+            <p className="mt-4 font-semibold">{loadingAction === "upload" ? "Scanning document and extracting fields…" : "Turning text into invoice fields…"}</p>
             <p className="mt-2 text-sm text-slate-400">Confidence scores will be shown after the backend returns extraction data.</p>
           </div>
         </Card>
       ) : result ? (
-        <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
+        <div className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr]">
           <Card className="p-5">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold">Confidence</h2>
@@ -112,28 +103,19 @@ export default function AiImportPage() {
           </Card>
 
           <Card className="p-5">
-            <h2 className="text-lg font-semibold">Editable extraction payload</h2>
-            <textarea
-              className={`${inputClass} mt-4 min-h-96 w-full font-mono`}
-              value={JSON.stringify(result.invoice, null, 2)}
-              onChange={(event) => {
-                try {
-                  setResult({ ...result, invoice: JSON.parse(event.target.value || "{}") });
-                } catch {
-                  setResult({ ...result, invoice: { raw: event.target.value } });
-                }
-              }}
-            />
+            <h2 className="text-lg font-semibold">Review extracted invoice</h2><p className="mt-1 text-sm text-slate-500">Check the detected values before saving.</p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">{Object.entries(result.invoice).filter(([, value]) => typeof value !== "object").map(([key, value]) => <Field key={key} label={key.replaceAll("_", " ").replace(/([a-z])([A-Z])/g, "$1 $2")}><input className={inputClass} value={String(value ?? "")} onChange={(event) => setResult({ ...result, invoice: { ...result.invoice, [key]: event.target.value } })} /></Field>)}</div>
+            {Object.entries(result.invoice).some(([, value]) => typeof value === "object") ? <p className="mt-4 rounded-xl bg-slate-50 p-3 text-xs text-slate-500 dark:bg-white/[0.04]">Line items and structured details were also detected and will be preserved when saved.</p> : null}
             <div className="mt-4 flex flex-wrap gap-3">
-              <Button onClick={() => saveExtraction({})}>Create client + invoice</Button>
-              <Button variant="secondary" onClick={() => saveExtraction({ createExpense: true })}>Also create expense</Button>
-              <Button variant="secondary" onClick={() => saveExtraction({ createPurchase: true })}>Also create purchase</Button>
+              <Button disabled={Boolean(loadingAction)} onClick={() => saveExtraction({})}>{loadingAction === "save" ? "Saving…" : "Create client + invoice"}</Button>
+              <Button variant="secondary" disabled={Boolean(loadingAction)} onClick={() => saveExtraction({ createExpense: true })}>Create invoice + expense</Button>
+              <Button variant="secondary" disabled={Boolean(loadingAction)} onClick={() => saveExtraction({ createPurchase: true })}>Create invoice + purchase</Button>
             </div>
-            {saveMessage ? <pre className="mt-4 overflow-auto rounded-2xl bg-slate-950 p-4 text-xs text-slate-100">{saveMessage}</pre> : null}
+            {saveMessage ? <div className="mt-4 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-200" role="status">{saveMessage} <Link className="font-semibold underline" href="/invoices">View invoices</Link></div> : null}
           </Card>
         </div>
       ) : (
-        <Card className="p-6 text-sm text-slate-500">AI extraction results will appear here after upload or text conversion.</Card>
+        <Card className="p-5 text-sm text-slate-500">AI extraction results will appear here after upload or text conversion.</Card>
       )}
     </div>
   );

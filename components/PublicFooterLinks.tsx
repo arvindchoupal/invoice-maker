@@ -23,6 +23,7 @@ const footerGroups = [
   {
     title: "Business documents",
     links: [
+      { href: "/tools/business-loan-project-report-generator", label: "Business loan project report" },
       { href: "/quotation-maker", label: "Quotation maker" },
       { href: "/purchase-order-generator", label: "Purchase order generator" },
       { href: "/receipt-generator", label: "Receipt generator" },
@@ -42,6 +43,7 @@ const footerGroups = [
   {
     title: "Guides",
     links: [
+      { href: "/blog/project-report-for-bank-loan-format", label: "Bank loan project report format" },
       { href: "/blog/gst-bill-format", label: "GST bill format" },
       { href: "/tax-invoice-format", label: "Tax invoice format" },
       { href: "/blog/cgst-sgst-igst-explained", label: "CGST, SGST and IGST" },

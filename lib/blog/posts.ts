@@ -1,6 +1,9 @@
+import { LOAN_PROJECT_POST } from "./loan-project-post";
+
 export type BlogPost = {
   slug: string;
   title: string;
+  metaTitle?: string;
   description: string;
   publishedAt: string;
   updatedAt?: string;
@@ -42,6 +45,7 @@ export function isNoindexBlogSlug(slug: string) {
 }
 
 export const BLOG_POSTS: BlogPost[] = [
+  LOAN_PROJECT_POST,
   {
     slug: "how-to-create-gst-invoice-india",
     title: "How to Create a GST Invoice in India (Step-by-Step Guide)",

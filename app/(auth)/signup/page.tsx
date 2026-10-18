@@ -7,6 +7,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { api, setSession } from "@/lib/api";
 import { attachPublicInvoiceDraft } from "@/lib/public-invoice-draft";
 import { Button, Field, inputClass } from "@/components/ui";
+import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 
 const onboardingBenefits = [
   ["Create", "Invoice, receipt, quotation or estimate"],
@@ -22,6 +23,27 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState(roleOptions[0]);
 
+  async function finishSignup(data: { token: string; user: unknown }) {
+    setSession(data.token, data.user);
+    const savedDraft = await attachPublicInvoiceDraft().catch(() => null);
+    router.push(savedDraft?.id ? `/invoices/${savedDraft.id}/edit` : "/dashboard");
+  }
+
+  async function signupWithGoogle(credential: string) {
+    setLoading(true);
+    setError("");
+    try {
+      const data = await api<{ token: string; user: unknown }>("/auth/google", {
+        method: "POST",
+        body: JSON.stringify({ credential }),
+      });
+      await finishSignup(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to continue with Google");
+      setLoading(false);
+    }
+  }
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
@@ -32,9 +54,7 @@ export default function SignupPage() {
         method: "POST",
         body: JSON.stringify({ name: form.get("name"), email: form.get("email"), password: form.get("password") }),
       });
-      setSession(data.token, data.user);
-      const savedDraft = await attachPublicInvoiceDraft().catch(() => null);
-      router.push(savedDraft?.id ? `/invoices/${savedDraft.id}/edit` : "/dashboard");
+      await finishSignup(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to sign up");
     } finally {
@@ -85,6 +105,12 @@ export default function SignupPage() {
               </div>
 
               <div className="mt-6 grid gap-4">
+                <GoogleSignInButton disabled={loading} onCredential={signupWithGoogle} />
+                <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.16em] text-slate-500">
+                  <span className="h-px flex-1 bg-white/10" />
+                  or create with email
+                  <span className="h-px flex-1 bg-white/10" />
+                </div>
                 <Field label="Your name">
                   <input autoComplete="name" className={inputClass} name="name" required />
                 </Field>

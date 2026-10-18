@@ -7,10 +7,12 @@ export function ToolPageLayout({
   after,
   tool,
   children,
+  wideTool = false,
 }: {
   after?: React.ReactNode;
   tool: ToolCatalogEntry;
   children: React.ReactNode;
+  wideTool?: boolean;
 }) {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -20,7 +22,7 @@ export function ToolPageLayout({
           <PublicToolNavActions signupSource={tool.signupSource} />
         </nav>
 
-        <div className="mx-auto grid max-w-7xl gap-8 py-10 sm:py-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(420px,0.8fr)] lg:items-start xl:grid-cols-[minmax(0,0.95fr)_minmax(460px,0.78fr)]">
+        <div className={`mx-auto grid max-w-7xl gap-8 py-10 sm:py-12 lg:items-start ${wideTool ? "lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)]" : "lg:grid-cols-[minmax(0,0.9fr)_minmax(420px,0.8fr)] xl:grid-cols-[minmax(0,0.95fr)_minmax(460px,0.78fr)]"}`}>
           <div className="lg:sticky lg:top-6">
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">{tool.title}</p>
             <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">{tool.headline}</h1>

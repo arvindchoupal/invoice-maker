@@ -13,6 +13,17 @@ export type ToolCatalogEntry = {
 
 export const TOOLS_CATALOG: ToolCatalogEntry[] = [
   {
+    href: "/tools/business-loan-project-report-generator",
+    title: "Bank Loan Project Report — PDF & Excel",
+    body: "Create a bank loan project report online. Start with a retail shop sample, add your figures and download projected financial statements in PDF and Excel.",
+    tag: "Finance", intent: "Best for new business loan planning",
+    metaTitle: "Bank Loan Project Report PDF & Excel | Free Online Tool",
+    metaDescription: "Create a bank loan project report online with a sample funding format, projected balance sheet, P&L and cash flow. Download free PDF and Excel. No signup needed.",
+    headline: "Bank Loan Project Report: PDF & Excel Online",
+    highlights: ["Start with a retail shop project report sample", "3–5 year projected balance sheet, P&L and cash flow", "Free bank loan project report PDF and Excel downloads", "No signup; calculations stay in your browser"],
+    signupSource: "business-loan-project-report",
+  },
+  {
     href: "/tools/business-expense-calculator",
     title: "Business expense calculator",
     body: "Add business costs by category, estimate expense ratio and GST included, then export a clean CSV summary.",

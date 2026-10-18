@@ -206,3 +206,30 @@ Before making SEO changes:
 - Record baseline metrics before editing.
 - Add the implementation and its expected measurement window here.
 - After deployment, verify the live canonical/indexability and later append actual Search Console results.
+# 18 October 2026 — Business loan project report generator
+
+- Added `/tools/business-loan-project-report-generator` for new proprietorship term-loan planning, with project costs, funding, 3–5 year P&L, balance sheet, cash flow and repayment.
+- Linked through the tools catalog, which also includes the route in the sitemap and tools search/list schema. Added canonical metadata, application schema and breadcrumbs.
+- PDF and seven-sheet `.xlsx` downloads run locally in the browser. No business inputs are sent to the API or stored by this tool. Excel contains calculated snapshots, not recalculating formulas.
+- Limitations: new-business opening position, full-year operations, no CC facility or moratorium; PDF business details require English / Roman Hindi. Bank/accountant review required for submission.
+- Validation: production build and TypeScript passed; financial reconciliation / repayment / validation tests passed; browser PDF and Excel downloads verified, workbook reopened and PDF pages inspected.
+- Deployment: local implementation and preview only; production deployment mechanism is not configured in this checkout. Live URL verification and indexing remain pending.
+
+## 18 October 2026 — Loan report tool + supporting search guide
+
+- Status: implemented and verified locally; production publication/indexing pending.
+- Tool canonical: `/tools/business-loan-project-report-generator`; targets free business loan project report generator, online project report maker, PDF/Excel project report and projected financial statement intent.
+- Guide canonical: `/blog/project-report-for-bank-loan-format`; targets project report for bank loan format, sample project report, retail shop funding example and projected balance sheet preparation intent. These are intent-based keyword targets, not verified search-volume estimates.
+- Tool additions: descriptive H1/title/description, social metadata, server-rendered guide content, sample funding table, steps, eight visible FAQs and matching FAQ schema. Kept the working generator and its existing canonical URL.
+- Guide additions: original worked funding/P&L example, format checklist, working capital explanation, project report/CMA distinctions, six visible FAQs, source link to SBI's indicative checklist and links back to the tool. Used the existing blog's BlogPosting, FAQ and breadcrumb schema; added a concise optional per-post search title.
+- Discovery: both pages appear in the existing sitemap and blog/tools indexes; linked them from site footer and each other. Guide's related tools are relevant to business finance.
+- Validation: production build and TypeScript passed. Inspected generated HTML for one H1 per page, canonical, absence of noindex, valid JSON-LD, visible FAQ questions and reciprocal links; confirmed both sitemap URLs and index links. Browser navigation and article layout reviewed.
+- After production deployment: verify live HTTP status/canonicals, submit sitemap / inspect both URLs in Search Console, then measure impressions, queries, clicks and completed report downloads. No traffic or ranking guarantee.
+
+## 18 October 2026 — CSV-led loan report keyword refinement
+
+- Source: user-supplied `Keyword Stats 2026-10-18 at 19_01_16.csv`, covering October 2025–September 2026. Prioritised bank loan report / format / sample and PDF / Excel intent over the exact generator phrase; no additive traffic forecast from overlapping keyword variants.
+- Tool search title: `Bank Loan Project Report PDF & Excel | Free Online Tool`. H1: `Bank Loan Project Report: PDF & Excel Online`. Updated catalog description, highlights, relevant headings, sample instructions and PDF/Excel comparison copy.
+- Blog search title: `Project Report for Bank Loan: Format & Sample | PDF & Excel`. Visible title: `Project Report for Bank Loan: Format, Sample, PDF & Excel`. Updated introduction, format/sample/P&L/download headings, contextual tool links and PDF-vs-Excel guidance.
+- Updated the shared tool FAQ content so visible answers and FAQ schema stay consistent. Sample downloads use the existing Load example workflow; no claim of a blank or formula-driven Excel template.
+- Retained both canonical URLs and the original worked financial example. Production publication and Search Console indexing remain pending.

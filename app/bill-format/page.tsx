@@ -9,13 +9,14 @@ import { PublicFooterLinks } from "@/components/PublicFooterLinks";
 const siteUrl = "https://invoicewala.shop";
 
 export const metadata: Metadata = {
-  title: "Free Bill Format in Excel, Word & PDF | InvoiceWala",
+  title: "Bill Format in Excel, Word & PDF – Free Samples | InvoiceWala",
   description:
-    "Choose a professional bill format for your shop, services or freelance work. Preview GST and non-GST bill samples and create a clean PDF bill online.",
+    "Preview free bill format samples for shops, services and freelancers. Compare Excel, Word and PDF formats, then create and download a professional bill online.",
   alternates: { canonical: `${siteUrl}/bill-format` },
+  robots: { index: true, follow: true },
   openGraph: {
-    title: "Free Bill Format in Excel, Word & PDF",
-    description: "Preview simple, GST, retail, service and freelancer bill formats for Indian businesses.",
+    title: "Bill Format in Excel, Word & PDF – Free Samples",
+    description: "Preview simple, GST, retail, shop, service and freelancer bill formats for Indian businesses.",
     url: `${siteUrl}/bill-format`,
     siteName: "InvoiceWala",
     images: [
@@ -32,6 +33,7 @@ export const metadata: Metadata = {
 const templates = [
   {
     name: "Simple bill format",
+    anchor: "simple-bill-format",
     image: "/bill-formats/simple-bill-format.webp",
     alt: "Simple bill format sample for a general store in India",
     description: "A clean non-GST bill for everyday products and services.",
@@ -40,6 +42,7 @@ const templates = [
   },
   {
     name: "GST bill format",
+    anchor: "gst-bill-format",
     image: "/bill-formats/gst-bill-format.webp",
     alt: "GST bill format sample with GSTIN, item rows and tax total",
     description: "GST-ready tax invoice with supplier, buyer and tax details.",
@@ -48,6 +51,7 @@ const templates = [
   },
   {
     name: "Service bill format",
+    anchor: "service-bill-format",
     image: "/bill-formats/service-bill-format.webp",
     alt: "Service bill format sample for a design studio",
     description: "For consultants, agencies, repairs and professional services.",
@@ -56,6 +60,7 @@ const templates = [
   },
   {
     name: "Retail shop bill",
+    anchor: "bill-format-for-shop",
     image: "/bill-formats/retail-shop-bill-format.webp",
     alt: "Retail shop bill format sample with products, quantities and GST",
     description: "A scan-friendly product bill for stores and local sellers.",
@@ -64,6 +69,7 @@ const templates = [
   },
   {
     name: "Bill book format",
+    anchor: "bill-book-format",
     image: "/bill-formats/bill-book-format.webp",
     alt: "Bill book and cash memo format sample for a hardware store",
     description: "A familiar cash memo layout that works well for print.",
@@ -72,6 +78,7 @@ const templates = [
   },
   {
     name: "Freelancer bill",
+    anchor: "freelancer-bill-format",
     image: "/bill-formats/freelancer-bill-format.webp",
     alt: "Freelancer bill format sample for website development services",
     description: "Project, milestone and retainer billing in a polished format.",
@@ -137,6 +144,36 @@ export default function BillFormatPage() {
         acceptedAnswer: { "@type": "Answer", text: answer },
       })),
     },
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: "Free Bill Format in Excel, Word and PDF",
+      description: metadata.description,
+      url: `${siteUrl}/bill-format`,
+      inLanguage: "en-IN",
+      mainEntity: {
+        "@type": "ItemList",
+        numberOfItems: templates.length,
+        itemListElement: templates.map((template, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: `${siteUrl}/bill-format#${template.anchor}`,
+          name: template.name,
+        })),
+      },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      name: "How to create a professional bill online",
+      description: "Choose a bill format, add transaction details and download a customer-ready PDF.",
+      totalTime: "PT5M",
+      step: [
+        { "@type": "HowToStep", position: 1, name: "Choose a bill format", text: "Choose the format that matches your business and tax needs." },
+        { "@type": "HowToStep", position: 2, name: "Add bill details", text: "Add your business, customer, item, price, tax and payment details." },
+        { "@type": "HowToStep", position: 3, name: "Review and download", text: "Review the totals and download a polished PDF bill." },
+      ],
+    },
   ];
 
   return (
@@ -159,26 +196,26 @@ export default function BillFormatPage() {
         </div>
       </header>
 
-      <section className="relative overflow-hidden border-b border-blue-100 bg-[linear-gradient(115deg,#f8fbff_0%,#eef6ff_55%,#ffffff_100%)]">
-        <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(#dbeafe_1px,transparent_1px),linear-gradient(90deg,#dbeafe_1px,transparent_1px)] [background-size:32px_32px]" />
+      <section className="relative overflow-hidden border-b border-blue-100 bg-[linear-gradient(115deg,#f8fbff_0%,#eef6ff_55%,#ffffff_100%)] dark:border-white/10 dark:bg-[linear-gradient(115deg,#0b0f14_0%,#111b2d_55%,#0b0f14_100%)]">
+        <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(#dbeafe_1px,transparent_1px),linear-gradient(90deg,#dbeafe_1px,transparent_1px)] [background-size:32px_32px] dark:opacity-20 dark:[background-image:linear-gradient(#334155_1px,transparent_1px),linear-gradient(90deg,#334155_1px,transparent_1px)]" />
         <div className="relative mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-6 sm:py-20 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:py-24">
           <div>
-            <span className="inline-flex rounded-full border border-blue-200 bg-white px-3 py-1 text-xs font-extrabold uppercase tracking-[0.16em] text-blue-700 shadow-sm">Free bill formats for India</span>
-            <h1 className="mt-5 max-w-3xl text-4xl font-black leading-[1.08] tracking-tight text-slate-950 sm:text-6xl">
+            <span className="inline-flex rounded-full border border-blue-200 bg-white px-3 py-1 text-xs font-extrabold uppercase tracking-[0.16em] text-blue-700 shadow-sm dark:border-blue-400/30 dark:bg-blue-500/10 dark:text-blue-200">Free bill formats for India</span>
+            <h1 className="mt-5 max-w-3xl text-4xl font-black leading-[1.08] tracking-tight text-slate-950 dark:text-white sm:text-6xl">
               Bill format that looks professional from the first glance
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-slate-300">
               Preview simple, GST, retail, service and freelancer bill formats. Pick the layout that fits your business, then create a clean customer-ready bill online.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 text-sm font-extrabold text-white shadow-xl shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700" href="#bill-templates">
                 Browse bill formats <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-300 bg-white px-6 text-sm font-bold text-slate-800 shadow-sm transition hover:border-blue-300 hover:text-blue-700" href="/free-invoice">
+              <Link className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-300 bg-white px-6 text-sm font-bold text-slate-800 shadow-sm transition hover:border-blue-300 hover:text-blue-700 dark:border-white/20 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 dark:hover:text-white" href="/free-invoice">
                 Create a bill online
               </Link>
             </div>
-            <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-slate-600">
+            <div className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-slate-600 dark:text-slate-300">
               {["GST and non-GST", "Mobile-friendly", "Professional PDF flow"].map((item) => (
                 <span className="inline-flex items-center gap-2" key={item}><CheckCircle2 className="h-4 w-4 text-emerald-600" />{item}</span>
               ))}
@@ -192,13 +229,29 @@ export default function BillFormatPage() {
             <div className="absolute right-[3%] top-0 z-10 w-[52%] rotate-3 overflow-hidden rounded-2xl border border-emerald-100 bg-white p-2 shadow-2xl shadow-emerald-900/20">
               <Image alt={templates[1].alt} className="h-auto w-full rounded-xl" height={1698} priority src={templates[1].image} width={1200} />
             </div>
-            <div className="absolute bottom-[2%] left-[22%] z-20 rounded-2xl border border-blue-100 bg-white px-5 py-4 shadow-xl">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-blue-600">Ready to use</p>
-              <p className="mt-1 text-lg font-black text-slate-950">6 polished formats</p>
+            <div className="absolute bottom-[2%] left-[22%] z-20 rounded-2xl border border-blue-100 bg-white px-5 py-4 shadow-xl dark:border-white/15 dark:bg-[#11161c]">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">Ready to use</p>
+              <p className="mt-1 text-lg font-black text-slate-950 dark:text-white">6 polished formats</p>
             </div>
           </div>
         </div>
       </section>
+
+      <nav className="border-b border-blue-100 bg-white px-5 py-5 dark:border-white/10 dark:bg-[#0b0f14] sm:px-6" aria-label="Popular bill format searches">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2">
+          <span className="mr-2 text-xs font-extrabold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">Popular searches</span>
+          {[
+            ["Bill format for shop", "#bill-format-for-shop"],
+            ["Bill format PDF", "#bill-format-pdf"],
+            ["Bill format in Excel", "#bill-format-excel"],
+            ["Bill format in Word", "#bill-format-word"],
+            ["Simple bill format", "#simple-bill-format"],
+            ["Online bill format", "#online-bill-format"],
+          ].map(([label, href]) => (
+            <a className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700 transition hover:border-blue-300 hover:bg-blue-100 dark:border-blue-400/20 dark:bg-blue-500/10 dark:text-blue-200 dark:hover:bg-blue-500/20" href={href} key={href}>{label}</a>
+          ))}
+        </div>
+      </nav>
 
       <section className="bg-slate-100 py-16 sm:py-20" id="bill-templates">
         <div className="mx-auto max-w-7xl px-5 sm:px-6">
@@ -210,7 +263,7 @@ export default function BillFormatPage() {
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {templates.map((template) => (
-              <article className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl" key={template.name}>
+              <article className="group scroll-mt-8 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl" id={template.anchor} key={template.name}>
                 <a className="block bg-slate-50 p-4" href={template.image}>
                   <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md">
                     <Image alt={template.alt} className="h-auto w-full transition duration-500 group-hover:scale-[1.02]" height={1698} loading="lazy" src={template.image} width={1200} />
@@ -263,7 +316,7 @@ export default function BillFormatPage() {
         </div>
       </section>
 
-      <section className="border-y border-slate-200 bg-blue-50 py-16 sm:py-20">
+      <section className="border-y border-slate-200 bg-blue-50 py-16 sm:py-20" id="bill-format-files">
         <div className="mx-auto max-w-7xl px-5 sm:px-6">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-blue-600">Choose the working format</p>
@@ -271,26 +324,26 @@ export default function BillFormatPage() {
             <p className="mt-4 text-base leading-7 text-slate-600">The best file type depends on whether you are calculating, editing or sending the bill. Many businesses prepare the data in Excel or an online invoice maker and share the final copy as PDF.</p>
           </div>
           <div className="mt-10 grid gap-5 lg:grid-cols-3">
-            <article className="rounded-3xl border border-emerald-100 bg-white p-7 shadow-sm">
+            <article className="scroll-mt-8 rounded-3xl border border-emerald-100 bg-white p-7 shadow-sm" id="bill-format-excel">
               <span className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-100 text-emerald-700"><FileSpreadsheet className="h-6 w-6" /></span>
               <h3 className="mt-5 text-2xl font-black">Bill format in Excel</h3>
               <p className="mt-3 text-sm leading-6 text-slate-600">Best when you want formulas for quantity × rate, discounts, taxable value, GST and totals. Protect formula cells and export a PDF before sending it to a customer.</p>
               <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.14em] text-emerald-700">Best for calculations</p>
             </article>
-            <article className="rounded-3xl border border-blue-100 bg-white p-7 shadow-sm">
+            <article className="scroll-mt-8 rounded-3xl border border-blue-100 bg-white p-7 shadow-sm" id="bill-format-word">
               <span className="grid h-12 w-12 place-items-center rounded-2xl bg-blue-100 text-blue-700"><FileType2 className="h-6 w-6" /></span>
               <h3 className="mt-5 text-2xl font-black">Bill format in Word</h3>
               <p className="mt-3 text-sm leading-6 text-slate-600">Useful for a simple document with flexible wording and branding. It works for occasional bills, but manual totals should be checked carefully before download.</p>
               <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.14em] text-blue-700">Best for manual editing</p>
             </article>
-            <article className="rounded-3xl border border-violet-100 bg-white p-7 shadow-sm">
+            <article className="scroll-mt-8 rounded-3xl border border-violet-100 bg-white p-7 shadow-sm" id="bill-format-pdf">
               <span className="grid h-12 w-12 place-items-center rounded-2xl bg-violet-100 text-violet-700"><Download className="h-6 w-6" /></span>
               <h3 className="mt-5 text-2xl font-black">Bill format in PDF</h3>
               <p className="mt-3 text-sm leading-6 text-slate-600">The safest format for customers because the design does not shift across phones and computers. PDF is ideal for email, WhatsApp, printing and record keeping.</p>
               <p className="mt-5 text-xs font-extrabold uppercase tracking-[0.14em] text-violet-700">Best for final sharing</p>
             </article>
           </div>
-          <div className="mt-8 flex flex-col items-center justify-between gap-5 rounded-3xl bg-slate-950 p-7 text-center text-white sm:flex-row sm:text-left">
+          <div className="mt-8 flex scroll-mt-8 flex-col items-center justify-between gap-5 rounded-3xl bg-slate-950 p-7 text-center text-white sm:flex-row sm:text-left" id="online-bill-format">
             <div><h3 className="text-2xl font-black">Want the calculations and PDF in one flow?</h3><p className="mt-2 text-sm leading-6 text-slate-300">Create the bill online, review GST and totals, then download a customer-ready document.</p></div>
             <Link className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 text-sm font-extrabold text-white transition hover:-translate-y-0.5 hover:bg-blue-500" href="/free-invoice">Create bill online <ArrowRight className="h-4 w-4" /></Link>
           </div>
@@ -346,7 +399,7 @@ export default function BillFormatPage() {
         </div>
       </section>
 
-      <section className="border-y border-slate-200 bg-blue-50 py-16 sm:py-20">
+      <section className="border-y border-slate-200 bg-blue-50 py-16 sm:py-20" id="how-to-create-bill">
         <div className="mx-auto max-w-7xl px-5 sm:px-6">
           <div className="text-center">
             <p className="text-sm font-extrabold uppercase tracking-[0.18em] text-blue-600">Three simple steps</p>
@@ -412,7 +465,7 @@ export default function BillFormatPage() {
             <h2 className="mt-3 text-3xl font-black tracking-tight">Create your bill in InvoiceWala</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">Start with the format you like, add the real transaction details and send a professional invoice to your customer.</p>
           </div>
-          <Link className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-6 text-sm font-extrabold text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-50" href="/free-invoice">Create free bill <ArrowRight className="h-4 w-4" /></Link>
+          <Link className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-6 text-sm font-extrabold text-[#0f172a] transition hover:-translate-y-0.5 hover:bg-cyan-50" href="/free-invoice">Create free bill <ArrowRight className="h-4 w-4" /></Link>
         </div>
       </section>
 

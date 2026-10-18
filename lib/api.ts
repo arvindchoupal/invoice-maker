@@ -21,7 +21,17 @@ export function clearSession() {
   localStorage.removeItem("invoice_user");
 }
 
-export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
+export class ApiError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
+async function request(path: string, options: RequestInit = {}) {
   const headers = new Headers(options.headers);
   if (!(options.body instanceof FormData)) headers.set("Content-Type", "application/json");
   const token = getToken();
@@ -40,10 +50,32 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
           })
           .filter(Boolean)
       : [];
-    throw new Error(issues.length ? issues.join("\n") : message);
+    throw new ApiError(response.status, issues.length ? issues.join("\n") : message);
   }
+  return response;
+}
+
+export async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const response = await request(path, options);
   if (response.status === 204) return undefined as T;
   return response.json() as Promise<T>;
+}
+
+export async function apiBlob(path: string, options: RequestInit = {}) {
+  const response = await request(path, options);
+  return response.blob();
+}
+
+export async function downloadApiFile(path: string, filename: string) {
+  const blob = await apiBlob(path);
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
 }
 
 export { API_URL };
