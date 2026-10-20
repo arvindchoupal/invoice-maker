@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Suspense } from "react";
+import { UserActivityTracker } from "@/components/UserActivityTracker";
 import { AnalyticsEvents } from "@/components/AnalyticsEvents";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import './globals.css'
@@ -42,6 +44,7 @@ export default function RootLayout({
           `}
         </Script>
         <AnalyticsEvents />
+        <Suspense fallback={null}><UserActivityTracker /></Suspense>
         {children}
         <ThemeToggle />
       </body>

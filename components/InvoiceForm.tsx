@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useInvoiceJourney } from "@/hooks/useInvoiceJourney";
+import { stepForField, type InvoiceStep } from "@/lib/user-tracking";
 import {
   ArrowDown,
   ArrowUp,
@@ -16,17 +18,20 @@ import {
   Save,
   Trash2,
 } from "lucide-react";
-import { API_URL, api, apiBlob, downloadApiFile } from "@/lib/api";
+import { API_URL, api, downloadApiFile } from "@/lib/api";
 import { calculateInvoice, currency } from "@/lib/invoice";
-import { previewFamily, previewStructure, type PdfStyleMeta, type PreviewFamily } from "@/lib/pdf-styles";
+import { type PdfStyleMeta } from "@/lib/pdf-styles";
 import type { Client, Invoice, InvoiceItem, InvoiceStatus } from "@/types";
+import { InvoicePdfPreview } from "@/components/InvoicePdfPreview";
+import { InvoiceAdditionalDetails } from "@/components/InvoiceAdditionalDetails";
+import { invoiceValidationErrors, invoiceLogoData, invoiceDates } from "@/lib/invoice-document";
 import { TemplateGallery } from "@/components/TemplateGallery";
 import { Badge, Button, Card, Field, inputClass } from "@/components/ui";
 
 type BuilderItem = InvoiceItem & { localId: string };
 type BuilderInvoice = Omit<Invoice, "items"> & { items: BuilderItem[] };
 type SectionId = "details" | "parties" | "items" | "notes";
-type BrandingSettings = { logo_url?: string; company_name?: string; default_pdf_style?: string };
+type BrandingSettings = { logo_url?: string; logo_snapshot?: string; company_name?: string; default_pdf_style?: string };
 
 const sectionLabels: Record<SectionId, string> = {
   details: "Document",
@@ -45,14 +50,7 @@ const supportedCurrencies = [
 
 function normalizeCurrency(code?: string) {
   const normalized = (code || "INR").trim().toUpperCase();
-  return supportedCurrencies.some((currency) => currency.code === normalized) ? normalized : "INR";
-}
-
-function emailValidationMessage(value: string | undefined, label: string) {
-  const email = (value ?? "").trim();
-  if (!email) return "";
-  const isValidEmail = /^(?!\.)(?!.*\.\.)[A-Za-z0-9_'+\-.]*[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9-]*\.)+[A-Za-z]{2,}$/.test(email);
-  return isValidEmail ? "" : `${label} must be a valid email address, for example name@business.com.`;
+  return normalized;
 }
 
 const blankItem = (): BuilderItem => ({
@@ -65,13 +63,10 @@ const blankItem = (): BuilderItem => ({
   discountRate: 0,
 });
 
-const today = new Date().toISOString().slice(0, 10);
-const defaultDueDate = new Date(new Date().getTime() + 14 * 86400000).toISOString().slice(0, 10);
-
 function toBuilderInvoice(initial?: Partial<Invoice>): BuilderInvoice {
   return {
-    issueDate: today,
-    dueDate: defaultDueDate,
+    amountPaid: 0, taxMode: "tax", documentTitle: "INVOICE",
+    ...invoiceDates(),
     status: "Draft",
     currency: "INR",
     businessName: "",
@@ -91,25 +86,22 @@ function toBuilderInvoice(initial?: Partial<Invoice>): BuilderInvoice {
 
 function toApiInvoice(invoice: BuilderInvoice, pdfStyle: string): Invoice {
   const items = invoice.items
-    .filter((item) => {
-      const hasName = item.name.trim().length > 0;
-      const hasDescription = (item.description ?? "").trim().length > 0;
-      const hasAmount = Number(item.quantity) > 0 && Number(item.unitPrice) > 0;
-      const hasTaxOrDiscount = Number(item.taxRate) > 0 || Number(item.discountRate) > 0;
-      return hasName || hasDescription || hasAmount || hasTaxOrDiscount;
-    })
     .map((item) => ({
       name: item.name.trim(),
       description: item.description?.trim() || undefined,
-      quantity: Number(item.quantity) || 1,
+      quantity: Number(item.quantity),
+      hsnCode: item.hsnCode?.trim() || undefined,
       unitPrice: Number(item.unitPrice) || 0,
-      taxRate: Number(item.taxRate) || 0,
+      taxRate: invoice.taxMode === "none" ? 0 : Number(item.taxRate) || 0,
       discountRate: Number(item.discountRate) || 0,
     }));
 
   return {
     ...invoice,
     invoiceNumber: invoice.invoiceNumber?.trim() || undefined,
+    amountPaid: Number(invoice.amountPaid || 0),
+    taxMode: invoice.taxMode || "tax",
+    logoData: invoice.logoData ?? null,
     currency: normalizeCurrency(invoice.currency),
     businessName: invoice.businessName.trim(),
     businessEmail: invoice.businessEmail?.trim() || undefined,
@@ -127,7 +119,6 @@ function toApiInvoice(invoice: BuilderInvoice, pdfStyle: string): Invoice {
 }
 
 const compactInput = `${inputClass} w-full min-w-0 min-h-9 rounded-lg border-transparent bg-transparent px-2 py-1 shadow-none hover:border-slate-200 hover:bg-white focus:border-blue-500 dark:hover:border-white/10 dark:hover:bg-white/[0.04]`;
-const previewInput = "w-full rounded-md border border-transparent bg-transparent px-1 py-0.5 outline-none transition hover:border-slate-200 hover:bg-slate-50 focus:border-blue-400 focus:bg-white";
 
 function assetUrl(path: string | undefined) {
   if (!path) return "";
@@ -140,14 +131,16 @@ function assetUrl(path: string | undefined) {
 
 export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>; invoiceId?: string }) {
   const router = useRouter();
+  const journey = useInvoiceJourney();
   const shellRef = useRef<HTMLDivElement | null>(null);
+  const persistedId = useRef(invoiceId);
+  const saveInFlight = useRef(false);
   const autosaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [pdfStyle, setPdfStyle] = useState(initial?.pdfStyle ?? "classic");
   const [pdfStyles, setPdfStyles] = useState<PdfStyleMeta[]>([]);
   const [showGallery, setShowGallery] = useState(false);
-  const [previewMode, setPreviewMode] = useState<"live" | "pdf">("live");
   const [shareMessage, setShareMessage] = useState("");
   const [clients, setClients] = useState<Client[]>([]);
   const [editorWidth, setEditorWidth] = useState(56);
@@ -156,41 +149,37 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
   const [sectionOrder, setSectionOrder] = useState<SectionId[]>(["details", "parties", "items", "notes"]);
   const [autosaveState, setAutosaveState] = useState<"saved" | "saving" | "idle">("idle");
   const [branding, setBranding] = useState<BrandingSettings>({});
-  const [failedLogoSrc, setFailedLogoSrc] = useState("");
-  const [pdfPreviewObjectUrl, setPdfPreviewObjectUrl] = useState("");
-  const [invoice, setInvoice] = useState<BuilderInvoice>(() => {
-    const key = `invoicewala-draft-${invoiceId ?? "new"}`;
-    if (typeof window !== "undefined") {
-      const draft = localStorage.getItem(key);
-      if (draft) {
-        try {
-          return toBuilderInvoice(JSON.parse(draft) as Partial<Invoice>);
-        } catch {
-          return toBuilderInvoice(initial);
-        }
-      }
-    }
-    return toBuilderInvoice(initial);
-  });
+  const [invoice, setInvoice] = useState<BuilderInvoice>(() => toBuilderInvoice(initial));
+  const [pendingDraft, setPendingDraft] = useState<Partial<Invoice> | null>(null);
+  const [draftReady, setDraftReady] = useState(false);
+  const dirty = useRef(false);
+  let accountId = "guest";
+  try { if (typeof window !== "undefined") accountId = String(JSON.parse(localStorage.getItem("invoice_user") || "null")?.id || "guest"); } catch { /* An unavailable session must not crash the editor. */ }
+  const draftKey = `invoicewala-draft-${accountId}-${invoiceId ?? "new"}`;
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      try {
+        const raw = localStorage.getItem(draftKey);
+        const draft = raw ? JSON.parse(raw) : null;
+        if (draft && Array.isArray(draft.items)) setPendingDraft(draft);
+        else setDraftReady(true);
+      } catch { setDraftReady(true); }
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [draftKey]);
 
-  const totals = useMemo(() => calculateInvoice(invoice.items), [invoice.items]);
-  const styleMeta = pdfStyles.find((item) => item.id === pdfStyle) ?? pdfStyles[0];
-  const family = previewFamily(pdfStyle);
-  const familyIs = (id: PreviewFamily) => family === id;
-  const logoSrc = assetUrl(branding.logo_url);
-  const showLogo = Boolean(logoSrc && failedLogoSrc !== logoSrc);
-  const taxSplit = {
-    cgst: totals.taxTotal / 2,
-    sgst: totals.taxTotal / 2,
-    igst: totals.taxTotal,
-  };
+
+  const totals = useMemo(() => calculateInvoice(invoice.items, invoice.taxMode), [invoice.items, invoice.taxMode]);
+  const styleMeta = pdfStyles.find(item => item.id === pdfStyle);
+  const logoSrc = invoice.logoData === undefined ? assetUrl(branding.logo_url) : invoice.logoData || "";
 
   useEffect(() => {
     api<BrandingSettings>("/settings").then((data) => {
       setBranding(data);
-      if (!initial?.pdfStyle && data.default_pdf_style) setPdfStyle(String(data.default_pdf_style));
+      setInvoice(current => current.logoData === undefined ? { ...current, logoData: data.logo_snapshot || null } : current);
+      if (!initial?.pdfStyle && !dirty.current && data.default_pdf_style) setPdfStyle(String(data.default_pdf_style));
     }).catch(() => undefined);
-    api<PdfStyleMeta[]>("/invoices/pdf/styles/list").then((items) => {
+    api<PdfStyleMeta[]>("/invoice-preview/styles").then((items) => {
       setPdfStyles(items);
       if (!initial?.pdfStyle && items[0]) setPdfStyle((current) => current || items[0].id);
     }).catch(() => undefined);
@@ -199,21 +188,21 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
   useEffect(() => {
     if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
+    if (!draftReady || !dirty.current || loading) return;
     autosaveTimer.current = setTimeout(() => {
-      localStorage.setItem(`invoicewala-draft-${invoiceId ?? "new"}`, JSON.stringify(toApiInvoice(invoice, pdfStyle)));
-      setAutosaveState("saved");
+      try {
+        localStorage.setItem(draftKey, JSON.stringify(toApiInvoice(invoice, pdfStyle)));
+        setAutosaveState("saved");
+      } catch { setAutosaveState("idle"); setError("Device storage is unavailable. Save this invoice to your account to keep your changes."); }
     }, 600);
     return () => {
       if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
     };
-  }, [invoice, invoiceId, pdfStyle]);
-
-  useEffect(() => () => {
-    if (pdfPreviewObjectUrl) URL.revokeObjectURL(pdfPreviewObjectUrl);
-  }, [pdfPreviewObjectUrl]);
+  }, [invoice, draftKey, pdfStyle, draftReady, loading]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
+      if (loading) return;
       const meta = event.metaKey || event.ctrlKey;
       if (meta && event.key.toLowerCase() === "s") {
         event.preventDefault();
@@ -225,19 +214,23 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
       }
       if (meta && event.key.toLowerCase() === "p") {
         event.preventDefault();
-        window.print();
+        void downloadPdf();
       }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   });
 
-  function markDirty() {
+  function markDirty(step: InvoiceStep = "items") {
+    dirty.current = true;
+    journey.change(step);
     setAutosaveState("saving");
   }
 
   function update<K extends keyof BuilderInvoice>(key: K, value: BuilderInvoice[K]) {
-    markDirty();
+    dirty.current = true;
+    journey.change(stepForField(String(key)));
+    setAutosaveState("saving");
     setInvoice((current) => ({ ...current, [key]: value }));
   }
 
@@ -331,35 +324,36 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
     window.addEventListener("pointerup", onPointerUp);
   }
 
-  async function save() {
+  async function save(navigate = true, style = pdfStyle) {
+    if (saveInFlight.current) return;
+    saveInFlight.current = true;
+    journey.event("save_attempted", "save");
+    let validationPassed = false;
     setLoading(true);
     setError("");
     setShareMessage("");
     try {
-      const payload = toApiInvoice(invoice, pdfStyle);
-      const firstInvalidItem = payload.items.findIndex((item) => !item.name?.trim());
-      const validationErrors = [
-        !payload.businessName.trim() ? "Business name is required." : "",
-        emailValidationMessage(payload.businessEmail, "Business email"),
-        !payload.customerName.trim() ? "Client name is required." : "",
-        emailValidationMessage(payload.customerEmail, "Client email"),
-        !payload.items.length ? "Add at least one line item before saving." : "",
-        firstInvalidItem >= 0 ? `Line item ${firstInvalidItem + 1}: item name is required.` : "",
-      ].filter(Boolean);
+      const payload = toApiInvoice(invoice, style);
+      const validationErrors = invoiceValidationErrors(payload);
       if (validationErrors.length) throw new Error(validationErrors.join("\n"));
-      const saved = await api<{ id: number }>(invoiceId ? `/invoices/${invoiceId}` : "/invoices", {
-        method: invoiceId ? "PUT" : "POST",
+      validationPassed = true;
+      const saved = await api<{ id: number; invoiceNumber: string }>(persistedId.current ? `/invoices/${persistedId.current}` : "/invoices", {
+        method: persistedId.current ? "PUT" : "POST",
         body: JSON.stringify(payload),
       });
-      localStorage.removeItem(`invoicewala-draft-${invoiceId ?? "new"}`);
-      if (invoiceId) {
-        router.push("/invoices");
-      } else {
-        router.push(`/invoices/${saved.id}/edit`);
-      }
+      journey.event("invoice_saved", "save");
+      dirty.current = false;
+      localStorage.removeItem(draftKey);
+      persistedId.current = String(saved.id);
+      setInvoice(current => ({ ...current, invoiceNumber: saved.invoiceNumber }));
+      setShareMessage("Invoice saved to your account.");
+      if (navigate) router.push(`/invoices/${saved.id}/edit`);
+      return String(saved.id);
     } catch (err) {
+      journey.event(validationPassed ? "save_failed" : "validation_failed", "save");
       setError(err instanceof Error ? err.message : "Could not save invoice");
     } finally {
+      saveInFlight.current = false;
       setLoading(false);
     }
   }
@@ -387,7 +381,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
   function applyClient(clientId: string) {
     const client = clients.find((item) => String(item.id) === clientId);
     if (!client) return;
-    markDirty();
+    markDirty("customer");
     setInvoice((current) => ({
       ...current,
       clientId: client.id,
@@ -400,56 +394,24 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
   async function uploadLogo(file: File | null) {
     if (!file) return;
-    try {
-      const form = new FormData();
-      form.append("logo", file);
-      const data = await api<{ logoUrl: string }>("/settings/logo", { method: "POST", body: form });
-      setBranding((current) => ({ ...current, logo_url: data.logoUrl }));
-      setShareMessage("Logo uploaded.");
-    } catch (err) {
-      setShareMessage(err instanceof Error ? err.message : "Could not upload logo.");
-    }
+    try { update("logoData", await invoiceLogoData(file)); setShareMessage("Invoice logo updated."); }
+    catch (err) { setShareMessage(err instanceof Error ? err.message : "Could not read logo."); }
   }
 
-  async function removeLogo() {
-    try {
-      const data = await api<{ logoUrl: string }>("/settings/logo", { method: "DELETE" });
-      setBranding((current) => ({ ...current, logo_url: data.logoUrl }));
-      setFailedLogoSrc("");
-      setShareMessage("Logo removed.");
-    } catch (err) {
-      setShareMessage(err instanceof Error ? err.message : "Could not remove logo.");
-    }
-  }
+  async function removeLogo() { update("logoData", null); setShareMessage("Invoice logo removed."); }
 
   async function downloadPdf(style = pdfStyle) {
-    if (!invoiceId) return;
+    const id = await save(false, style);
+    if (!id) return;
+    setLoading(true);
     try {
-      await downloadApiFile(`/invoices/${invoiceId}/pdf?style=${encodeURIComponent(style)}`, `${invoice.invoiceNumber || "invoice"}-${style}.pdf`);
-      setShareMessage("PDF downloaded securely.");
+      await downloadApiFile(`/invoices/${id}/pdf`, `${invoice.invoiceNumber || "invoice"}-${style}.pdf`);
+      journey.event("pdf_downloaded", "download");
+      setShareMessage("Current invoice saved and PDF downloaded.");
     } catch (err) {
+      journey.event("pdf_failed", "download");
       setShareMessage(err instanceof Error ? err.message : "Could not download PDF.");
-    }
-  }
-
-  async function showPdfPreview() {
-    if (!invoiceId) {
-      setShareMessage("Save the invoice first to preview the final PDF.");
-      return;
-    }
-    setShareMessage("Loading PDF preview…");
-    try {
-      const blob = await apiBlob(`/invoices/${invoiceId}/pdf2?style=${encodeURIComponent(pdfStyle)}`);
-      const url = URL.createObjectURL(blob);
-      setPdfPreviewObjectUrl((current) => {
-        if (current) URL.revokeObjectURL(current);
-        return url;
-      });
-      setPreviewMode("pdf");
-      setShareMessage("");
-    } catch (err) {
-      setShareMessage(err instanceof Error ? err.message : "Could not load PDF preview.");
-    }
+    } finally { setLoading(false); }
   }
 
   function sectionShell(id: SectionId, children: React.ReactNode) {
@@ -483,12 +445,14 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
     if (id === "details") {
       return sectionShell(id, (
         <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
-          <Field label="Invoice #"><input className={compactInput} value={invoice.invoiceNumber ?? ""} placeholder="Auto" onChange={(e) => update("invoiceNumber", e.target.value)} /></Field>
-          <Field label="Issue"><input className={compactInput} type="date" value={invoice.issueDate} onChange={(e) => update("issueDate", e.target.value)} /></Field>
-          <Field label="Due"><input className={compactInput} type="date" value={invoice.dueDate} onChange={(e) => update("dueDate", e.target.value)} /></Field>
-          <Field label="Status"><select className={compactInput} value={invoice.status} onChange={(e) => update("status", e.target.value as InvoiceStatus)}>{["Draft", "Sent", "Paid", "Overdue"].map((status) => <option key={status}>{status}</option>)}</select></Field>
+          <Field label="Document title"><input className={compactInput} value={invoice.documentTitle || "INVOICE"} onChange={e => update("documentTitle", e.target.value)} /></Field>
+          <Field label="Invoice #"><input className={compactInput} value={invoice.invoiceNumber ?? ""} placeholder="Auto" onFocus={() => journey.visit(stepForField("invoiceNumber"))} onChange={(e) => update("invoiceNumber", e.target.value)} /></Field>
+          <Field label="Issue"><input className={compactInput} type="date" value={invoice.issueDate} onFocus={() => journey.visit(stepForField("issueDate"))} onChange={(e) => update("issueDate", e.target.value)} /></Field>
+          <Field label="Due"><input className={compactInput} type="date" value={invoice.dueDate} onFocus={() => journey.visit(stepForField("dueDate"))} onChange={(e) => update("dueDate", e.target.value)} /></Field>
+          <Field label="Status"><select className={compactInput} value={invoice.status} onFocus={() => journey.visit(stepForField("status"))} onChange={(e) => update("status", e.target.value as InvoiceStatus)}>{["Draft", "Sent", "Paid", "Overdue"].map((status) => <option key={status}>{status}</option>)}</select></Field>
           <Field label="Currency">
-            <select className={compactInput} value={normalizeCurrency(invoice.currency)} onChange={(e) => update("currency", e.target.value)}>
+            <select className={compactInput} value={normalizeCurrency(invoice.currency)} onFocus={() => journey.visit(stepForField("currency"))} onChange={(e) => update("currency", e.target.value)}>
+              {!supportedCurrencies.some(c => c.code === normalizeCurrency(invoice.currency)) ? <option value={normalizeCurrency(invoice.currency)}>{normalizeCurrency(invoice.currency)}</option> : null}
               {supportedCurrencies.map((currency) => (
                 <option key={currency.code} value={currency.code}>{currency.label}</option>
               ))}
@@ -504,10 +468,10 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
           <div className="rounded-2xl border border-slate-200 p-3 dark:border-white/10">
             <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">From</p>
             <div className="grid gap-2">
-              <input className={compactInput} placeholder="Business name" value={invoice.businessName} onChange={(e) => update("businessName", e.target.value)} />
-              <input className={compactInput} type="email" placeholder="Business email" value={invoice.businessEmail} onChange={(e) => update("businessEmail", e.target.value)} />
-              <input className={compactInput} placeholder="GST/VAT ID" value={invoice.businessTaxId} onChange={(e) => update("businessTaxId", e.target.value)} />
-              <textarea className={`${compactInput} min-h-16`} placeholder="Business address" value={invoice.businessAddress} onChange={(e) => update("businessAddress", e.target.value)} />
+              <input className={compactInput} placeholder="Business name" value={invoice.businessName} onFocus={() => journey.visit(stepForField("businessName"))} onChange={(e) => update("businessName", e.target.value)} />
+              <input className={compactInput} type="email" placeholder="Business email" value={invoice.businessEmail} onFocus={() => journey.visit(stepForField("businessEmail"))} onChange={(e) => update("businessEmail", e.target.value)} />
+              <input className={compactInput} placeholder="GST/VAT ID" value={invoice.businessTaxId} onFocus={() => journey.visit(stepForField("businessTaxId"))} onChange={(e) => update("businessTaxId", e.target.value)} />
+              <textarea className={`${compactInput} min-h-16`} placeholder="Business address" value={invoice.businessAddress} onFocus={() => journey.visit(stepForField("businessAddress"))} onChange={(e) => update("businessAddress", e.target.value)} />
             </div>
           </div>
           <div className="rounded-2xl border border-slate-200 p-3 dark:border-white/10">
@@ -523,10 +487,10 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
               ) : null}
             </div>
             <div className="grid gap-2">
-              <input className={compactInput} placeholder="Client name" value={invoice.customerName} onChange={(e) => update("customerName", e.target.value)} />
-              <input className={compactInput} type="email" placeholder="Client email" value={invoice.customerEmail} onChange={(e) => update("customerEmail", e.target.value)} />
-              <input className={compactInput} placeholder="Client GST/VAT ID" value={invoice.customerTaxId} onChange={(e) => update("customerTaxId", e.target.value)} />
-              <textarea className={`${compactInput} min-h-16`} placeholder="Client address" value={invoice.customerAddress} onChange={(e) => update("customerAddress", e.target.value)} />
+              <input className={compactInput} placeholder="Client name" value={invoice.customerName} onFocus={() => journey.visit(stepForField("customerName"))} onChange={(e) => update("customerName", e.target.value)} />
+              <input className={compactInput} type="email" placeholder="Client email" value={invoice.customerEmail} onFocus={() => journey.visit(stepForField("customerEmail"))} onChange={(e) => update("customerEmail", e.target.value)} />
+              <input className={compactInput} placeholder="Client GST/VAT ID" value={invoice.customerTaxId} onFocus={() => journey.visit(stepForField("customerTaxId"))} onChange={(e) => update("customerTaxId", e.target.value)} />
+              <textarea className={`${compactInput} min-h-16`} placeholder="Client address" value={invoice.customerAddress} onFocus={() => journey.visit(stepForField("customerAddress"))} onChange={(e) => update("customerAddress", e.target.value)} />
             </div>
           </div>
         </div>
@@ -559,14 +523,15 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                 </div>
                 <div className="grid min-w-0 gap-3">
                   <div className="grid min-w-0 gap-2 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-                    <input className={`${compactInput} w-full min-w-0`} placeholder="Service or product" value={item.name} onChange={(e) => updateItem(item.localId, { name: e.target.value })} />
-                    <input className={`${compactInput} w-full min-w-0`} placeholder="Description" value={item.description} onChange={(e) => updateItem(item.localId, { description: e.target.value })} />
+                    <input className={`${compactInput} w-full min-w-0`} placeholder="Service or product" value={item.name} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { name: e.target.value })} />
+                    <input className={`${compactInput} w-full min-w-0`} placeholder="Description" value={item.description} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { description: e.target.value })} />
                   </div>
+                  <Field label="HSN / SAC (optional)"><input className={compactInput} value={item.hsnCode || ""} onChange={e => updateItem(item.localId, { hsnCode: e.target.value })} /></Field>
                   <div className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-4">
-                    <Field label="Qty"><input className={`${compactInput} w-full min-w-0`} aria-label="Quantity" type="number" min="0" step="0.01" value={item.quantity} onChange={(e) => updateItem(item.localId, { quantity: Number(e.target.value) })} /></Field>
-                    <Field label="Rate"><input className={`${compactInput} w-full min-w-0`} aria-label="Unit price" type="number" min="0" step="0.01" value={item.unitPrice} onChange={(e) => updateItem(item.localId, { unitPrice: Number(e.target.value) })} /></Field>
-                    <Field label="Tax %"><input className={`${compactInput} w-full min-w-0`} aria-label="Tax rate" type="number" min="0" step="0.01" value={item.taxRate} onChange={(e) => updateItem(item.localId, { taxRate: Number(e.target.value) })} /></Field>
-                    <Field label="Disc %"><input className={`${compactInput} w-full min-w-0`} aria-label="Discount rate" type="number" min="0" step="0.01" value={item.discountRate} onChange={(e) => updateItem(item.localId, { discountRate: Number(e.target.value) })} /></Field>
+                    <Field label="Qty"><input className={`${compactInput} w-full min-w-0`} aria-label="Quantity" type="number" min="0" step="0.01" value={item.quantity} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { quantity: Number(e.target.value) })} /></Field>
+                    <Field label="Rate"><input className={`${compactInput} w-full min-w-0`} aria-label="Unit price" type="number" min="0" step="0.01" value={item.unitPrice} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { unitPrice: Number(e.target.value) })} /></Field>
+                    <Field label="Tax %"><input className={`${compactInput} w-full min-w-0`} aria-label="Tax rate" type="number" min="0" step="0.01" value={item.taxRate} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { taxRate: Number(e.target.value) })} /></Field>
+                    <Field label="Disc %"><input className={`${compactInput} w-full min-w-0`} aria-label="Discount rate" type="number" min="0" step="0.01" value={item.discountRate} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { discountRate: Number(e.target.value) })} /></Field>
                   </div>
                 </div>
               </div>
@@ -579,23 +544,24 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
     return sectionShell(id, (
       <div className="grid gap-3 md:grid-cols-2">
-        <Field label="Notes"><textarea className={`${compactInput} min-h-20`} value={invoice.notes} onChange={(e) => update("notes", e.target.value)} /></Field>
-        <Field label="Terms"><textarea className={`${compactInput} min-h-20`} value={invoice.terms} onChange={(e) => update("terms", e.target.value)} /></Field>
+        <Field label="Notes"><textarea className={`${compactInput} min-h-20`} value={invoice.notes} onFocus={() => journey.visit(stepForField("notes"))} onChange={(e) => update("notes", e.target.value)} /></Field>
+        <Field label="Terms"><textarea className={`${compactInput} min-h-20`} value={invoice.terms} onFocus={() => journey.visit(stepForField("terms"))} onChange={(e) => update("terms", e.target.value)} /></Field>
       </div>
     ));
   }
 
   return (
-    <div className="relative grid gap-4">
+    <fieldset disabled={loading} className="relative grid min-w-0 gap-4 border-0 p-0">
+      {pendingDraft ? <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950"><p>A previous draft is saved on this device. Resume it, or start from the current invoice details?</p><div className="mt-3 flex gap-2"><Button onClick={() => { setInvoice(toBuilderInvoice(pendingDraft)); setPdfStyle(pendingDraft.pdfStyle || pdfStyle); dirty.current = true; setPendingDraft(null); setDraftReady(true); }}>Resume draft</Button><Button variant="secondary" onClick={() => { localStorage.removeItem(draftKey); setPendingDraft(null); setDraftReady(true); }}>Start fresh</Button></div></div> : null}
       <Card className="p-5">
         <div className="grid gap-4 xl:grid-cols-[1fr_auto] xl:items-center">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
             <Badge tone={autosaveState === "saved" ? "green" : autosaveState === "saving" ? "amber" : "slate"}>
-              {autosaveState === "saved" ? "Draft saved" : autosaveState === "saving" ? "Autosaving..." : "Ready"}
+              {autosaveState === "saved" ? "Saved on this device" : autosaveState === "saving" ? "Autosaving..." : "Ready"}
             </Badge>
             <div className="hidden items-center gap-2 text-xs text-slate-500 md:flex">
               <Keyboard className="h-3.5 w-3.5" />
-              Ctrl/⌘+S save · Ctrl/⌘+Enter item · Ctrl/⌘+P print
+              Ctrl/⌘+S save · Ctrl/⌘+Enter item · Ctrl/⌘+P PDF
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 xl:justify-end">
@@ -621,11 +587,12 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
             ) : (
               <span className="text-xs text-slate-500">Save to download PDF or share</span>
             )}
-            <Button variant="secondary" onClick={() => window.print()}><Maximize2 className="h-4 w-4" />Print</Button>
-            <Button disabled={loading} onClick={save}><Save className="h-4 w-4" />{loading ? "Saving..." : "Save"}</Button>
+            <Button variant="secondary" onClick={() => void downloadPdf()}><Maximize2 className="h-4 w-4" />Save & download</Button>
+            <Button disabled={loading} onClick={() => void save()}><Save className="h-4 w-4" />{loading ? "Saving..." : "Save"}</Button>
           </div>
         </div>
-        {shareMessage ? <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{shareMessage}</p> : null}
+        {shareMessage ? <p role="status" className="mt-2 text-sm text-slate-600 dark:text-slate-300">{shareMessage}</p> : null}
+        {error ? <div role="alert" className="mt-3 whitespace-pre-line rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-200">{error}</div> : null}
       </Card>
 
       {showGallery ? (
@@ -635,9 +602,10 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
           onClose={() => setShowGallery(false)}
           onSelect={(id) => {
             setPdfStyle(id);
-            markDirty();
+            markDirty("template");
           }}
           onDownload={invoiceId ? (id) => {
+            journey.change("template");
             setPdfStyle(id);
             void downloadPdf(id);
           } : undefined}
@@ -665,20 +633,20 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
             </div>
           </Card>
           {sectionOrder.map(renderSection)}
+          <InvoiceAdditionalDetails invoice={invoice} update={(key, value) => { markDirty(stepForField(key)); setInvoice(current => ({ ...current, [key]: value })); }} />
           <Card className="p-5">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="grid grid-cols-3 gap-3 text-sm">
                 <div><p className="text-xs text-slate-500">Subtotal</p><strong>{currency(totals.subtotal, invoice.currency)}</strong></div>
+                <div><p className="text-xs text-slate-500">Discount</p><strong>{currency(totals.discountTotal, invoice.currency)}</strong></div>
                 <div><p className="text-xs text-slate-500">Tax</p><strong>{currency(totals.taxTotal, invoice.currency)}</strong></div>
                 <div><p className="text-xs text-slate-500">Total</p><strong>{currency(totals.total, invoice.currency)}</strong></div>
+                <div><p className="text-xs text-slate-500">Amount paid</p><strong>{currency(Number(invoice.amountPaid || 0), invoice.currency)}</strong></div>
+                <div><p className="text-xs text-slate-500">Balance due</p><strong>{currency(totals.total - Number(invoice.amountPaid || 0), invoice.currency)}</strong></div>
               </div>
-              <Button disabled={loading} onClick={save}><Save className="h-4 w-4" />{loading ? "Saving..." : "Save invoice"}</Button>
+              <Button disabled={loading} onClick={() => void save()}><Save className="h-4 w-4" />{loading ? "Saving..." : "Save invoice"}</Button>
             </div>
-            {error ? (
-              <div className="mt-2 rounded-xl bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-200">
-                {error.split("\n").map((line) => <p key={line}>{line}</p>)}
-              </div>
-            ) : null}
+
           </Card>
         </div>
 
@@ -691,182 +659,11 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
           <MoveHorizontal className="h-3.5 w-3.5 rotate-90" />
         </button>
 
-        <aside className="min-w-0 flex-1 lg:min-w-[380px]">
-          <Card className="flex overflow-hidden lg:max-h-[calc(100vh-7.5rem)] lg:flex-col">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 p-3 dark:border-white/10">
-              <div>
-                <h2 className="font-semibold">{previewMode === "live" ? "Editable live preview" : "PDF preview"}</h2>
-                <p className="text-xs text-slate-500">
-                  {previewMode === "live" ? "Click text in preview to edit directly." : "Matches downloaded PDF output."}
-                </p>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="flex rounded-xl border border-slate-200 p-0.5 dark:border-white/10">
-                  <button type="button" className={`min-h-10 rounded-lg px-3 py-1.5 text-xs font-semibold ${previewMode === "live" ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-600"}`} onClick={() => setPreviewMode("live")}>Live</button>
-                  <button type="button" className={`min-h-10 rounded-lg px-3 py-1.5 text-xs font-semibold ${previewMode === "pdf" ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-600"}`} onClick={() => void showPdfPreview()} disabled={!invoiceId} title={!invoiceId ? "Save the invoice first" : "Preview final PDF"}>PDF</button>
-                </div>
-                <Badge tone="blue">{styleMeta?.label ?? pdfStyle}</Badge>
-                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600 dark:bg-white/[0.06] dark:text-slate-300">{previewStructure(pdfStyle)}</span>
-              </div>
-            </div>
-
-            {previewMode === "pdf" && invoiceId && pdfPreviewObjectUrl ? (
-              <iframe className="min-h-[80vh] w-full flex-1 bg-slate-100 dark:bg-slate-950/60" src={pdfPreviewObjectUrl} title="Invoice PDF preview" />
-            ) : (
-            <div className="premium-scrollbar flex-1 overflow-auto bg-slate-100 p-2 dark:bg-slate-950/60">
-              <div className="mx-auto min-h-[800px] w-full max-w-[920px] border-t-8 bg-white p-5 text-slate-950 shadow-2xl sm:p-7" style={{ borderTopColor: styleMeta?.accent ?? "#2563eb" }}>
-                <div className={`grid gap-6 ${familyIs("minimal") ? "" : "sm:grid-cols-[1fr_auto]"}`}>
-                  <div>
-                    {showLogo ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img alt="Company logo" className="mb-3 h-12 w-12 rounded-2xl object-contain ring-1 ring-slate-200" src={logoSrc} onError={() => setFailedLogoSrc(logoSrc)} />
-                    ) : (
-                      <div className="mb-3 h-10 w-10 rounded-2xl" style={{ backgroundColor: styleMeta?.accent ?? "#2563eb" }} />
-                    )}
-                    <input className={`${previewInput} text-2xl font-bold`} value={invoice.businessName || ""} placeholder="Your business" onChange={(e) => update("businessName", e.target.value)} />
-                    <input className={`${previewInput} mt-1 text-xs text-slate-500`} type="email" value={invoice.businessEmail || ""} placeholder="business@email.com" onChange={(e) => update("businessEmail", e.target.value)} />
-                    <textarea className={`${previewInput} mt-2 min-h-12 resize-none text-xs text-slate-500`} value={invoice.businessAddress || ""} placeholder="Business address" onChange={(e) => update("businessAddress", e.target.value)} />
-                  </div>
-                  <div className="text-left sm:text-right">
-                    <p className="text-4xl font-bold" style={{ color: styleMeta?.accentDark ?? styleMeta?.accent ?? "#0f172a" }}>INVOICE</p>
-                    <input className={`${previewInput} mt-1 text-sm text-slate-500 sm:text-right`} value={invoice.invoiceNumber ?? ""} placeholder="Auto-generated" onChange={(e) => update("invoiceNumber", e.target.value)} />
-                    <Badge tone={statusTone(invoice.status)}>{invoice.status}</Badge>
-                    {familyIs("corporate") ? <div className="mt-3 rounded-xl px-3 py-2 text-xs font-semibold" style={{ backgroundColor: styleMeta?.soft ?? "#eff6ff", color: styleMeta?.accentDark ?? "#1d4ed8" }}>Due badge · {String(invoice.dueDate).slice(0, 10)}</div> : null}
-                  </div>
-                </div>
-
-                <div className="mt-7 grid gap-4 rounded-2xl bg-slate-50 p-4 sm:grid-cols-2">
-                  <div>
-                    <p className="text-xs font-semibold uppercase text-slate-400">Bill to</p>
-                    <input className={`${previewInput} mt-2 font-semibold`} value={invoice.customerName || ""} placeholder="Client name" onChange={(e) => update("customerName", e.target.value)} />
-                    <input className={`${previewInput} text-xs text-slate-500`} type="email" value={invoice.customerEmail || ""} placeholder="client@email.com" onChange={(e) => update("customerEmail", e.target.value)} />
-                    <textarea className={`${previewInput} mt-2 min-h-12 resize-none text-xs text-slate-500`} value={invoice.customerAddress || ""} placeholder="Client address" onChange={(e) => update("customerAddress", e.target.value)} />
-                  </div>
-                  <div className="grid gap-2 text-sm sm:text-right">
-                    <label>Issue <input className={`${previewInput} w-auto sm:text-right`} type="date" value={invoice.issueDate} onChange={(e) => update("issueDate", e.target.value)} /></label>
-                    <label>Due <input className={`${previewInput} w-auto sm:text-right`} type="date" value={invoice.dueDate} onChange={(e) => update("dueDate", e.target.value)} /></label>
-                    <label>GST/VAT <input className={`${previewInput} w-auto sm:text-right`} value={invoice.customerTaxId || ""} placeholder="—" onChange={(e) => update("customerTaxId", e.target.value)} /></label>
-                    {familyIs("gst") ? <label>Place of supply <input className={`${previewInput} w-auto sm:text-right`} value="India" readOnly /></label> : null}
-                  </div>
-                </div>
-
-                {familyIs("agency") ? (
-                  <div className="mt-6 grid gap-3 rounded-2xl p-4 sm:grid-cols-3" style={{ backgroundColor: styleMeta?.soft ?? "#fce7f3" }}>
-                    <div className="sm:col-span-2">
-                      <p className="text-xs font-semibold uppercase text-pink-700">Project summary</p>
-                      <p className="mt-2 text-sm text-slate-700">Creative, consulting or service work billed by deliverable, retainer or hours.</p>
-                    </div>
-                    <div className="rounded-xl bg-white p-3 text-sm shadow-sm">
-                      <p className="text-xs text-slate-500">Estimated hours</p>
-                      <strong>{invoice.items.reduce((sum, item) => sum + Number(item.quantity || 0), 0).toFixed(2)}</strong>
-                    </div>
-                  </div>
-                ) : null}
-
-                {familyIs("construction") ? (
-                  <div className="mt-6 grid gap-3 rounded-2xl p-4 sm:grid-cols-3" style={{ backgroundColor: styleMeta?.soft ?? "#fef3c7" }}>
-                    <div>
-                      <p className="text-xs font-semibold uppercase text-amber-700">Materials</p>
-                      <p className="mt-2 text-lg font-semibold">{currency(totals.subtotal * 0.58, invoice.currency)}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold uppercase text-amber-700">Labor</p>
-                      <p className="mt-2 text-lg font-semibold">{currency(totals.subtotal * 0.42, invoice.currency)}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold uppercase text-amber-700">Milestone</p>
-                      <p className="mt-2 text-sm font-semibold">Completion billing</p>
-                    </div>
-                  </div>
-                ) : null}
-
-                {familyIs("startup") ? (
-                  <div className="mt-6 rounded-2xl p-4" style={{ backgroundColor: styleMeta?.soft ?? "#e0f2fe" }}>
-                    <p className="text-xs font-semibold uppercase text-cyan-700">Payment link memo</p>
-                    <p className="mt-2 text-sm text-slate-700">Pay online by card, UPI, Razorpay or Stripe once payment integrations are enabled.</p>
-                  </div>
-                ) : null}
-
-                <div className="mt-6 overflow-x-auto rounded-2xl border border-slate-200">
-                  <div className={`grid min-w-[560px] ${familyIs("gst") || familyIs("retail") ? "grid-cols-[1.4fr_54px_64px_64px_86px]" : familyIs("agency") ? "grid-cols-[1.5fr_64px_90px_90px]" : "grid-cols-[1.7fr_56px_92px_92px]"} px-3 py-2 text-xs font-semibold uppercase text-white sm:px-4`} style={{ backgroundColor: styleMeta?.accentDark ?? "#0f172a" }}>
-                    <span>{familyIs("agency") ? "Deliverable" : familyIs("construction") ? "Material / labor" : "Item"}</span>
-                    <span>{familyIs("agency") ? "Hours" : "Qty"}</span>
-                    {(familyIs("gst") || familyIs("retail")) ? <span>HSN</span> : null}
-                    <span>Rate</span>
-                    <span>Total</span>
-                  </div>
-                  {invoice.items.map((item, index) => (
-                    <div
-                      className={`grid min-w-[560px] ${familyIs("gst") || familyIs("retail") ? "grid-cols-[1.4fr_54px_64px_64px_86px]" : familyIs("agency") ? "grid-cols-[1.5fr_64px_90px_90px]" : "grid-cols-[1.7fr_56px_92px_92px]"} border-t border-slate-100 px-3 py-2 text-sm transition hover:bg-slate-50 sm:px-4`}
-                      draggable
-                      key={item.localId}
-                      onDragStart={() => setDraggedItemId(item.localId)}
-                      onDragOver={(event) => event.preventDefault()}
-                      onDrop={() => dropItemOn(item.localId)}
-                    >
-                      <span>
-                        <input className={`${previewInput} font-semibold`} value={item.name || ""} placeholder="Untitled item" onChange={(e) => updateItem(item.localId, { name: e.target.value })} />
-                        <input className={`${previewInput} text-xs text-slate-500`} value={item.description || ""} placeholder="Description" onChange={(e) => updateItem(item.localId, { description: e.target.value })} />
-                      </span>
-                      <input className={`${previewInput} text-center`} type="number" value={item.quantity} onChange={(e) => updateItem(item.localId, { quantity: Number(e.target.value) })} />
-                      {(familyIs("gst") || familyIs("retail")) ? <span className="py-1 text-xs text-slate-500">{familyIs("retail") ? `89${index}1` : `99${index}0`}</span> : null}
-                      <input className={`${previewInput} text-right`} type="number" value={item.unitPrice} onChange={(e) => updateItem(item.localId, { unitPrice: Number(e.target.value) })} />
-                      <span className="py-1 text-right">{currency(Number(item.quantity) * Number(item.unitPrice), invoice.currency)}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {familyIs("retail") ? (
-                  <div className="mt-5 flex items-center justify-between gap-4 rounded-2xl p-4" style={{ backgroundColor: styleMeta?.soft ?? "#ede9fe" }}>
-                    <div>
-                      <p className="text-xs font-semibold uppercase text-violet-700">Retail receipt marker</p>
-                      <p className="mt-1 text-sm text-slate-600">HSN + item quantity layout for product sales.</p>
-                    </div>
-                    <div className="flex h-12 items-end gap-1">
-                      {[8, 18, 10, 24, 14, 28, 9, 20, 12].map((height, index) => <span className="w-1.5 bg-slate-950" style={{ height }} key={index} />)}
-                    </div>
-                  </div>
-                ) : null}
-
-                <div className="ml-auto mt-6 grid max-w-xs gap-2 text-sm">
-                  <div className="flex justify-between"><span>Subtotal</span><strong>{currency(totals.subtotal, invoice.currency)}</strong></div>
-                  <div className="flex justify-between"><span>Discount</span><strong>{currency(totals.discountTotal, invoice.currency)}</strong></div>
-                  <div className="flex justify-between"><span>Tax</span><strong>{currency(totals.taxTotal, invoice.currency)}</strong></div>
-                  {familyIs("gst") ? (
-                    <div className="rounded-xl p-3 text-xs" style={{ backgroundColor: styleMeta?.soft ?? "#d1fae5", color: styleMeta?.accentDark ?? "#064e3b" }}>
-                      <div className="flex justify-between"><span>CGST</span><strong>{currency(taxSplit.cgst, invoice.currency)}</strong></div>
-                      <div className="mt-1 flex justify-between"><span>SGST</span><strong>{currency(taxSplit.sgst, invoice.currency)}</strong></div>
-                      <div className="mt-1 flex justify-between"><span>IGST</span><strong>{currency(taxSplit.igst, invoice.currency)}</strong></div>
-                    </div>
-                  ) : null}
-                  <div className="mt-2 flex justify-between border-t border-slate-200 pt-3 text-lg"><span>Total</span><strong>{currency(totals.total, invoice.currency)}</strong></div>
-                </div>
-
-                {familyIs("corporate") ? (
-                  <div className="mt-6 rounded-2xl p-4 text-sm" style={{ backgroundColor: styleMeta?.soft ?? "#eff6ff", color: styleMeta?.accentDark ?? "#1e3a8a" }}>
-                    <p className="font-semibold">Payment terms</p>
-                    <p className="mt-1">{invoice.terms || "Payment is due by the invoice due date."}</p>
-                  </div>
-                ) : null}
-
-                <div className="mt-8 grid gap-3 text-xs text-slate-500">
-                  <label><strong className="text-slate-700">Notes:</strong><textarea className={`${previewInput} mt-1 min-h-12 resize-none`} value={invoice.notes} onChange={(e) => update("notes", e.target.value)} /></label>
-                  <label><strong className="text-slate-700">Terms:</strong><textarea className={`${previewInput} mt-1 min-h-12 resize-none`} value={invoice.terms} onChange={(e) => update("terms", e.target.value)} /></label>
-                </div>
-              </div>
-            </div>
-            )}
-          </Card>
+        <aside className="min-w-0 lg:sticky lg:top-24" style={{ flexBasis: `${100-editorWidth}%` }}>
+          <InvoicePdfPreview invoice={toApiInvoice(invoice, pdfStyle)} />
         </aside>
       </div>
 
-    </div>
+    </fieldset>
   );
-}
-
-function statusTone(status: string) {
-  if (status === "Paid") return "green";
-  if (status === "Overdue") return "rose";
-  if (status === "Sent") return "blue";
-  return "slate";
 }

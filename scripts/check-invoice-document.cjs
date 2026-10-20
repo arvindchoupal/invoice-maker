@@ -1,0 +1,31 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs'); const vm = require('node:vm'); const ts = require('typescript');
+function load(file,mocks,globals={}) {const module={exports:{}};const code=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText;vm.runInNewContext(code,{module,exports:module.exports,require:n=>mocks[n]||require(n),Date,console,Number,JSON,...globals});return module.exports;}
+const math=load('lib/invoice.ts',{});
+const document=load('lib/invoice-document.ts',{'@/lib/invoice':math});
+const store=new Map(); const localStorage={getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v),removeItem:k=>store.delete(k)};
+let calls=[];let release;let token="";
+const draft=load('lib/public-invoice-draft.ts',{'@/lib/api':{getToken:()=>token,api:(path,options)=>{calls.push({path,body:JSON.parse(options.body)});return new Promise(resolve=>{release=resolve;});}},'@/lib/user-tracking':{trackAttachedPublicInvoice:()=>{}},'@/lib/invoice-document':document},{localStorage,window:{}});
+(async()=>{
+ const invoice={invoiceNumber:'OWN-0007',issueDate:'2026-10-20',dueDate:'2026-11-03',businessName:'Test Business',customerName:'Test Customer',status:'Draft',currency:'INR',pdfStyle:'construction',sourceTemplate:'construction-invoice-template',documentTitle:'TAX INVOICE',amountPaid:10,logoData:'data:image/png;base64,AAA=',taxMode:'inter',supplierState:'Delhi',customerState:'Maharashtra',placeOfSupply:'Maharashtra',shippingAddress:'Separate shipping',notes:'',terms:'',items:[{name:'Service',description:'Hindi सेवा and café',quantity:0.25,unitPrice:125.5,taxRate:18,discountRate:5,hsnCode:'9983'}]};
+ assert.equal(document.invoiceValidationErrors(invoice).length,0);
+ assert(document.invoiceValidationErrors({...invoice,items:[{...invoice.items[0],quantity:0}]}).length);
+ assert(document.invoiceValidationErrors({...invoice,amountPaid:99999}).length);
+ const total=math.calculateInvoice(invoice.items,'inter');
+ assert.equal(total.total,35.18);
+ assert.equal(math.calculateInvoice(invoice.items,'none').taxTotal,0);
+ draft.savePublicInvoiceDraft(invoice);
+ assert.equal(JSON.stringify(draft.getPublicInvoiceDraft()),JSON.stringify(invoice));
+ const pending=draft.attachPublicInvoiceDraft();const second=draft.attachPublicInvoiceDraft();
+ assert.equal(pending,second);assert.equal(calls.length,1,'Concurrent signup/save attachment must not duplicate requests');
+ for(const key of ['invoiceNumber','pdfStyle','sourceTemplate','documentTitle','amountPaid','logoData','taxMode','shippingAddress','notes','terms']) assert.equal(calls[0].body[key],invoice[key],key+' preserved');
+ assert.equal(calls[0].body.items[0].hsnCode,'9983');
+ const newer={...invoice,notes:'Edited while request was in flight'};draft.savePublicInvoiceDraft(newer);
+ release({id:7});await pending;
+ assert.equal(draft.getPublicInvoiceDraft().notes,newer.notes,'Do not delete a newer draft after saving an earlier snapshot');
+ token='account-one';localStorage.setItem('invoice_user',JSON.stringify({id:1}));draft.savePublicInvoiceDraft(invoice);
+ assert(draft.getPublicInvoiceDraft());
+ token='account-two';localStorage.setItem('invoice_user',JSON.stringify({id:2}));
+ assert.equal(draft.getPublicInvoiceDraft(),null,'Another account must not resume or attach the previous account’s draft');
+ console.log('Frontend money/validation, draft restoration, template/logo/payment/HSN handoff and concurrent save checks passed.');
+})().catch(e=>{console.error(e);process.exitCode=1});

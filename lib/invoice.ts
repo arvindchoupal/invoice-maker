@@ -1,21 +1,17 @@
 import type { InvoiceItem } from "@/types";
 
-export function calculateInvoice(items: InvoiceItem[]) {
-  const subtotal = items.reduce((sum, item) => sum + Number(item.quantity) * Number(item.unitPrice), 0);
-  const discountTotal = items.reduce(
-    (sum, item) => sum + Number(item.quantity) * Number(item.unitPrice) * (Number(item.discountRate) / 100),
-    0,
-  );
-  const taxTotal = items.reduce((sum, item) => {
-    const discounted = Number(item.quantity) * Number(item.unitPrice) * (1 - Number(item.discountRate) / 100);
-    return sum + discounted * (Number(item.taxRate) / 100);
-  }, 0);
-  const total = subtotal - discountTotal + taxTotal;
+export function calculateInvoice(items: InvoiceItem[], taxMode = "tax") {
+  const lines = items.map(item => {
+    const base = money(Number(item.quantity) * Number(item.unitPrice));
+    const discount = money(base * Number(item.discountRate || 0) / 100);
+    const tax = taxMode === "none" ? 0 : money((base - discount) * Number(item.taxRate || 0) / 100);
+    return { base, discount, tax, total: money(base - discount + tax) };
+  });
   return {
-    subtotal: money(subtotal),
-    discountTotal: money(discountTotal),
-    taxTotal: money(taxTotal),
-    total: money(total),
+    subtotal: money(lines.reduce((n, l) => n + l.base, 0)),
+    discountTotal: money(lines.reduce((n, l) => n + l.discount, 0)),
+    taxTotal: money(lines.reduce((n, l) => n + l.tax, 0)),
+    total: money(lines.reduce((n, l) => n + l.total, 0)),
   };
 }
 

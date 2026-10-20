@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BrandLogo } from "@/components/BrandLogo";
 import { api, setSession } from "@/lib/api";
-import { attachPublicInvoiceDraft } from "@/lib/public-invoice-draft";
+import { attachPublicInvoiceDraft, getPublicInvoiceDraft } from "@/lib/public-invoice-draft";
 import { Button, Field, inputClass } from "@/components/ui";
 import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 
@@ -22,7 +22,11 @@ export default function LoginPage() {
 
   async function finishLogin(data: { token: string; user: unknown }) {
     setSession(data.token, data.user);
-    const savedDraft = await attachPublicInvoiceDraft().catch(() => null);
+    const hasDraft = !!getPublicInvoiceDraft();
+    let savedDraft;
+    try { savedDraft = await attachPublicInvoiceDraft(); }
+    catch { router.push("/free-invoice?saveError=1"); return; }
+    if (hasDraft && !savedDraft) { router.push("/free-invoice?saveError=1"); return; }
     router.push(savedDraft?.id ? `/invoices/${savedDraft.id}/edit` : "/dashboard");
   }
 

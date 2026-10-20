@@ -14,11 +14,13 @@ export function getToken() {
 export function setSession(token: string, user: unknown) {
   localStorage.setItem("invoice_token", token);
   localStorage.setItem("invoice_user", JSON.stringify(user));
+  window.dispatchEvent(new CustomEvent("invoicewala-session", { detail: "login" }));
 }
 
 export function clearSession() {
   localStorage.removeItem("invoice_token");
   localStorage.removeItem("invoice_user");
+  window.dispatchEvent(new CustomEvent("invoicewala-session", { detail: "logout" }));
 }
 
 export class ApiError extends Error {

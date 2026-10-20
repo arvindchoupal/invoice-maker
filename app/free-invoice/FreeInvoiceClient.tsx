@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useInvoiceJourney } from "@/hooks/useInvoiceJourney";
+import { stepForField } from "@/lib/user-tracking";
 import {
   ChevronDown,
   Download,
@@ -15,14 +17,16 @@ import {
 } from "lucide-react";
 import { PublicSiteFooter } from "@/components/PublicSiteFooter";
 import { PublicSiteNav } from "@/components/PublicSiteNav";
+import { InvoicePdfPreview } from "@/components/InvoicePdfPreview";
+import { InvoiceAdditionalDetails } from "@/components/InvoiceAdditionalDetails";
+import { invoiceValidationErrors, invoiceLogoData, invoiceDates } from "@/lib/invoice-document";
+import type { PdfStyleMeta } from "@/lib/pdf-styles";
 import { calculateInvoice, currency } from "@/lib/invoice";
-import { getToken } from "@/lib/api";
+import { getToken, api, apiBlob } from "@/lib/api";
 import { trackAnalyticsEvent } from "@/lib/client-analytics";
-import { attachPublicInvoiceDraft, savePublicInvoiceDraft } from "@/lib/public-invoice-draft";
+import { attachPublicInvoiceDraft, savePublicInvoiceDraft, getPublicInvoiceDraft, PUBLIC_INVOICE_DRAFT_KEY } from "@/lib/public-invoice-draft";
 import type { Invoice, InvoiceItem } from "@/types";
 
-const today = new Date().toISOString().slice(0, 10);
-const defaultDueDate = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
 const freePdfStorageKey = "invoicewala-free-pdf-downloaded-v1";
 
 const fieldClass =
@@ -36,46 +40,6 @@ function numericParam(value: string | undefined) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-function pdfString(value: string, maxLength = 90) {
-  return value
-    .normalize("NFKD")
-    .replace(/[^\x20-\x7E]/g, " ")
-    .replace(/\\/g, "\\\\")
-    .replace(/\(/g, "\\(")
-    .replace(/\)/g, "\\)")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, maxLength);
-}
-
-function pdfMoney(value: number, currencyCode: string) {
-  return `${currencyCode} ${(value || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-}
-
-function createPdfBlob(stream: string) {
-  const objects = [
-    "<< /Type /Catalog /Pages 2 0 R >>",
-    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
-    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>",
-    `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`,
-    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
-    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
-  ];
-  let pdf = "%PDF-1.4\n";
-  const offsets = [0];
-  objects.forEach((object, index) => {
-    offsets.push(pdf.length);
-    pdf += `${index + 1} 0 obj\n${object}\nendobj\n`;
-  });
-  const xrefStart = pdf.length;
-  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
-  offsets.slice(1).forEach((offset) => {
-    pdf += `${String(offset).padStart(10, "0")} 00000 n \n`;
-  });
-  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
-  return new Blob([pdf], { type: "application/pdf" });
-}
-
 function downloadBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -85,75 +49,6 @@ function downloadBlob(blob: Blob, filename: string) {
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
-}
-
-function freeInvoicePdf(invoice: Invoice, amountPaid: number) {
-  const totals = calculateInvoice(invoice.items);
-  const commands: string[] = [];
-  const text = (value: string, x: number, y: number, size = 10, font = "F1") => {
-    commands.push(`BT /${font} ${size} Tf ${x} ${y} Td (${pdfString(value)}) Tj ET`);
-  };
-  const rect = (x: number, y: number, width: number, height: number, color = "0.95 0.98 0.99") => {
-    commands.push(`${color} rg ${x} ${y} ${width} ${height} re f`);
-  };
-
-  rect(42, 770, 42, 42, "0.03 0.57 0.70");
-  text(invoice.businessName || "Business name", 42, 744, 18, "F2");
-  text(invoice.businessEmail || "", 42, 726);
-  text(invoice.businessAddress || "", 42, 710);
-  text("INVOICE", 410, 790, 26, "F2");
-  text(invoice.invoiceNumber || "INV-001", 430, 764, 11, "F2");
-  text(`Issue: ${invoice.issueDate || "-"}`, 430, 746);
-  text(`Due: ${invoice.dueDate || "-"}`, 430, 730);
-
-  rect(42, 628, 511, 58);
-  text("BILL TO", 58, 666, 9, "F2");
-  text(invoice.customerName || "Customer name", 58, 646, 14, "F2");
-  text(invoice.customerEmail || "", 290, 650);
-  text(invoice.customerAddress || "", 290, 634);
-
-  rect(42, 584, 511, 25, "0.06 0.09 0.16");
-  text("ITEM", 52, 593, 9, "F2");
-  text("QTY", 300, 593, 9, "F2");
-  text("RATE", 350, 593, 9, "F2");
-  text("TAX", 430, 593, 9, "F2");
-  text("AMOUNT", 485, 593, 9, "F2");
-
-  let y = 558;
-  invoice.items.slice(0, 10).forEach((item) => {
-    text(item.name || "Item", 52, y, 10, "F2");
-    if (item.description) text(item.description, 52, y - 13, 8);
-    text(String(item.quantity || 0), 302, y);
-    text(pdfMoney(Number(item.unitPrice || 0), invoice.currency), 350, y);
-    text(`${Number(item.taxRate || 0)}%`, 432, y);
-    text(pdfMoney(Number(item.quantity || 0) * Number(item.unitPrice || 0), invoice.currency), 475, y);
-    commands.push(`0.88 0.91 0.95 RG 42 ${y - 22} 511 0.5 re S`);
-    y -= item.description ? 38 : 30;
-  });
-
-  y = Math.min(y, 220);
-  text("Subtotal", 350, y, 10);
-  text(pdfMoney(totals.subtotal, invoice.currency), 445, y, 10, "F2");
-  text("Discount", 350, y - 18, 10);
-  text(pdfMoney(totals.discountTotal, invoice.currency), 445, y - 18, 10, "F2");
-  text("Tax", 350, y - 36, 10);
-  text(pdfMoney(totals.taxTotal, invoice.currency), 445, y - 36, 10, "F2");
-  text("Total", 350, y - 64, 15, "F2");
-  text(pdfMoney(totals.total, invoice.currency), 445, y - 64, 15, "F2");
-  if (amountPaid > 0) {
-    text("Balance due", 350, y - 84, 10, "F2");
-    text(pdfMoney(Math.max(totals.total - amountPaid, 0), invoice.currency), 445, y - 84, 10, "F2");
-  }
-
-  rect(42, 70, 238, 82);
-  rect(300, 70, 253, 82);
-  text("NOTES", 58, 130, 9, "F2");
-  text(invoice.notes || "Thank you for your business.", 58, 110, 9);
-  text("TERMS", 316, 130, 9, "F2");
-  text(invoice.terms || "Payment due by the due date.", 316, 110, 9);
-  text("Created free with InvoiceWala.shop", 42, 38, 8);
-
-  return createPdfBlob(commands.join("\n"));
 }
 
 function blankItem(initialItem?: FreeInvoiceClientProps["initialItem"]): InvoiceItem {
@@ -168,6 +63,8 @@ function blankItem(initialItem?: FreeInvoiceClientProps["initialItem"]): Invoice
 }
 
 type FreeInvoiceClientProps = {
+  initialSaveError?: boolean;
+  initialTemplate?: { slug: string; label: string; style: string };
   initialItem?: {
     name?: string;
     taxRate?: string;
@@ -179,22 +76,27 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
   return <span className="mb-1.5 block text-xs font-semibold text-slate-600">{children}</span>;
 }
 
-export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
+export function FreeInvoiceClient({ initialItem, initialTemplate, initialSaveError }: FreeInvoiceClientProps) {
   const router = useRouter();
+  const journey = useInvoiceJourney();
   const logoInputRef = useRef<HTMLInputElement>(null);
-  const [logo, setLogo] = useState<string | null>(null);
+  const [styles, setStyles] = useState<PdfStyleMeta[]>([]);
+  const [showPreview, setShowPreview] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [discountOpen, setDiscountOpen] = useState(false);
-  const [amountPaid, setAmountPaid] = useState(0);
   const [hasUsedFreeDownload, setHasUsedFreeDownload] = useState(false);
-  const [actionMessage, setActionMessage] = useState("");
-  const [actionError, setActionError] = useState(false);
+  const [actionMessage, setActionMessage] = useState(initialSaveError ? "You are signed in, but your invoice was not saved. Resume the draft below, check its details and try saving again." : "");
+  const [actionError, setActionError] = useState(!!initialSaveError);
   const invoiceStartedRef = useRef(false);
-  const [invoice, setInvoice] = useState<Invoice>({
-    invoiceNumber: "INV-001",
+  const [draftReady, setDraftReady] = useState(false);
+  const [pendingDraft, setPendingDraft] = useState<Invoice | null>(null);
+  const [invoice, setInvoice] = useState<Invoice>(() => ({
+    invoiceNumber: "",
+    amountPaid: 0, logoData: null, taxMode: "tax", documentTitle: "INVOICE",
+    sourceTemplate: initialTemplate?.slug,
     status: "Draft",
-    issueDate: today,
-    dueDate: defaultDueDate,
+    ...invoiceDates(),
     currency: "INR",
     businessName: "",
     businessEmail: "",
@@ -204,11 +106,13 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
     customerAddress: "",
     notes: "",
     terms: "Payment is due by the invoice due date.",
-    pdfStyle: "classic",
+    pdfStyle: initialTemplate?.style || "classic",
     items: [blankItem(initialItem)],
-  });
+  }));
 
-  const totals = useMemo(() => calculateInvoice(invoice.items), [invoice.items]);
+  const totals = useMemo(() => calculateInvoice(invoice.items, invoice.taxMode), [invoice.items, invoice.taxMode]);
+  const logo = invoice.logoData;
+  const amountPaid = invoice.amountPaid || 0;
   const currencySymbol = useMemo(
     () =>
       new Intl.NumberFormat("en", { style: "currency", currency: invoice.currency })
@@ -220,13 +124,26 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
   const isLoggedIn = Boolean(getToken());
 
   useEffect(() => {
+    api<PdfStyleMeta[]>("/invoice-preview/styles").then(setStyles).catch(() => undefined);
     const syncFreeDownloadState = window.setTimeout(() => {
       setHasUsedFreeDownload(window.localStorage.getItem(freePdfStorageKey) === "1");
+      const draft = getPublicInvoiceDraft();
+      if (draft && Array.isArray(draft.items)) setPendingDraft(draft);
+      else setDraftReady(true);
     }, 0);
     return () => window.clearTimeout(syncFreeDownloadState);
   }, []);
 
+  useEffect(() => {
+    if (!draftReady || !invoiceStartedRef.current) return;
+    const timer = window.setTimeout(() => {
+      try { savePublicInvoiceDraft(invoice); } catch { setActionError(true); setActionMessage("Device storage is unavailable. Download or save your invoice before leaving."); }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [invoice, draftReady]);
+
   function markInvoiceStarted(source: string) {
+    journey.change(stepForField(source));
     if (invoiceStartedRef.current) return;
     invoiceStartedRef.current = true;
     trackAnalyticsEvent("invoice_started", { source });
@@ -259,21 +176,21 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
   }
 
   function removeItem(index: number) {
+    markInvoiceStarted("items");
     setInvoice((current) => ({
       ...current,
       items: current.items.length > 1 ? current.items.filter((_, itemIndex) => itemIndex !== index) : current.items,
     }));
   }
 
-  function handleLogo(file?: File) {
-    if (!file || !file.type.startsWith("image/")) return;
-    markInvoiceStarted("logo");
-    const reader = new FileReader();
-    reader.onload = () => setLogo(typeof reader.result === "string" ? reader.result : null);
-    reader.readAsDataURL(file);
+  async function handleLogo(file?: File) {
+    if (!file) return;
+    try { update("logoData", await invoiceLogoData(file)); }
+    catch (error) { setActionError(true); setActionMessage(error instanceof Error ? error.message : "Could not read logo."); }
   }
 
   function continueToAuth(path: "/signup" | "/login") {
+    journey.event("auth_requested", path === "/signup" ? "signup" : "login");
     savePublicInvoiceDraft(invoice);
     trackAnalyticsEvent(path === "/signup" ? "invoice_signup_started" : "invoice_login_started", {
       has_downloaded_free_pdf: hasUsedFreeDownload,
@@ -282,42 +199,44 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
   }
 
   async function openInWorkspace() {
-    savePublicInvoiceDraft(invoice);
-    const savedDraft = await attachPublicInvoiceDraft().catch(() => null);
-    router.push(savedDraft?.id ? `/invoices/${savedDraft.id}/edit` : "/dashboard");
+    if (busy) return;
+    const errors = invoiceValidationErrors(invoice);
+    if (errors.length) { setActionError(true); setActionMessage(errors.join(" ")); journey.event("validation_failed", "save"); return; }
+    setBusy(true); setActionError(false); setActionMessage("");
+    try {
+      savePublicInvoiceDraft(invoice);
+      journey.event("save_attempted", "save");
+      const saved = await attachPublicInvoiceDraft();
+      if (!saved) throw new Error("Could not save this invoice. Your draft is still on this device.");
+      journey.event("invoice_saved", "save");
+      router.push(`/invoices/${saved.id}/edit`);
+    } catch (error) {
+      journey.event("save_failed", "save");
+      setActionError(true); setActionMessage(error instanceof Error ? error.message : "Could not save invoice. Try again.");
+    } finally { setBusy(false); }
   }
 
-  function downloadFreePdf() {
-    const firstInvalidItem = invoice.items.findIndex((item) => !item.name.trim());
-    const errors = [
-      !invoice.businessName.trim() ? "Add your business name." : "",
-      !invoice.customerName.trim() ? "Add the customer name." : "",
-      firstInvalidItem >= 0 ? `Add a name for line item ${firstInvalidItem + 1}.` : "",
-    ].filter(Boolean);
+  async function downloadFreePdf() {
+    if (busy) return;
+    const errors = invoiceValidationErrors(invoice);
     if (errors.length) {
-      setActionError(true);
-      setActionMessage(errors.join(" "));
-      trackAnalyticsEvent("free_pdf_validation_failed", { error_count: errors.length });
-      return;
+      setActionError(true); setActionMessage(errors.join(" "));
+      journey.event("validation_failed", "download"); return;
     }
-
-    const blob = freeInvoicePdf(invoice, amountPaid);
-    const safeName = (invoice.invoiceNumber || "invoice").replace(/[^a-z0-9-]+/gi, "-").toLowerCase();
-    downloadBlob(blob, `${safeName}.pdf`);
-    savePublicInvoiceDraft(invoice);
-    window.localStorage.setItem(freePdfStorageKey, "1");
-    setHasUsedFreeDownload(true);
-    setActionError(false);
-    setActionMessage(
-      logo
-        ? "Your free PDF is downloaded without the preview logo. Create a free account for branded PDFs, saved invoices and faster repeat billing."
-        : "Your free PDF is downloaded. Create a free account to save this invoice and make future billing faster.",
-    );
-    trackAnalyticsEvent("free_invoice_pdf_downloaded", {
-      currency: invoice.currency,
-      item_count: invoice.items.length,
-      invoice_total: Number(totals.total.toFixed(2)),
-    });
+    setBusy(true); setActionMessage("");
+    try {
+      const blob = await apiBlob("/invoice-preview", { method: "POST", body: JSON.stringify(invoice) });
+      downloadBlob(blob, `${(invoice.invoiceNumber || "invoice").replace(/[^a-z0-9-]+/gi, "-")}.pdf`);
+      journey.event("pdf_downloaded", "download");
+      savePublicInvoiceDraft(invoice);
+      window.localStorage.setItem(freePdfStorageKey, "1");
+      setHasUsedFreeDownload(true); setActionError(false);
+      setActionMessage("PDF downloaded with all items and your invoice details. Save to your account to keep invoice history.");
+      trackAnalyticsEvent("free_invoice_pdf_downloaded", { item_count: invoice.items.length });
+    } catch (error) {
+      journey.event("pdf_failed", "download"); setActionError(true);
+      setActionMessage(error instanceof Error ? error.message : "PDF could not be downloaded. Try again.");
+    } finally { setBusy(false); }
   }
 
   function handlePrimaryAction() {
@@ -326,7 +245,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
       return;
     }
     if (!hasUsedFreeDownload) {
-      downloadFreePdf();
+      void downloadFreePdf();
       return;
     }
     continueToAuth("/signup");
@@ -334,6 +253,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
+      <fieldset disabled={busy} className="contents">
       <header className="mx-auto w-full max-w-7xl px-5 py-5 sm:px-6 sm:py-6">
         <PublicSiteNav />
       </header>
@@ -357,6 +277,14 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
           </div>
         ) : null}
 
+        {pendingDraft ? <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950"><p>A previous invoice draft is saved on this device. Resume it or start fresh?</p><div className="mt-3 flex gap-3"><button className="rounded-lg bg-blue-600 px-3 py-2 text-white" onClick={() => { setInvoice({ ...pendingDraft, logoData: pendingDraft.logoData || null }); invoiceStartedRef.current = true; setPendingDraft(null); setDraftReady(true); }}>Resume draft</button><button className="rounded-lg border border-amber-400 px-3 py-2" onClick={() => { localStorage.removeItem(PUBLIC_INVOICE_DRAFT_KEY); setPendingDraft(null); setDraftReady(true); }}>Start fresh</button></div></div> : null}
+        <div className="mb-5 grid gap-4">
+          <label className="grid gap-2 text-sm font-semibold">PDF template<select className={fieldClass} value={invoice.pdfStyle || "classic"} onChange={e => update("pdfStyle", e.target.value)}>{styles.length ? styles.map(style => <option value={style.id} key={style.id}>{style.label}</option>) : <option value={invoice.pdfStyle || "classic"}>{initialTemplate?.label || "Classic Professional"}</option>}</select></label>
+          <InvoiceAdditionalDetails invoice={invoice} update={update} />
+          <details className="rounded-xl border border-slate-200 bg-white p-4 text-slate-900"><summary className="cursor-pointer font-semibold">HSN / SAC codes (optional)</summary><div className="mt-3 grid gap-3 sm:grid-cols-2">{invoice.items.map((item, index) => <label key={index} className="grid gap-1 text-sm">Item {index + 1}: {item.name || "Untitled"}<input className={fieldClass} value={item.hsnCode || ""} maxLength={20} onChange={e => updateItem(index, { hsnCode: e.target.value })} /></label>)}</div></details>
+          <button className="rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white" type="button" onClick={() => { setShowPreview(v => !v); journey.event("pdf_previewed", "preview"); }}>{showPreview ? "Hide PDF preview" : "Preview exact PDF"}</button>
+          {showPreview ? <InvoicePdfPreview invoice={invoice} /> : null}
+        </div>
         <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_260px]">
           <article className="overflow-hidden rounded-3xl border border-white/10 bg-white text-slate-950 shadow-2xl shadow-black/30">
             <div className="h-1.5 bg-gradient-to-r from-cyan-300 via-blue-500 to-indigo-500" />
@@ -377,7 +305,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                       <button
                         aria-label="Remove logo"
                         className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:bg-slate-50 hover:text-red-600"
-                        onClick={() => setLogo(null)}
+                        onClick={() => update("logoData", null)}
                         type="button"
                       >
                         <X className="h-4 w-4" />
@@ -399,27 +327,30 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                   <input
                     aria-label="Document title"
                     className="w-full bg-transparent text-left text-4xl font-black tracking-tight text-slate-950 outline-none placeholder:text-slate-950 sm:text-right"
-                    defaultValue="INVOICE"
+                    value={invoice.documentTitle || "INVOICE"}
+                    onChange={event => update("documentTitle", event.target.value)}
                   />
                   <label className="mt-3 flex items-center gap-2 sm:justify-end">
                     <span className="text-sm font-semibold text-slate-500">#</span>
                     <input
                       aria-label="Invoice number"
+                      placeholder="Assigned on save"
                       className={`${compactFieldClass} max-w-40`}
-                      onChange={(event) => update("invoiceNumber", event.target.value)}
+                      onFocus={() => journey.visit(stepForField("invoiceNumber"))} onChange={(event) => update("invoiceNumber", event.target.value)}
                       value={invoice.invoiceNumber || ""}
                     />
                   </label>
                 </div>
               </div>
 
+              {initialTemplate ? <p className="mt-4 rounded-lg bg-blue-50 p-3 text-sm text-blue-800">Selected template: {initialTemplate.label}. Add your own business and item details below.</p> : null}
               <div className="mt-7 grid gap-6 border-t border-slate-100 pt-7 lg:grid-cols-[minmax(0,1.4fr)_minmax(260px,0.8fr)]">
                 <div>
                   <label>
                     <FieldLabel>Who is this invoice from?</FieldLabel>
                     <input
                       className={fieldClass}
-                      onChange={(event) => update("businessName", event.target.value)}
+                      onFocus={() => journey.visit(stepForField("businessName"))} onChange={(event) => update("businessName", event.target.value)}
                       placeholder="Your business or name"
                       value={invoice.businessName}
                     />
@@ -429,7 +360,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                       <span className="sr-only">Your email</span>
                       <input
                         className={compactFieldClass}
-                        onChange={(event) => update("businessEmail", event.target.value)}
+                        onFocus={() => journey.visit(stepForField("businessEmail"))} onChange={(event) => update("businessEmail", event.target.value)}
                         placeholder="your@email.com"
                         type="email"
                         value={invoice.businessEmail || ""}
@@ -439,7 +370,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                       <span className="sr-only">Your address</span>
                       <input
                         className={compactFieldClass}
-                        onChange={(event) => update("businessAddress", event.target.value)}
+                        onFocus={() => journey.visit(stepForField("businessAddress"))} onChange={(event) => update("businessAddress", event.target.value)}
                         placeholder="Business address (optional)"
                         value={invoice.businessAddress || ""}
                       />
@@ -451,25 +382,25 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                       <FieldLabel>Bill to</FieldLabel>
                       <input
                         className={compactFieldClass}
-                        onChange={(event) => update("customerName", event.target.value)}
+                        onFocus={() => journey.visit(stepForField("customerName"))} onChange={(event) => update("customerName", event.target.value)}
                         placeholder="Customer or company"
                         value={invoice.customerName}
                       />
                       <input
                         aria-label="Customer email"
                         className={`${compactFieldClass} mt-2`}
-                        onChange={(event) => update("customerEmail", event.target.value)}
+                        onFocus={() => journey.visit(stepForField("customerEmail"))} onChange={(event) => update("customerEmail", event.target.value)}
                         placeholder="customer@email.com"
                         type="email"
                         value={invoice.customerEmail || ""}
                       />
                     </div>
                     <div>
-                      <FieldLabel>Ship to</FieldLabel>
+                      <FieldLabel>Billing address</FieldLabel>
                       <textarea
                         className={`${compactFieldClass} min-h-[86px] resize-none`}
-                        onChange={(event) => update("customerAddress", event.target.value)}
-                        placeholder="Shipping address (optional)"
+                        onFocus={() => journey.visit(stepForField("customerAddress"))} onChange={(event) => update("customerAddress", event.target.value)}
+                        placeholder="Customer billing address (optional)"
                         value={invoice.customerAddress || ""}
                       />
                     </div>
@@ -479,11 +410,11 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                 <div className="grid content-start gap-3 rounded-xl bg-slate-50 p-4">
                   <label className="grid grid-cols-[96px_1fr] items-center gap-3">
                     <span className="text-xs font-semibold text-slate-600">Invoice date</span>
-                    <input className={compactFieldClass} onChange={(event) => update("issueDate", event.target.value)} type="date" value={invoice.issueDate} />
+                    <input className={compactFieldClass} onFocus={() => journey.visit(stepForField("issueDate"))} onChange={(event) => update("issueDate", event.target.value)} type="date" value={invoice.issueDate} />
                   </label>
                   <label className="grid grid-cols-[96px_1fr] items-center gap-3">
                     <span className="text-xs font-semibold text-slate-600">Due date</span>
-                    <input className={compactFieldClass} onChange={(event) => update("dueDate", event.target.value)} type="date" value={invoice.dueDate} />
+                    <input className={compactFieldClass} onFocus={() => journey.visit(stepForField("dueDate"))} onChange={(event) => update("dueDate", event.target.value)} type="date" value={invoice.dueDate} />
                   </label>
                   <div className="grid grid-cols-[96px_1fr] items-center gap-3">
                     <span className="text-xs font-semibold text-slate-600">Status</span>
@@ -508,40 +439,40 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                         <span className="mb-1 block text-[11px] font-bold uppercase text-slate-500 md:hidden">Item</span>
                         <input
                           className={compactFieldClass}
-                          onChange={(event) => updateItem(index, { name: event.target.value })}
+                          onFocus={() => journey.visit("items")} onChange={(event) => updateItem(index, { name: event.target.value })}
                           placeholder="Description of item or service"
                           value={item.name}
                         />
                         <input
                           aria-label={`Item ${index + 1} details`}
                           className="mt-1.5 w-full border-0 bg-transparent px-1 text-xs text-slate-500 outline-none placeholder:text-slate-400"
-                          onChange={(event) => updateItem(index, { description: event.target.value })}
+                          onFocus={() => journey.visit("items")} onChange={(event) => updateItem(index, { description: event.target.value })}
                           placeholder="Additional details (optional)"
                           value={item.description || ""}
                         />
                       </label>
                       <label>
                         <span className="mb-1 block text-[11px] font-bold uppercase text-slate-500 md:hidden">Quantity</span>
-                        <input className={compactFieldClass} min="0" onChange={(event) => updateItem(index, { quantity: Number(event.target.value) })} type="number" value={item.quantity} />
+                        <input className={compactFieldClass} min="0" onFocus={() => journey.visit("items")} onChange={(event) => updateItem(index, { quantity: Number(event.target.value) })} type="number" value={item.quantity} />
                       </label>
                       <label>
                         <span className="mb-1 block text-[11px] font-bold uppercase text-slate-500 md:hidden">Rate</span>
                         <div className="relative">
                           <span className="absolute left-2.5 top-2 text-sm text-slate-400">{currencySymbol}</span>
-                          <input className={`${compactFieldClass} pl-7`} min="0" onChange={(event) => updateItem(index, { unitPrice: Number(event.target.value) })} type="number" value={item.unitPrice} />
+                          <input className={`${compactFieldClass} pl-7`} min="0" onFocus={() => journey.visit("items")} onChange={(event) => updateItem(index, { unitPrice: Number(event.target.value) })} type="number" value={item.unitPrice} />
                         </div>
                       </label>
                       <label>
                         <span className="mb-1 block text-[11px] font-bold uppercase text-slate-500 md:hidden">Tax</span>
                         <div className="relative">
-                          <input className={`${compactFieldClass} pr-7`} min="0" onChange={(event) => updateItem(index, { taxRate: Number(event.target.value) })} type="number" value={item.taxRate} />
+                          <input className={`${compactFieldClass} pr-7`} min="0" onFocus={() => journey.visit("items")} onChange={(event) => updateItem(index, { taxRate: Number(event.target.value) })} type="number" value={item.taxRate} />
                           <span className="absolute right-2.5 top-2 text-sm text-slate-400">%</span>
                         </div>
                       </label>
                       <div>
                         <span className="mb-1 block text-[11px] font-bold uppercase text-slate-500 md:hidden">Amount</span>
                         <p className="py-2 text-right text-sm font-semibold text-slate-900">
-                          {currency(Number(item.quantity || 0) * Number(item.unitPrice || 0), invoice.currency)}
+                          {currency(calculateInvoice([item], invoice.taxMode).total, invoice.currency)}
                         </p>
                       </div>
                       <button
@@ -572,7 +503,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                     <FieldLabel>Notes</FieldLabel>
                     <textarea
                       className={`${fieldClass} min-h-20 resize-y`}
-                      onChange={(event) => update("notes", event.target.value)}
+                      onFocus={() => journey.visit(stepForField("notes"))} onChange={(event) => update("notes", event.target.value)}
                       placeholder="Any relevant information not already covered"
                       value={invoice.notes || ""}
                     />
@@ -581,7 +512,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                     <FieldLabel>Terms</FieldLabel>
                     <textarea
                       className={`${fieldClass} min-h-20 resize-y`}
-                      onChange={(event) => update("terms", event.target.value)}
+                      onFocus={() => journey.visit(stepForField("terms"))} onChange={(event) => update("terms", event.target.value)}
                       placeholder="Payment terms, methods or delivery schedule"
                       value={invoice.terms || ""}
                     />
@@ -632,7 +563,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                       aria-label="Amount paid"
                       className={`${compactFieldClass} max-w-32 text-right`}
                       min="0"
-                      onChange={(event) => setAmountPaid(Number(event.target.value))}
+                      onFocus={() => journey.visit("document")} onChange={(event) => update("amountPaid", Number(event.target.value))}
                       type="number"
                       value={amountPaid}
                     />
@@ -652,6 +583,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-300 px-4 py-3 text-sm font-bold text-slate-950 shadow-lg shadow-cyan-950/20 transition hover:-translate-y-0.5 hover:bg-cyan-200"
                 data-event={isLoggedIn ? "invoice_save_click" : hasUsedFreeDownload ? "invoice_signup_after_free_pdf_click" : "free_pdf_download_click"}
                 data-event-category="conversion"
+                disabled={busy}
                 onClick={handlePrimaryAction}
                 type="button"
               >
@@ -690,7 +622,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                 <div className="grid gap-3 border-t border-white/10 p-4">
                   <label>
                     <span className="mb-1.5 block text-xs font-semibold text-slate-300">Currency</span>
-                    <select className={compactFieldClass} onChange={(event) => update("currency", event.target.value)} value={invoice.currency}>
+                    <select className={compactFieldClass} onFocus={() => journey.visit(stepForField("currency"))} onChange={(event) => update("currency", event.target.value)} value={invoice.currency}>
                       <option value="INR">INR — Indian Rupee</option>
                       <option value="USD">USD — US Dollar</option>
                       <option value="EUR">EUR — Euro</option>
@@ -698,7 +630,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
                       <option value="AED">AED — UAE Dirham</option>
                     </select>
                   </label>
-                  <p className="text-xs leading-5 text-slate-400">Add tax on each item row. Discount support is available in your saved workspace.</p>
+                  <p className="text-xs leading-5 text-slate-400">Add tax on each item row. Discounts and tax selections are preserved when you save.</p>
                 </div>
               ) : null}
             </div>
@@ -712,6 +644,7 @@ export function FreeInvoiceClient({ initialItem }: FreeInvoiceClientProps) {
       </section>
 
       <PublicSiteFooter />
+      </fieldset>
     </main>
   );
 }

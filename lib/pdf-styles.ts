@@ -17,10 +17,10 @@ export type PreviewFamily = "corporate" | "minimal" | "gst" | "agency" | "constr
 const FAMILY_LABELS: Record<PreviewFamily, string> = {
   corporate: "Logo, due badge, payment terms",
   minimal: "Clean single-column billing",
-  gst: "CGST, SGST, IGST, GSTIN",
-  agency: "Project summary and hours",
-  construction: "Materials, labor, milestones",
-  retail: "HSN, quantity, receipt layout",
+  gst: "Selected GST components and tax IDs",
+  agency: "Service invoice layout",
+  construction: "Project invoice layout",
+  retail: "Item codes, quantities and totals",
   startup: "Modern memo and payment link",
 };
 

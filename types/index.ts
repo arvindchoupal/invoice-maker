@@ -21,7 +21,10 @@ export interface Client {
   last_invoice_date?: string;
 }
 
+export type TaxMode = "none" | "tax" | "intra" | "inter";
+
 export interface InvoiceItem {
+  hsnCode?: string;
   name: string;
   description?: string;
   quantity: number;
@@ -31,6 +34,15 @@ export interface InvoiceItem {
 }
 
 export interface Invoice {
+  amountPaid?: number;
+  shippingAddress?: string;
+  taxMode?: TaxMode;
+  supplierState?: string;
+  customerState?: string;
+  placeOfSupply?: string;
+  documentTitle?: string;
+  sourceTemplate?: string;
+  logoData?: string | null;
   id?: number;
   invoiceNumber?: string;
   invoice_number?: string;

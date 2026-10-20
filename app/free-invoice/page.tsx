@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema, faqSchema, webApplicationSchema } from "@/lib/seo-schemas";
+import { getInvoiceTemplatePage } from "@/lib/invoice-template-pages";
 import { FreeInvoiceClient } from "./FreeInvoiceClient";
 
 const siteUrl = "https://invoicewala.shop";
@@ -37,6 +38,9 @@ function firstParam(value: string | string[] | undefined) {
 
 export default async function FreeInvoicePage({ searchParams }: FreeInvoicePageProps) {
   const params = await searchParams;
+  const template = getInvoiceTemplatePage(firstParam(params.template) || "");
+  const category = template?.category.toLowerCase() || "";
+  const style = category.includes("construction") ? "construction" : category.includes("creative") ? "studio" : category.includes("retail") ? "retail" : "classic";
   return (
     <>
       <JsonLd
@@ -54,6 +58,8 @@ export default async function FreeInvoicePage({ searchParams }: FreeInvoicePageP
         ]}
       />
       <FreeInvoiceClient
+        initialSaveError={firstParam(params.saveError) === "1"}
+        initialTemplate={template ? { slug: template.slug, label: template.profession, style } : undefined}
         initialItem={{
           name: firstParam(params.item),
           taxRate: firstParam(params.gstRate),
