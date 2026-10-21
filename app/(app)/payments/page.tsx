@@ -19,6 +19,15 @@ interface PaymentRow {
   created_at: string;
 }
 
+interface InvoiceOption {
+  id: number;
+  invoice_number: string;
+  customer_name: string;
+  total: number;
+  currency: string;
+  status: string;
+}
+
 function statusTone(status: string) {
   if (status === "paid") return "green";
   if (status === "refunded") return "rose";
@@ -27,32 +36,61 @@ function statusTone(status: string) {
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState<PaymentRow[]>([]);
+  const [invoices, setInvoices] = useState<InvoiceOption[]>([]);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   async function load() {
     setLoading(true);
-    setPayments(await api<PaymentRow[]>("/payments"));
-    setLoading(false);
+    setError("");
+    try {
+      setPayments(await api<PaymentRow[]>("/payments"));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not load payments.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
-    api<PaymentRow[]>("/payments").then(setPayments).finally(() => setLoading(false));
+    Promise.all([
+      api<PaymentRow[]>("/payments"),
+      api<{ data: InvoiceOption[] }>("/invoices?status=all&page=1&pageSize=100&sortBy=created_at&sortDir=desc"),
+    ])
+      .then(([nextPayments, invoiceResponse]) => {
+        setPayments(nextPayments);
+        setInvoices(invoiceResponse.data);
+      })
+      .catch((err) => setError(err instanceof Error ? err.message : "Could not load payment details."))
+      .finally(() => setLoading(false));
   }, []);
 
   async function manualPayment(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setSubmitting(true);
+    setError("");
+    setMessage("");
     const form = new FormData(event.currentTarget);
     const id = form.get("invoiceId");
-    await api(`/payments/${id}/manual`, {
-      method: "POST",
-      body: JSON.stringify({
-        amount: Number(form.get("amount")),
-        reference: form.get("reference"),
-        note: form.get("note"),
-      }),
-    });
-    event.currentTarget.reset();
-    load();
+    try {
+      await api(`/payments/${id}/manual`, {
+        method: "POST",
+        body: JSON.stringify({
+          amount: Number(form.get("amount")),
+          reference: form.get("reference"),
+          note: form.get("note"),
+        }),
+      });
+      event.currentTarget.reset();
+      setMessage("Payment recorded.");
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not record this payment.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   async function refund(paymentId: number) {
@@ -63,16 +101,19 @@ export default function PaymentsPage() {
   return (
     <div className="grid gap-5">
       <PageHeader title="Payments" description="Record payments received directly from customers and keep invoice status up to date." />
+      {error ? <p className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-500/20 dark:bg-red-950/30 dark:text-red-200" role="alert">{error}</p> : null}
+      {message ? <p className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-950/30 dark:text-emerald-200" role="status">{message}</p> : null}
 
       <div className="grid gap-5 xl:grid-cols-[1fr_0.7fr]">
         <Card className="p-5">
           <h2 className="text-lg font-semibold">Record manual or partial payment</h2>
           <form onSubmit={manualPayment} className="mt-4 grid gap-4 md:grid-cols-2">
-            <Field label="Invoice ID"><input className={inputClass} name="invoiceId" required /></Field>
+            <Field label="Invoice"><select className={inputClass} name="invoiceId" required defaultValue=""><option value="" disabled>Select an invoice</option>{invoices.map((invoice) => <option key={invoice.id} value={invoice.id}>{invoice.invoice_number} — {invoice.customer_name} · {currency(Number(invoice.total), invoice.currency)} · {invoice.status}</option>)}</select></Field>
             <Field label="Amount"><input className={inputClass} name="amount" type="number" min="0" step="0.01" required /></Field>
             <Field label="Reference"><input className={inputClass} name="reference" /></Field>
             <Field label="Note"><input className={inputClass} name="note" /></Field>
-            <Button className="md:col-span-2"><CreditCard className="h-4 w-4" />Record payment</Button>
+            <Button className="md:col-span-2" disabled={submitting || !invoices.length}><CreditCard className="h-4 w-4" />{submitting ? "Recording…" : "Record payment"}</Button>
+            {!loading && !invoices.length ? <p className="text-sm text-amber-700 md:col-span-2">Create an invoice before recording a payment.</p> : null}
           </form>
         </Card>
         <Card className="border-amber-200 bg-amber-50 p-5 dark:border-amber-300/15 dark:bg-amber-300/[0.06]">

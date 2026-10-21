@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -8,16 +8,17 @@ import {
   Bell,
   Building2,
   ChevronDown,
-  ChevronRight,
   CreditCard,
   Download,
+  Expand,
   FilePlus2,
   FileText,
   LayoutDashboard,
   LogOut,
   Menu,
+  PanelLeftClose,
+  Sparkles,
   Plus,
-  Search,
   Settings,
   Shield,
   Users,
@@ -45,6 +46,15 @@ const quickActions = [
   { href: "/clients", label: "Client", icon: Users },
 ];
 
+function subscribeToScroll(onChange: () => void) {
+  window.addEventListener("scroll", onChange, { passive: true });
+  return () => window.removeEventListener("scroll", onChange);
+}
+
+function isPageScrolled() {
+  return window.scrollY > 8;
+}
+
 function routeDetails(pathname: string) {
   if (pathname === "/invoices/new") return { label: "Create invoice", parent: "Invoices", icon: FilePlus2 };
   if (/^\/invoices\/[^/]+\/edit$/.test(pathname)) return { label: "Edit invoice", parent: "Invoices", icon: FileText };
@@ -57,13 +67,14 @@ function routeDetails(pathname: string) {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const headerScrolled = useSyncExternalStore(subscribeToScroll, isPageScrolled, () => false);
   const [user, setUser] = useState<{ name: string; email?: string; role: string } | null>(null);
   const [settings, setSettings] = useState<{ company_name?: string; company_tax_id?: string } | null>(null);
   const [authReady, setAuthReady] = useState(false);
-  const [search, setSearch] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const searchRef = useRef<HTMLInputElement | null>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [editorSidebarExpanded, setEditorSidebarExpanded] = useState(false);
 
   useEffect(() => {
     if (!getToken()) {
@@ -82,27 +93,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     api<{ company_name?: string; company_tax_id?: string }>("/settings").then(setSettings).catch(() => undefined);
   }, [pathname, router]);
 
-  useEffect(() => {
-    function focusSearch(event: KeyboardEvent) {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        searchRef.current?.focus();
-      }
-    }
-    window.addEventListener("keydown", focusSearch);
-    return () => window.removeEventListener("keydown", focusSearch);
-  }, []);
-
   const companyName = settings?.company_name || "InvoiceWala workspace";
   const workspaceLabel = settings?.company_tax_id ? "GST workspace" : "Business workspace";
-  const compactSidebar = pathname === "/invoices/new" || /^\/invoices\/[^/]+\/edit$/.test(pathname);
+  const isInvoiceEditor = pathname === "/invoices/new" || /^\/invoices\/[^/]+\/edit$/.test(pathname);
+  const compactSidebar = isInvoiceEditor ? !editorSidebarExpanded : sidebarCollapsed;
   const isAdmin = user?.role === "admin" || user?.email?.toLowerCase() === "arvind@vtechserve.io";
   const visibleNav = isAdmin ? [...nav, adminNav] : nav;
   const currentNav = visibleNav.find((item) => pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href)));
   const routeDetail = routeDetails(pathname);
   const CurrentPageIcon = routeDetail?.icon ?? currentNav?.icon ?? LayoutDashboard;
   const pageTitle = routeDetail?.label ?? currentNav?.label ?? "Workspace";
-  const breadcrumbParent = routeDetail?.parent ?? (pageTitle === "Dashboard" ? undefined : "Workspace");
   const initials = (user?.name || "User")
     .split(" ")
     .map((part) => part[0])
@@ -113,11 +113,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   function signOut() {
     clearSession();
     router.push("/");
-  }
-  function runSearch(event: React.FormEvent) {
-    event.preventDefault();
-    const value = search.trim();
-    router.push(value ? `/invoices?search=${encodeURIComponent(value)}` : "/invoices");
   }
   const mobileNav = visibleNav.filter((item) => ["/dashboard", "/invoices", "/clients", "/reports"].includes(item.href));
 
@@ -231,7 +226,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div className={`transition-[padding] duration-200 ${compactSidebar ? "lg:pl-[96px]" : "lg:pl-[260px]"}`}>
-        <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 px-4 py-2.5 backdrop-blur-xl dark:border-[#2b3138] dark:bg-[#0f1216]/92 lg:px-5">
+        <header className={`sticky top-0 z-20 border-b border-slate-200 px-4 py-2.5 transition-colors duration-200 dark:border-[#2b3138] lg:px-5 ${headerScrolled ? "bg-white/95 backdrop-blur-xl dark:bg-[#0f1216]/95" : "bg-transparent backdrop-blur-none"}`}>
           <div className="mx-auto flex max-w-[100rem] items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3 lg:hidden">
               <BrandLogo href="/dashboard" imageClassName="h-9 w-9" showText={false} />
@@ -242,43 +237,33 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="hidden min-w-0 flex-1 items-center gap-3 lg:flex">
+              <button className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-[#1c2229]" onClick={() => isInvoiceEditor ? setEditorSidebarExpanded((value) => !value) : setSidebarCollapsed((value) => !value)} aria-label="Toggle sidebar" title="Toggle sidebar" aria-expanded={!compactSidebar}>
+                <PanelLeftClose className="h-5 w-5" />
+              </button>
               <div className="flex min-w-[170px] items-center gap-2 text-sm text-slate-800 dark:text-slate-100">
                 <CurrentPageIcon className="h-4 w-4 text-slate-500" />
-                {breadcrumbParent ? <><span className="font-medium text-slate-500 dark:text-slate-400">{breadcrumbParent}</span><ChevronRight className="h-3.5 w-3.5 text-slate-400" /></> : null}
                 <h1 className="truncate font-semibold">{pageTitle}</h1>
               </div>
-              <form className="ml-5 flex w-full max-w-md items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm text-slate-500 shadow-sm focus-within:border-blue-400 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-slate-400" onSubmit={runSearch}>
-                <Search className="h-4 w-4" />
-                <input ref={searchRef} className="min-w-0 flex-1 bg-transparent text-slate-800 outline-none placeholder:text-slate-500 dark:text-slate-100" placeholder="Search invoices, clients, GSTIN..." value={search} onChange={(event) => setSearch(event.target.value)} aria-label="Search invoices" />
-                <kbd className="ml-auto rounded border border-slate-200 px-1.5 py-0.5 text-[10px] font-medium dark:border-[#2b3138]">⌘K</kbd>
-              </form>
             </div>
 
             <div className="flex items-center gap-2">
-              <Link
-                href="/reports"
-                className="hidden items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-slate-200 dark:hover:bg-[#1c2229] sm:flex"
-              >
+              <Link href="/reports" className="hidden h-10 w-10 place-items-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-slate-300 dark:hover:bg-[#1c2229] sm:grid" aria-label="Reports" title="Reports">
                 <Download className="h-4 w-4" />
-                Reports
               </Link>
-              <button className="hidden h-9 w-9 place-items-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-slate-300 dark:hover:bg-[#1c2229] sm:grid" onClick={() => setShowNotifications((value) => !value)} aria-label="Notifications" aria-expanded={showNotifications}>
+              <button className="hidden h-10 w-10 place-items-center rounded-lg text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-[#1c2229] sm:grid" onClick={() => router.push("/ai-import")} aria-label="AI import" title="AI import">
+                <Sparkles className="h-5 w-5" />
+              </button>
+              <button className="hidden h-10 w-10 place-items-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-slate-300 dark:hover:bg-[#1c2229] sm:grid" onClick={() => setShowNotifications((value) => !value)} aria-label="Notifications" aria-expanded={showNotifications}>
                 <Bell className="h-4 w-4" />
               </button>
-              <ThemeToggle inline showLabel={false} />
-              <button
-                type="button"
-                onClick={signOut}
-                className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-slate-200 dark:hover:bg-[#1c2229]"
-                title="Sign out"
-              >
-                <LogOut className="h-4 w-4" />
-                <span className="hidden md:inline">Sign out</span>
+              <button className="hidden h-10 w-10 place-items-center rounded-lg text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-[#1c2229] sm:grid" onClick={() => document.documentElement.requestFullscreen?.()} aria-label="Full screen" title="Full screen">
+                <Expand className="h-5 w-5" />
               </button>
-              <Link href="/invoices/new" className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg bg-blue-600 px-3.5 py-1.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500">
+              <ThemeToggle inline showLabel={false} />
+              {!isInvoiceEditor ? <Link href="/invoices/new" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg bg-blue-600 px-3.5 py-1.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500">
                 <Plus className="h-4 w-4" />
-                <span className="hidden sm:inline">New</span>
-              </Link>
+                <span className="hidden sm:inline">New invoice</span>
+              </Link> : null}
             </div>
             {showNotifications ? (
               <div className="absolute right-28 top-16 z-50 w-72 rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl dark:border-[#2a313a] dark:bg-[#151a20]">

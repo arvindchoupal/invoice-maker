@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useInvoiceJourney } from "@/hooks/useInvoiceJourney";
 import { stepForField, type InvoiceStep } from "@/lib/user-tracking";
@@ -30,8 +31,20 @@ import { Badge, Button, Card, Field, inputClass } from "@/components/ui";
 
 type BuilderItem = InvoiceItem & { localId: string };
 type BuilderInvoice = Omit<Invoice, "items"> & { items: BuilderItem[] };
+type LocalInvoiceDraft = Partial<Invoice> & { localDraftSavedAt?: string };
 type SectionId = "details" | "parties" | "items" | "notes";
-type BrandingSettings = { logo_url?: string; logo_snapshot?: string; company_name?: string; default_pdf_style?: string };
+type BuilderStep = SectionId | "tax" | "review";
+type BrandingSettings = {
+  logo_url?: string;
+  logo_snapshot?: string;
+  company_name?: string;
+  company_email?: string;
+  company_tax_id?: string;
+  company_address?: string;
+  currency?: string;
+  tax_rate?: number | string;
+  default_pdf_style?: string;
+};
 
 const sectionLabels: Record<SectionId, string> = {
   details: "Document",
@@ -53,13 +66,13 @@ function normalizeCurrency(code?: string) {
   return normalized;
 }
 
-const blankItem = (): BuilderItem => ({
+const blankItem = (taxRate = 0): BuilderItem => ({
   localId: crypto.randomUUID(),
   name: "",
   description: "",
   quantity: 1,
   unitPrice: 0,
-  taxRate: 0,
+  taxRate,
   discountRate: 0,
 });
 
@@ -147,10 +160,12 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
   const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
   const [draggedSection, setDraggedSection] = useState<SectionId | null>(null);
   const [sectionOrder, setSectionOrder] = useState<SectionId[]>(["details", "parties", "items", "notes"]);
+  const [activeStep, setActiveStep] = useState<BuilderStep>("details");
   const [autosaveState, setAutosaveState] = useState<"saved" | "saving" | "idle">("idle");
   const [branding, setBranding] = useState<BrandingSettings>({});
+  const [defaultTaxRate, setDefaultTaxRate] = useState(0);
   const [invoice, setInvoice] = useState<BuilderInvoice>(() => toBuilderInvoice(initial));
-  const [pendingDraft, setPendingDraft] = useState<Partial<Invoice> | null>(null);
+  const [pendingDraft, setPendingDraft] = useState<LocalInvoiceDraft | null>(null);
   const [draftReady, setDraftReady] = useState(false);
   const dirty = useRef(false);
   let accountId = "guest";
@@ -170,13 +185,29 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
 
   const totals = useMemo(() => calculateInvoice(invoice.items, invoice.taxMode), [invoice.items, invoice.taxMode]);
+  const validationErrors = useMemo(() => invoiceValidationErrors(toApiInvoice(invoice, pdfStyle)), [invoice, pdfStyle]);
+  const stepOrder: BuilderStep[] = [...sectionOrder, "tax", "review"];
+  const currentStepIndex = stepOrder.indexOf(activeStep);
   const styleMeta = pdfStyles.find(item => item.id === pdfStyle);
   const logoSrc = invoice.logoData === undefined ? assetUrl(branding.logo_url) : invoice.logoData || "";
 
   useEffect(() => {
     api<BrandingSettings>("/settings").then((data) => {
       setBranding(data);
-      setInvoice(current => current.logoData === undefined ? { ...current, logoData: data.logo_snapshot || null } : current);
+      setDefaultTaxRate(Number(data.tax_rate) || 0);
+      setInvoice((current) => {
+        const next = { ...current };
+        if (next.logoData === undefined) next.logoData = data.logo_snapshot || null;
+        if (!invoiceId && !dirty.current) {
+          if (!next.businessName) next.businessName = data.company_name ?? "";
+          if (!next.businessEmail) next.businessEmail = data.company_email ?? "";
+          if (!next.businessTaxId) next.businessTaxId = data.company_tax_id ?? "";
+          if (!next.businessAddress) next.businessAddress = data.company_address ?? "";
+          if (!initial?.currency && data.currency) next.currency = data.currency;
+          next.items = next.items.map((item) => item.taxRate ? item : { ...item, taxRate: Number(data.tax_rate) || 0 });
+        }
+        return next;
+      });
       if (!initial?.pdfStyle && !dirty.current && data.default_pdf_style) setPdfStyle(String(data.default_pdf_style));
     }).catch(() => undefined);
     api<PdfStyleMeta[]>("/invoice-preview/styles").then((items) => {
@@ -184,14 +215,14 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
       if (!initial?.pdfStyle && items[0]) setPdfStyle((current) => current || items[0].id);
     }).catch(() => undefined);
     api<Client[]>("/clients").then(setClients).catch(() => undefined);
-  }, [initial?.pdfStyle]);
+  }, [initial?.currency, initial?.pdfStyle, invoiceId]);
 
   useEffect(() => {
     if (autosaveTimer.current) clearTimeout(autosaveTimer.current);
     if (!draftReady || !dirty.current || loading) return;
     autosaveTimer.current = setTimeout(() => {
       try {
-        localStorage.setItem(draftKey, JSON.stringify(toApiInvoice(invoice, pdfStyle)));
+        localStorage.setItem(draftKey, JSON.stringify({ ...toApiInvoice(invoice, pdfStyle), localDraftSavedAt: new Date().toISOString() }));
         setAutosaveState("saved");
       } catch { setAutosaveState("idle"); setError("Device storage is unavailable. Save this invoice to your account to keep your changes."); }
     }, 600);
@@ -244,14 +275,14 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
   function addItem() {
     markDirty();
-    setInvoice((current) => ({ ...current, items: [...current.items, blankItem()] }));
+    setInvoice((current) => ({ ...current, items: [...current.items, blankItem(defaultTaxRate)] }));
   }
 
   function removeItem(localId: string) {
     markDirty();
     setInvoice((current) => {
       const next = current.items.filter((item) => item.localId !== localId);
-      return { ...current, items: next.length ? next : [blankItem()] };
+      return { ...current, items: next.length ? next : [blankItem(defaultTaxRate)] };
     });
   }
 
@@ -416,10 +447,8 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
   function sectionShell(id: SectionId, children: React.ReactNode) {
     return (
-      <Card
-        className="p-3 sm:p-4"
-        key={id}
-      >
+      <div id={`invoice-section-${id}`} className="scroll-mt-24" key={id}>
+      <Card className="p-3 sm:p-4">
         <div
           draggable
           onDragStart={() => setDraggedSection(id)}
@@ -438,7 +467,41 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
         </div>
         {children}
       </Card>
+      </div>
     );
+  }
+
+  function stepIsReady(step: BuilderStep) {
+    if (step === "details") return /^[A-Z]{3}$/.test(invoice.currency) && Boolean(invoice.issueDate && invoice.dueDate && invoice.dueDate >= invoice.issueDate);
+    if (step === "parties") return Boolean(invoice.businessName.trim() && invoice.customerName.trim());
+    if (step === "items") return invoice.items.length > 0 && invoice.items.every((item) => item.name.trim() && Number(item.quantity) > 0);
+    if (step === "notes") return true;
+    if (step === "tax") return true;
+    return validationErrors.length === 0;
+  }
+
+  function stepLabel(step: BuilderStep) {
+    if (step === "tax") return "Tax & payment";
+    if (step === "review") return "Review & save";
+    return sectionLabels[step];
+  }
+
+  function nextStep() {
+    setActiveStep(stepOrder[Math.min(currentStepIndex + 1, stepOrder.length - 1)]);
+  }
+
+  function previousStep() {
+    setActiveStep(stepOrder[Math.max(currentStepIndex - 1, 0)]);
+  }
+
+  function preserveDraftBeforeSettings(event: React.MouseEvent<HTMLAnchorElement>) {
+    if (!draftReady || !dirty.current) return;
+    try {
+      localStorage.setItem(draftKey, JSON.stringify({ ...toApiInvoice(invoice, pdfStyle), localDraftSavedAt: new Date().toISOString() }));
+    } catch {
+      event.preventDefault();
+      setError("This device could not save the invoice draft. Please save the invoice before leaving this page.");
+    }
   }
 
   function renderSection(id: SectionId) {
@@ -467,11 +530,12 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
         <div className="grid gap-3 xl:grid-cols-2">
           <div className="rounded-2xl border border-slate-200 p-3 dark:border-white/10">
             <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">From</p>
+            <p className="mb-3 text-xs text-slate-500">{branding.company_name ? "Prefilled from your company settings. Edit these details for this invoice." : <>Add your business profile in <Link className="font-semibold text-blue-600 underline dark:text-blue-300" href="/settings?returnTo=%2Finvoices%2Fnew" onClick={preserveDraftBeforeSettings}>Settings</Link> to fill these details automatically.</>}</p>
             <div className="grid gap-2">
-              <input className={compactInput} placeholder="Business name" value={invoice.businessName} onFocus={() => journey.visit(stepForField("businessName"))} onChange={(e) => update("businessName", e.target.value)} />
-              <input className={compactInput} type="email" placeholder="Business email" value={invoice.businessEmail} onFocus={() => journey.visit(stepForField("businessEmail"))} onChange={(e) => update("businessEmail", e.target.value)} />
-              <input className={compactInput} placeholder="GST/VAT ID" value={invoice.businessTaxId} onFocus={() => journey.visit(stepForField("businessTaxId"))} onChange={(e) => update("businessTaxId", e.target.value)} />
-              <textarea className={`${compactInput} min-h-16`} placeholder="Business address" value={invoice.businessAddress} onFocus={() => journey.visit(stepForField("businessAddress"))} onChange={(e) => update("businessAddress", e.target.value)} />
+              <Field label="Business name (required)"><input className={compactInput} autoComplete="organization" required value={invoice.businessName} onFocus={() => journey.visit(stepForField("businessName"))} onChange={(e) => update("businessName", e.target.value)} /></Field>
+              <Field label="Business email (optional)"><input className={compactInput} type="email" autoComplete="email" value={invoice.businessEmail} onFocus={() => journey.visit(stepForField("businessEmail"))} onChange={(e) => update("businessEmail", e.target.value)} /></Field>
+              <Field label="GSTIN / VAT number (optional)"><input className={compactInput} value={invoice.businessTaxId} onFocus={() => journey.visit(stepForField("businessTaxId"))} onChange={(e) => update("businessTaxId", e.target.value)} /></Field>
+              <Field label="Business address (optional)"><textarea className={`${compactInput} min-h-16`} autoComplete="street-address" value={invoice.businessAddress} onFocus={() => journey.visit(stepForField("businessAddress"))} onChange={(e) => update("businessAddress", e.target.value)} /></Field>
             </div>
           </div>
           <div className="rounded-2xl border border-slate-200 p-3 dark:border-white/10">
@@ -487,10 +551,10 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
               ) : null}
             </div>
             <div className="grid gap-2">
-              <input className={compactInput} placeholder="Client name" value={invoice.customerName} onFocus={() => journey.visit(stepForField("customerName"))} onChange={(e) => update("customerName", e.target.value)} />
-              <input className={compactInput} type="email" placeholder="Client email" value={invoice.customerEmail} onFocus={() => journey.visit(stepForField("customerEmail"))} onChange={(e) => update("customerEmail", e.target.value)} />
-              <input className={compactInput} placeholder="Client GST/VAT ID" value={invoice.customerTaxId} onFocus={() => journey.visit(stepForField("customerTaxId"))} onChange={(e) => update("customerTaxId", e.target.value)} />
-              <textarea className={`${compactInput} min-h-16`} placeholder="Client address" value={invoice.customerAddress} onFocus={() => journey.visit(stepForField("customerAddress"))} onChange={(e) => update("customerAddress", e.target.value)} />
+              <Field label="Customer name (required)"><input className={compactInput} autoComplete="name" required value={invoice.customerName} onFocus={() => journey.visit(stepForField("customerName"))} onChange={(e) => update("customerName", e.target.value)} /></Field>
+              <Field label="Customer email (optional)"><input className={compactInput} type="email" autoComplete="email" value={invoice.customerEmail} onFocus={() => journey.visit(stepForField("customerEmail"))} onChange={(e) => update("customerEmail", e.target.value)} /></Field>
+              <Field label="Customer GSTIN / VAT number (optional)"><input className={compactInput} value={invoice.customerTaxId} onFocus={() => journey.visit(stepForField("customerTaxId"))} onChange={(e) => update("customerTaxId", e.target.value)} /></Field>
+              <Field label="Customer address (optional)"><textarea className={`${compactInput} min-h-16`} autoComplete="street-address" value={invoice.customerAddress} onFocus={() => journey.visit(stepForField("customerAddress"))} onChange={(e) => update("customerAddress", e.target.value)} /></Field>
             </div>
           </div>
         </div>
@@ -523,13 +587,13 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                 </div>
                 <div className="grid min-w-0 gap-3">
                   <div className="grid min-w-0 gap-2 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-                    <input className={`${compactInput} w-full min-w-0`} placeholder="Service or product" value={item.name} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { name: e.target.value })} />
+                    <input className={`${compactInput} w-full min-w-0`} aria-label={`Item ${index + 1} name (required)`} placeholder="Product or service name (required)" required value={item.name} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { name: e.target.value })} />
                     <input className={`${compactInput} w-full min-w-0`} placeholder="Description" value={item.description} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { description: e.target.value })} />
                   </div>
                   <Field label="HSN / SAC (optional)"><input className={compactInput} value={item.hsnCode || ""} onChange={e => updateItem(item.localId, { hsnCode: e.target.value })} /></Field>
                   <div className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-4">
-                    <Field label="Qty"><input className={`${compactInput} w-full min-w-0`} aria-label="Quantity" type="number" min="0" step="0.01" value={item.quantity} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { quantity: Number(e.target.value) })} /></Field>
-                    <Field label="Rate"><input className={`${compactInput} w-full min-w-0`} aria-label="Unit price" type="number" min="0" step="0.01" value={item.unitPrice} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { unitPrice: Number(e.target.value) })} /></Field>
+                    <Field label="Quantity (required)"><input className={`${compactInput} w-full min-w-0`} aria-label="Quantity" type="number" min="0.01" step="0.01" value={item.quantity} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { quantity: Number(e.target.value) })} /></Field>
+                    <Field label="Price per item"><input className={`${compactInput} w-full min-w-0`} aria-label="Price per item" type="number" min="0" step="0.01" value={item.unitPrice} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { unitPrice: Number(e.target.value) })} /></Field>
                     <Field label="Tax %"><input className={`${compactInput} w-full min-w-0`} aria-label="Tax rate" type="number" min="0" step="0.01" value={item.taxRate} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { taxRate: Number(e.target.value) })} /></Field>
                     <Field label="Disc %"><input className={`${compactInput} w-full min-w-0`} aria-label="Discount rate" type="number" min="0" step="0.01" value={item.discountRate} onFocus={() => journey.visit("items")} onChange={(e) => updateItem(item.localId, { discountRate: Number(e.target.value) })} /></Field>
                   </div>
@@ -552,12 +616,13 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
   return (
     <fieldset disabled={loading} className="relative grid min-w-0 gap-4 border-0 p-0">
-      {pendingDraft ? <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950"><p>A previous draft is saved on this device. Resume it, or start from the current invoice details?</p><div className="mt-3 flex gap-2"><Button onClick={() => { setInvoice(toBuilderInvoice(pendingDraft)); setPdfStyle(pendingDraft.pdfStyle || pdfStyle); dirty.current = true; setPendingDraft(null); setDraftReady(true); }}>Resume draft</Button><Button variant="secondary" onClick={() => { localStorage.removeItem(draftKey); setPendingDraft(null); setDraftReady(true); }}>Start fresh</Button></div></div> : null}
+      {pendingDraft ? <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950"><p className="font-semibold">We found an invoice draft saved on this device.</p><p className="mt-1">Resume it to keep your work, or start a new invoice. Starting fresh removes this saved draft from this device.</p>{pendingDraft.localDraftSavedAt ? <p className="mt-1 text-xs text-amber-800">Last saved {new Date(pendingDraft.localDraftSavedAt).toLocaleString()}</p> : null}<div className="mt-3 flex flex-wrap gap-2"><Button type="button" onClick={() => { setInvoice(toBuilderInvoice(pendingDraft)); setPdfStyle(pendingDraft.pdfStyle || pdfStyle); dirty.current = true; setPendingDraft(null); setDraftReady(true); }}>Resume saved draft</Button><Button type="button" variant="secondary" onClick={() => { localStorage.removeItem(draftKey); setPendingDraft(null); setDraftReady(true); }}>Start a new invoice</Button></div></div> : null}
+      {!invoiceId && !branding.company_name ? <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-950 dark:border-blue-400/20 dark:bg-blue-400/[0.07] dark:text-blue-100"><div><p className="font-semibold">Set up your company details once</p><p className="mt-1 text-blue-800/80 dark:text-blue-100/75">They will fill the “From” section on future invoices. You can return here right after saving.</p></div><Link className="inline-flex min-h-10 items-center rounded-lg bg-blue-600 px-3.5 py-2 font-semibold text-white hover:bg-blue-700" href="/settings?returnTo=%2Finvoices%2Fnew" onClick={preserveDraftBeforeSettings}>Add company details</Link></div> : null}
       <Card className="p-5">
         <div className="grid gap-4 xl:grid-cols-[1fr_auto] xl:items-center">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
             <Badge tone={autosaveState === "saved" ? "green" : autosaveState === "saving" ? "amber" : "slate"}>
-              {autosaveState === "saved" ? "Saved on this device" : autosaveState === "saving" ? "Autosaving..." : "Ready"}
+              {pendingDraft ? "Draft found · choose Resume or Start new" : autosaveState === "saved" ? "Saved on this device" : autosaveState === "saving" ? "Autosaving..." : "Ready"}
             </Badge>
             <div className="hidden items-center gap-2 text-xs text-slate-500 md:flex">
               <Keyboard className="h-3.5 w-3.5" />
@@ -585,10 +650,9 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                 </a>
               </>
             ) : (
-              <span className="text-xs text-slate-500">Save to download PDF or share</span>
+              <span className="text-xs text-slate-500">Saves invoice, then downloads PDF</span>
             )}
             <Button variant="secondary" onClick={() => void downloadPdf()}><Maximize2 className="h-4 w-4" />Save & download</Button>
-            <Button disabled={loading} onClick={() => void save()}><Save className="h-4 w-4" />{loading ? "Saving..." : "Save"}</Button>
           </div>
         </div>
         {shareMessage ? <p role="status" className="mt-2 text-sm text-slate-600 dark:text-slate-300">{shareMessage}</p> : null}
@@ -612,30 +676,37 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
         />
       ) : null}
 
-      <div ref={shellRef} className="grid gap-3 lg:flex lg:items-start">
-        <div className="grid w-full min-w-0 gap-3 lg:w-[var(--editor-width)]" style={{ "--editor-width": `${editorWidth}%` } as React.CSSProperties}>
+      <div ref={shellRef} className="grid gap-3 xl:flex xl:items-start">
+        <div className="grid w-full min-w-0 gap-3 xl:w-[var(--editor-width)]" style={{ "--editor-width": `${editorWidth}%` } as React.CSSProperties}>
           <Card className="p-3">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Document sections</p>
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2"><p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step {currentStepIndex + 1} of {stepOrder.length}</p><p className="text-xs text-slate-500">Complete each step, then review your invoice.</p></div>
             <div className="flex flex-wrap gap-2">
-              {sectionOrder.map((section) => (
+              {stepOrder.map((section, index) => (
                 <button
-                  draggable
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold transition hover:bg-slate-50 dark:border-white/10 dark:bg-white/[0.04]"
+                  draggable={section !== "review" && section !== "tax"}
+                  className={`inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-semibold transition ${activeStep === section ? "border-blue-500 bg-blue-50 text-blue-700 dark:border-blue-400 dark:bg-blue-400/10 dark:text-blue-100" : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-100 dark:hover:bg-[#1c2229] dark:hover:text-white"}`}
                   key={section}
-                  onDragStart={() => setDraggedSection(section)}
+                  type="button"
+                  title={`Go to ${stepLabel(section)}`}
+                  aria-label={`Go to ${stepLabel(section)}`}
+                  aria-current={activeStep === section ? "step" : undefined}
+                  onClick={() => setActiveStep(section)}
+                  onDragStart={() => { if (section !== "review" && section !== "tax") setDraggedSection(section); }}
                   onDragOver={(event) => event.preventDefault()}
-                  onDrop={() => dropSectionOn(section)}
+                  onDrop={() => { if (section !== "review" && section !== "tax") dropSectionOn(section); }}
                 >
-                  <GripVertical className="h-3.5 w-3.5 text-slate-400" />
-                  {sectionLabels[section]}
+                  {section !== "review" && section !== "tax" ? <GripVertical className="h-3.5 w-3.5 text-slate-400" /> : null}
+                  {index + 1}. {stepLabel(section)}
+                  {stepIsReady(section) ? <span aria-label="Complete" className="text-emerald-600 dark:text-emerald-300">✓</span> : null}
                 </button>
               ))}
             </div>
           </Card>
-          {sectionOrder.map(renderSection)}
-          <InvoiceAdditionalDetails invoice={invoice} update={(key, value) => { markDirty(stepForField(key)); setInvoice(current => ({ ...current, [key]: value })); }} />
-          <Card className="p-5">
-            <div className="flex flex-wrap items-center justify-between gap-4">
+          {activeStep === "tax" ? <InvoiceAdditionalDetails invoice={invoice} update={(key, value) => { markDirty(stepForField(key)); setInvoice(current => ({ ...current, [key]: value })); }} /> : activeStep !== "review" ? renderSection(activeStep) : <>
+            <Card className="grid gap-4 p-5">
+              <div><h2 className="font-semibold">Review your invoice</h2><p className="mt-1 text-sm text-slate-500">Check the required details and total before saving.</p></div>
+              {validationErrors.length ? <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-400/20 dark:bg-amber-400/[0.07] dark:text-amber-100"><p className="font-semibold">Finish these required details to save:</p><ul className="mt-2 list-disc space-y-1 pl-5">{validationErrors.map((message) => <li key={message}>{message}</li>)}</ul></div> : <p className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800 dark:border-emerald-400/20 dark:bg-emerald-400/[0.07] dark:text-emerald-100">Required details are complete. Your invoice is ready to save.</p>}
+              <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="grid grid-cols-3 gap-3 text-sm">
                 <div><p className="text-xs text-slate-500">Subtotal</p><strong>{currency(totals.subtotal, invoice.currency)}</strong></div>
                 <div><p className="text-xs text-slate-500">Discount</p><strong>{currency(totals.discountTotal, invoice.currency)}</strong></div>
@@ -645,13 +716,17 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                 <div><p className="text-xs text-slate-500">Balance due</p><strong>{currency(totals.total - Number(invoice.amountPaid || 0), invoice.currency)}</strong></div>
               </div>
               <Button disabled={loading} onClick={() => void save()}><Save className="h-4 w-4" />{loading ? "Saving..." : "Save invoice"}</Button>
-            </div>
-
-          </Card>
+              </div>
+            </Card>
+          </>}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <Button type="button" variant="secondary" disabled={currentStepIndex === 0} onClick={previousStep}>Back</Button>
+            {activeStep !== "review" ? <Button type="button" onClick={nextStep}>Continue to {stepLabel(stepOrder[currentStepIndex + 1])}</Button> : <Button type="button" variant="secondary" onClick={() => setActiveStep("tax")}>Back to tax & payment</Button>}
+          </div>
         </div>
 
         <button
-          className="hidden h-[calc(100vh-9rem)] w-3 cursor-col-resize items-center justify-center rounded-full bg-slate-200 text-slate-500 transition hover:bg-blue-200 dark:bg-white/10 lg:flex"
+          className="hidden h-[calc(100vh-9rem)] w-3 cursor-col-resize items-center justify-center rounded-full bg-slate-200 text-slate-500 transition hover:bg-blue-200 dark:bg-white/10 xl:flex"
           onPointerDown={startSplitterDrag}
           type="button"
           aria-label="Resize editor and preview"
@@ -659,8 +734,8 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
           <MoveHorizontal className="h-3.5 w-3.5 rotate-90" />
         </button>
 
-        <aside className="min-w-0 lg:sticky lg:top-24" style={{ flexBasis: `${100-editorWidth}%` }}>
-          <InvoicePdfPreview invoice={toApiInvoice(invoice, pdfStyle)} />
+        <aside className="min-w-0 xl:sticky xl:top-24" style={{ flexBasis: `${100-editorWidth}%` }}>
+          <InvoicePdfPreview invoice={toApiInvoice(invoice, pdfStyle)} onFix={setActiveStep} />
         </aside>
       </div>
 

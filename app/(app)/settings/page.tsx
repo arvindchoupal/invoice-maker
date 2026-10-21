@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { API_URL, api } from "@/lib/api";
 import type { PdfStyleMeta } from "@/lib/pdf-styles";
 import { TemplateGallery } from "@/components/TemplateGallery";
@@ -17,6 +18,7 @@ function assetUrl(path: string | number | undefined) {
 }
 
 export default function SettingsPage() {
+  const router = useRouter();
   const [settings, setSettings] = useState<Record<string, string | number>>({});
   const [pdfStyles, setPdfStyles] = useState<PdfStyleMeta[]>([]);
   const [defaultPdfStyle, setDefaultPdfStyle] = useState("classic");
@@ -68,6 +70,9 @@ export default function SettingsPage() {
       document.documentElement.style.colorScheme = resolvedDark ? "dark" : "light";
       window.dispatchEvent(new Event("invoicewala-theme-change"));
       setMessage("Settings saved.");
+      if (new URLSearchParams(window.location.search).get("returnTo") === "/invoices/new") {
+        window.setTimeout(() => router.push("/invoices/new"), 500);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save settings.");
     } finally {
@@ -110,28 +115,39 @@ export default function SettingsPage() {
     <div className="grid gap-5">
       <PageHeader title="Settings" description="Configure company profile, logo, currency, tax, and theme preferences." />
       {error ? <p className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-500/20 dark:bg-red-950/30 dark:text-red-200" role="alert">{error}</p> : null}
-      {loading ? <p className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900">Loading saved settings…</p> : <form key="loaded-settings" onSubmit={save} className="grid gap-4 rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900 md:grid-cols-2">
-        <Field label="Company name"><input className={inputClass} name="companyName" defaultValue={String(settings.company_name ?? "")} /></Field>
-        <Field label="Company email"><input className={inputClass} name="companyEmail" type="email" defaultValue={String(settings.company_email ?? "")} /></Field>
-        <Field label="Company GST/VAT ID"><input className={inputClass} name="companyTaxId" defaultValue={String(settings.company_tax_id ?? "")} /></Field>
-        <Field label="Currency"><select className={inputClass} name="currency" defaultValue={String(settings.currency ?? "INR")}><option value="INR">INR — Indian Rupee</option><option value="USD">USD — US Dollar</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — British Pound</option><option value="AED">AED — UAE Dirham</option></select></Field>
-        <Field label="Tax name"><input className={inputClass} name="taxName" defaultValue={String(settings.tax_name ?? "GST")} /></Field>
-        <Field label="Tax rate"><input className={inputClass} name="taxRate" type="number" step="0.01" defaultValue={String(settings.tax_rate ?? 0)} /></Field>
-        <Field label="Invoice prefix"><input className={inputClass} name="invoicePrefix" defaultValue={String(settings.invoice_prefix ?? "INV")} /></Field>
-        <Field label="Theme">
-          <select className={inputClass} name="theme" defaultValue={settings.theme === "dark" || settings.theme === "light" ? settings.theme : "system"}>
-            <option value="system">System default</option>
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-          </select>
-        </Field>
-        <Field label="Company address"><textarea className={inputClass} name="companyAddress" defaultValue={String(settings.company_address ?? "")} /></Field>
-        <div className="md:col-span-2">
-          <p className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-200">Default invoice PDF template</p>
-          <p className="mb-3 text-xs text-slate-500">Used for new invoices when no template is chosen yet.</p>
+      {loading ? <p className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900">Loading saved settings…</p> : <form key="loaded-settings" onSubmit={save} className="grid gap-5 rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+        <section className="grid gap-4 md:grid-cols-2" aria-labelledby="company-profile-title">
+          <div className="md:col-span-2">
+            <h2 id="company-profile-title" className="font-semibold">Company profile and invoice defaults</h2>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Saved details fill the “From” section on new invoices. You can still change them on any invoice.</p>
+          </div>
+          <Field label="Company name"><input className={inputClass} name="companyName" autoComplete="organization" defaultValue={String(settings.company_name ?? "")} /></Field>
+          <Field label="Company email"><input className={inputClass} name="companyEmail" type="email" autoComplete="email" defaultValue={String(settings.company_email ?? "")} /></Field>
+          <Field label="Company GSTIN / VAT number"><input className={inputClass} name="companyTaxId" defaultValue={String(settings.company_tax_id ?? "")} /></Field>
+          <Field label="Default currency"><select className={inputClass} name="currency" defaultValue={String(settings.currency ?? "INR")}><option value="INR">INR — Indian Rupee</option><option value="USD">USD — US Dollar</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — British Pound</option><option value="AED">AED — UAE Dirham</option></select></Field>
+          <Field label="Company address"><textarea className={inputClass} name="companyAddress" autoComplete="street-address" defaultValue={String(settings.company_address ?? "")} /></Field>
+          <div className="grid content-start gap-4">
+            <Field label="Tax name"><input className={inputClass} name="taxName" defaultValue={String(settings.tax_name ?? "GST")} /></Field>
+            <Field label="Default tax rate (%)"><input className={inputClass} name="taxRate" type="number" min="0" max="100" step="0.01" defaultValue={String(settings.tax_rate ?? 0)} /></Field>
+            <Field label="Invoice number prefix"><input className={inputClass} name="invoicePrefix" defaultValue={String(settings.invoice_prefix ?? "INV")} /></Field>
+            <Field label="Theme">
+              <select className={inputClass} name="theme" defaultValue={settings.theme === "dark" || settings.theme === "light" ? settings.theme : "system"}>
+                <option value="system">System default</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+              </select>
+            </Field>
+          </div>
+          <p className="text-xs text-slate-500 md:col-span-2">The default tax rate is applied to new invoice items. Check the correct GST mode and rate for each invoice.</p>
+          <div className="md:col-span-2">
+            <Button disabled={saving}>{saving ? "Saving…" : "Save company details"}</Button>
+          </div>
+        </section>
+        <details className="rounded-xl border border-slate-200 p-4 dark:border-slate-700">
+          <summary className="cursor-pointer font-semibold">Default PDF template <span className="font-normal text-slate-500">({pdfStyles.length} designs)</span></summary>
+          <p className="mb-3 mt-2 text-sm text-slate-500">Choose the design used for new invoices. This is optional; the current template is already selected.</p>
           {pdfStyles.length ? <TemplateGallery styles={pdfStyles} selectedId={defaultPdfStyle} onSelect={setDefaultPdfStyle} /> : <p className="text-sm text-slate-500">Invoice templates are unavailable right now.</p>}
-        </div>
-        <Button className="md:col-span-2" disabled={saving}>{saving ? "Saving…" : "Save company settings"}</Button>
+        </details>
       </form>}
       <form onSubmit={uploadLogo} className="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
         <div className="mb-4 flex items-center gap-4">

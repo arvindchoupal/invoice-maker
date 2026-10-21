@@ -5,7 +5,16 @@ import { apiBlob } from "@/lib/api";
 import { invoiceValidationErrors } from "@/lib/invoice-document";
 import type { Invoice } from "@/types";
 
-export function InvoicePdfPreview({ invoice }: { invoice: Invoice }) {
+type FixStep = "details" | "parties" | "items" | "tax";
+
+function stepForError(message: string): FixStep {
+  if (/business|customer|email/i.test(message)) return "parties";
+  if (/item|line item/i.test(message)) return "items";
+  if (/amount paid/i.test(message)) return "tax";
+  return "details";
+}
+
+export function InvoicePdfPreview({ invoice, onFix }: { invoice: Invoice; onFix?: (step: FixStep) => void }) {
   const payload = JSON.stringify(invoice);
   const [preview, setPreview] = useState<{ payload: string; url?: string; error?: string }>({ payload: "" });
   useEffect(() => {
@@ -25,6 +34,6 @@ export function InvoicePdfPreview({ invoice }: { invoice: Invoice }) {
   const errors = invoiceValidationErrors(invoice);
   return <section className="rounded-xl border border-slate-200 bg-white p-4 text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-white">
     <h2 className="font-semibold">PDF preview</h2><p className="mb-3 mt-1 text-xs text-slate-500">The same document layout is used when you save and download. Invoice numbers are assigned on save when left blank.</p>
-    {errors.length ? <p className="rounded-lg bg-slate-50 p-4 text-sm text-slate-600 dark:bg-slate-800 dark:text-slate-300">Complete business, customer and valid item details to preview the PDF.</p> : preview.payload !== payload ? <p role="status" className="p-4 text-sm">Updating preview…</p> : preview.error ? <p role="alert" className="p-4 text-sm text-red-600">{preview.error}</p> : preview.url ? <><iframe title="Invoice PDF preview" src={preview.url} className="h-[75vh] min-h-[480px] w-full rounded-lg border-0 bg-slate-100" /><a className="mt-2 inline-block text-sm text-blue-600 underline" href={preview.url} target="_blank" rel="noreferrer">Open preview in a new tab</a></> : null}
+    {errors.length ? <div className="rounded-lg bg-slate-50 p-4 text-sm text-slate-700 dark:bg-slate-800 dark:text-slate-200"><p className="font-medium">Finish these details to see your PDF:</p><ul className="mt-2 grid gap-1.5">{errors.map((message) => <li className="flex flex-wrap items-center justify-between gap-2" key={message}><span>{message}</span>{onFix ? <button className="shrink-0 font-semibold text-blue-700 underline underline-offset-2 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-100" type="button" onClick={() => onFix(stepForError(message))}>Open step</button> : null}</li>)}</ul></div> : preview.payload !== payload ? <p role="status" className="p-4 text-sm">Updating preview…</p> : preview.error ? <p role="alert" className="p-4 text-sm text-red-600">{preview.error}</p> : preview.url ? <><iframe title="Invoice PDF preview" src={preview.url} className="h-[75vh] min-h-[480px] w-full rounded-lg border-0 bg-slate-100" /><a className="mt-2 inline-block text-sm text-blue-600 underline" href={preview.url} target="_blank" rel="noreferrer">Open preview in a new tab</a></> : null}
   </section>;
 }
