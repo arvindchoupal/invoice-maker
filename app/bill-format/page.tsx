@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BadgeCheck, Calculator, CheckCircle2, Download, FileSpreadsheet, FileText, FileType2, Send, Smartphone } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
 
@@ -180,21 +179,7 @@ export default function BillFormatPage() {
     <main className="min-h-screen bg-white text-slate-950">
       <JsonLd data={schemas} />
 
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-5 px-5 sm:px-6">
-          <BrandLogo className="text-slate-950" imageClassName="h-9 w-9" tagline="" />
-          <nav className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex" aria-label="Primary navigation">
-            <Link className="transition hover:text-blue-600" href="/invoice-templates">Templates</Link>
-            <Link className="transition hover:text-blue-600" href="/tools">Free tools</Link>
-            <Link className="transition hover:text-blue-600" href="/pricing">Pricing</Link>
-            <Link className="transition hover:text-blue-600" href="/blog">Guides</Link>
-          </nav>
-          <div className="flex items-center gap-2">
-            <Link className="hidden rounded-xl px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 sm:inline-flex" href="/login">Log in</Link>
-            <Link className="inline-flex min-h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-700" href="/free-invoice">Create bill</Link>
-          </div>
-        </div>
-      </header>
+
 
       <section className="relative overflow-hidden border-b border-blue-100 bg-[linear-gradient(115deg,#f8fbff_0%,#eef6ff_55%,#ffffff_100%)] dark:border-white/10 dark:bg-[linear-gradient(115deg,#0b0f14_0%,#111b2d_55%,#0b0f14_100%)]">
         <div className="absolute inset-0 opacity-50 [background-image:linear-gradient(#dbeafe_1px,transparent_1px),linear-gradient(90deg,#dbeafe_1px,transparent_1px)] [background-size:32px_32px] dark:opacity-20 dark:[background-image:linear-gradient(#334155_1px,transparent_1px),linear-gradient(90deg,#334155_1px,transparent_1px)]" />

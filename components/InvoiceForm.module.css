@@ -1,0 +1,28 @@
+/* The editable sheet stays paper-white in either workspace theme. */
+.paper.paper.paper { background: #fff; color: #0f172a; color-scheme: light; }
+.paper.paper.paper label { color: #475569; }
+.paper.paper.paper a { color: #1d4ed8; }
+.paper.paper.paper table thead { background: #f1f5f9; color: #475569; }
+.paper.paper.paper table tbody tr:hover { background: #f8fafc; }
+.paper.paper.paper input, .paper.paper.paper textarea, .paper.paper.paper select { color: #0f172a; }
+.paper.paper.paper input::placeholder, .paper.paper.paper textarea::placeholder { color: #64748b; }
+
+.paper.paper.paper input:not([type="file"]),
+.paper.paper.paper textarea,
+.paper.paper.paper select {
+  border: 1px dotted #cbd5e1;
+  background-color: #fafcff;
+}
+.paper.paper.paper input:not([type="file"]):hover,
+.paper.paper.paper textarea:hover,
+.paper.paper.paper select:hover {
+  border-color: #94a3b8;
+  background-color: #f8fafc;
+}
+.paper.paper.paper input:not([type="file"]):focus,
+.paper.paper.paper textarea:focus,
+.paper.paper.paper select:focus {
+  border-style: solid;
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}

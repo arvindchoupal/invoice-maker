@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Check, Copy, Download, Mail, MessageCircle, RefreshCw } from "lucide-react";
-import { ToolPageLayout } from "@/components/tools/ToolPageLayout";
-import { Field, inputClass } from "@/components/ui";
-import { paymentReminderFaqs, paymentReminderKeywords } from "@/lib/payment-reminder-content";
+import { PublicSiteFooter } from "@/components/PublicSiteFooter";
+import styles from "@/components/tools/PaymentReminder.module.css";
+
 import { toolByHref } from "@/lib/tools-catalog";
 
 const tool = toolByHref("/tools/payment-reminder-generator")!;
@@ -33,7 +32,7 @@ function formatAmount(value: string) {
   return amount ? new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 2 }).format(amount) : "the outstanding amount";
 }
 
-export default function PaymentReminderGeneratorClient() {
+export default function PaymentReminderGeneratorClient({seoContent}: {seoContent: ReactNode}) {
   const [client, setClient] = useState("Rahul");
   const [business, setBusiness] = useState("Sharma Design Studio");
   const [invoice, setInvoice] = useState("INV-2026-104");
@@ -45,6 +44,8 @@ export default function PaymentReminderGeneratorClient() {
   const [channel, setChannel] = useState<Channel>("whatsapp");
   const [paymentDetails, setPaymentDetails] = useState("UPI: sharmadesign@upi");
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState("");
+  const [edited, setEdited] = useState<{source: string; value: string} | null>(null);
 
   const reminder = useMemo(() => {
     const name = client.trim() || "there";
@@ -91,14 +92,21 @@ export default function PaymentReminderGeneratorClient() {
     return `Hi ${name} 👋\n\n${opening}\n\n${request}${payment ? `\n\n${payment}` : ""}\n\nThank you,\n${sender}`;
   }, [amount, business, channel, client, dueDate, invoice, language, paymentDetails, stage, tone]);
 
+  const message = edited?.source === reminder ? edited.value : reminder;
+  const amountError = amount !== "" && (!Number.isFinite(Number(amount)) || Number(amount) < 0);
+  const canUseMessage = !!message.trim() && !amountError;
+
   async function copyReminder() {
-    await navigator.clipboard.writeText(reminder);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
+    setCopyError("");
+    try {
+      await navigator.clipboard.writeText(message);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch { setCopyError("Copy is unavailable. Select the message text and copy it manually."); }
   }
 
   function downloadReminder() {
-    const blob = new Blob([reminder], { type: "text/plain;charset=utf-8" });
+    const blob = new Blob([message], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -109,6 +117,12 @@ export default function PaymentReminderGeneratorClient() {
 
   function resetForm() {
     setClient("");
+    setBusiness("");
+    setLanguage("english");
+    setChannel("whatsapp");
+    setEdited(null);
+    setCopyError("");
+    setCopied(false);
     setInvoice("");
     setAmount("");
     setDueDate("");
@@ -117,169 +131,57 @@ export default function PaymentReminderGeneratorClient() {
     setTone("friendly");
   }
 
-  const whatsAppUrl = `https://wa.me/?text=${encodeURIComponent(reminder)}`;
-  const emailParts = reminder.match(/^Subject: (.*)\n\n([\s\S]*)$/);
-  const emailUrl = `mailto:?subject=${encodeURIComponent(emailParts?.[1] ?? "Invoice payment reminder")}&body=${encodeURIComponent(emailParts?.[2] ?? reminder)}`;
+  const whatsAppUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  const emailParts = message.match(/^Subject: (.*)\n\n([\s\S]*)$/);
+  const emailUrl = `mailto:?subject=${encodeURIComponent(emailParts?.[1] ?? "Invoice payment reminder")}&body=${encodeURIComponent(emailParts?.[2] ?? message)}`;
 
   return (
-    <ToolPageLayout after={<PaymentReminderSeoContent />} tool={tool}>
-      <div className="rounded-2xl border border-white/10 bg-slate-950/85 p-4 sm:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2 className="text-xl font-semibold text-white">Generate your reminder</h2>
-            <p className="mt-1 text-sm text-slate-400">Nothing is sent automatically. Review before sharing.</p>
+    <main className={`${styles.page} min-h-screen`}>
+      <section id="payment-reminder-tool" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-8 sm:px-6 sm:py-10">
+        <header className="mb-7"><p className="text-xs font-semibold uppercase tracking-widest text-[var(--guide-accent)]">Free payment reminder generator</p><h1 className="mt-3 max-w-4xl text-3xl font-semibold tracking-tight text-[var(--guide-heading)] sm:text-4xl">{tool.headline}</h1><p className="mt-3 max-w-3xl text-sm leading-7">{tool.metaDescription}</p></header>
+        <div className="grid min-w-0 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <div className={styles.panel}>
+            <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="text-xl font-semibold text-[var(--guide-heading)]">Generate your reminder</h2><p className="mt-2 text-sm text-[var(--guide-muted)]">Enter your invoice details and choose a style.</p></div><button className="inline-flex items-center gap-2 rounded-lg border border-[var(--guide-border)] px-3 py-2 text-xs font-semibold hover:bg-[var(--guide-soft)]" onClick={resetForm} type="button"><RefreshCw className="h-3.5 w-3.5" />Reset</button></div>
+            <div className="mt-6 grid gap-5 sm:grid-cols-2">
+              <Field label="Client name"><input value={client} onChange={e=>setClient(e.target.value)} placeholder="e.g. Rahul" /></Field>
+              <Field label="Your business name"><input value={business} onChange={e=>setBusiness(e.target.value)} placeholder="e.g. Sharma Design Studio" /></Field>
+              <Field label="Invoice number"><input value={invoice} onChange={e=>setInvoice(e.target.value)} placeholder="INV-2026-104" /></Field>
+              <Field label="Outstanding amount (₹)"><input aria-invalid={amountError} min="0" step="0.01" type="number" value={amount} onChange={e=>setAmount(e.target.value)} placeholder="25000" /></Field>
+              <Field label="Payment due date"><input type="date" value={dueDate} onChange={e=>setDueDate(e.target.value)} /></Field>
+              <Field label="Reminder stage"><select value={stage} onChange={e=>setStage(e.target.value as Stage)}>{Object.entries(stageLabels).map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></Field>
+            </div>
+            {amountError && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-300">Enter a valid outstanding amount of zero or more.</p>}
+            <div className="mt-6 grid gap-5 border-t border-[var(--guide-border)] pt-6">
+              <ChoiceGroup label="Tone" value={tone} onChange={value=>setTone(value as Tone)} options={[["friendly","Friendly"],["professional","Professional"],["firm","Firm"]]} />
+              <ChoiceGroup label="Language" value={language} onChange={value=>setLanguage(value as Language)} options={[["english","English"],["hinglish","Hinglish"]]} />
+              <ChoiceGroup label="Message format" value={channel} onChange={value=>setChannel(value as Channel)} options={[["whatsapp","WhatsApp"],["email","Email"],["sms","SMS"]]} />
+              <Field label="Payment link, UPI or bank note (optional)"><input value={paymentDetails} onChange={e=>setPaymentDetails(e.target.value)} placeholder="UPI: yourname@upi or payment link" /></Field>
+            </div>
           </div>
-          <button className="inline-flex items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-xs font-semibold text-slate-300 hover:bg-white/5" onClick={resetForm} type="button">
-            <RefreshCw className="h-3.5 w-3.5" /> Reset
-          </button>
+          <aside className={`${styles.panel} lg:sticky lg:top-24`} aria-label="Payment reminder preview">
+            <div className="flex flex-wrap justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-widest text-[var(--guide-accent)]">{channel} reminder preview</p><h2 className="mt-2 text-xl font-semibold text-[var(--guide-heading)]">Your message, ready to review</h2></div><span className="text-xs text-[var(--guide-muted)]">{message.length} characters</span></div>
+            <label className="mt-5 block"><span className="sr-only">Edit reminder message</span><textarea className={styles.message} value={message} onChange={e=>setEdited({source:reminder,value:e.target.value})} spellCheck /></label>
+            <p className="mt-3 text-xs leading-6 text-[var(--guide-muted)]">Edit the wording here before sharing. Changing invoice details refreshes this draft. Nothing is sent automatically.</p>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2"><button disabled={!canUseMessage} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-40" onClick={copyReminder} type="button">{copied?<Check className="h-4 w-4" />:<Copy className="h-4 w-4" />}{copied?"Copied":"Copy reminder"}</button>
+              {channel === "whatsapp" ? <a aria-disabled={!canUseMessage} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 text-sm font-semibold text-white hover:bg-emerald-800 aria-disabled:pointer-events-none aria-disabled:opacity-40" href={canUseMessage?whatsAppUrl:undefined} target="_blank" rel="noreferrer"><MessageCircle className="h-4 w-4" />Open WhatsApp</a> : channel === "email" ? <a aria-disabled={!canUseMessage} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[var(--guide-border)] px-4 text-sm font-semibold text-[var(--guide-accent)] aria-disabled:pointer-events-none aria-disabled:opacity-40" href={canUseMessage?emailUrl:undefined}><Mail className="h-4 w-4" />Open email app</a> : <button disabled={!canUseMessage} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[var(--guide-border)] px-4 text-sm font-semibold disabled:opacity-40" onClick={downloadReminder} type="button"><Download className="h-4 w-4" />Download message</button>}
+            </div>
+            {channel!=="sms" && <button disabled={!canUseMessage} className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-[var(--guide-border)] text-xs font-semibold text-[var(--guide-accent)] disabled:opacity-40" onClick={downloadReminder} type="button"><Download className="h-3.5 w-3.5" />Download as text file</button>}
+            {copyError && <p role="alert" className="mt-3 text-sm">{copyError}</p>}
+            <p role="status" aria-live="polite" className="mt-2 text-xs text-[var(--guide-accent)]">{copied?"Reminder copied to clipboard.":""}</p>
+            {channel==="sms" && <p className="mt-3 text-xs leading-6 text-[var(--guide-muted)]">SMS apps may split a long reminder into multiple messages. Shorten the draft to fit your needs.</p>}
+          </aside>
         </div>
-
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <Field label="Client name"><input className={inputClass} value={client} onChange={(e) => setClient(e.target.value)} placeholder="e.g. Rahul" /></Field>
-          <Field label="Your business name"><input className={inputClass} value={business} onChange={(e) => setBusiness(e.target.value)} placeholder="e.g. Sharma Design Studio" /></Field>
-          <Field label="Invoice number"><input className={inputClass} value={invoice} onChange={(e) => setInvoice(e.target.value)} placeholder="INV-2026-104" /></Field>
-          <Field label="Outstanding amount (₹)"><input className={inputClass} min="0" type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="25000" /></Field>
-          <Field label="Payment due date"><input className={inputClass} type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} /></Field>
-          <Field label="Reminder stage"><select className={inputClass} value={stage} onChange={(e) => setStage(e.target.value as Stage)}>{Object.entries(stageLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></Field>
-        </div>
-
-        <div className="mt-5 grid gap-5 border-t border-white/10 pt-5">
-          <ChoiceGroup label="Tone" value={tone} onChange={(value) => setTone(value as Tone)} options={[["friendly", "Friendly"], ["professional", "Professional"], ["firm", "Firm"]]} />
-          <ChoiceGroup label="Language" value={language} onChange={(value) => setLanguage(value as Language)} options={[["english", "English"], ["hinglish", "Hinglish"]]} />
-          <ChoiceGroup label="Message format" value={channel} onChange={(value) => setChannel(value as Channel)} options={[["whatsapp", "WhatsApp"], ["email", "Email"], ["sms", "SMS"]]} />
-          <Field label="Payment link, UPI or bank note (optional)"><input className={inputClass} value={paymentDetails} onChange={(e) => setPaymentDetails(e.target.value)} placeholder="UPI: yourname@upi or payment link" /></Field>
-        </div>
-
-        <div className="mt-6 rounded-2xl border border-cyan-300/20 bg-cyan-300/[0.07] p-4">
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200">{channel} reminder preview</p>
-            <span className="text-xs text-slate-500">{reminder.length} characters</span>
-          </div>
-          <pre className="mt-4 max-h-[360px] overflow-auto whitespace-pre-wrap font-sans text-sm leading-7 text-slate-100">{reminder}</pre>
-        </div>
-
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <button className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-300 px-4 text-sm font-semibold text-slate-950 hover:bg-cyan-200" onClick={copyReminder} type="button">
-            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />} {copied ? "Copied" : "Copy reminder"}
-          </button>
-          {channel === "whatsapp" ? (
-            <a className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 text-sm font-semibold text-white hover:bg-emerald-400" href={whatsAppUrl} rel="noreferrer" target="_blank"><MessageCircle className="h-4 w-4" /> Open WhatsApp</a>
-          ) : channel === "email" ? (
-            <a className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white hover:bg-blue-500" href={emailUrl}><Mail className="h-4 w-4" /> Open email app</a>
-          ) : (
-            <button className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-sm font-semibold text-white hover:bg-white/5" onClick={downloadReminder} type="button"><Download className="h-4 w-4" /> Download message</button>
-          )}
-        </div>
-        {channel !== "sms" && <button className="mt-3 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-white/10 text-xs font-semibold text-slate-300 hover:bg-white/5" onClick={downloadReminder} type="button"><Download className="h-3.5 w-3.5" /> Download as text file</button>}
-      </div>
-    </ToolPageLayout>
+      </section>
+      {seoContent}
+      <PublicSiteFooter />
+    </main>
   );
 }
 
-function ChoiceGroup({ label, value, options, onChange }: { label: string; value: string; options: Array<[string, string]>; onChange: (value: string) => void }) {
-  return (
-    <div>
-      <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">{label}</p>
-      <div className="grid grid-cols-3 gap-2">
-        {options.map(([optionValue, optionLabel]) => (
-          <button className={`min-h-10 rounded-xl border px-3 text-xs font-semibold transition ${value === optionValue ? "border-cyan-300 bg-cyan-300/15 text-cyan-100" : "border-white/10 text-slate-400 hover:bg-white/5"}`} key={optionValue} onClick={() => onChange(optionValue)} type="button">
-            {optionLabel}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+function Field({label,children}: {label:string;children:ReactNode}) {
+  return <label className={styles.formField}><span>{label}</span>{children}</label>;
 }
 
-function PaymentReminderSeoContent() {
-  const examples = [
-    ["Friendly WhatsApp payment reminder", "Hi Rahul 👋 Just following up on invoice INV-2026-104 for ₹25,000, which was due on 20 Jun 2026. Could you please share the expected payment date? Thank you!"],
-    ["Professional overdue invoice email", "Subject: Payment reminder for INV-2026-104. This is a reminder that the invoice remains outstanding. Please arrange payment or confirm the processing date."],
-    ["Firm final payment reminder", "This is a final reminder for the outstanding invoice. Please process payment immediately or confirm a specific date to avoid further action under the agreed terms."],
-    ["Hinglish payment follow-up", "Hi Rahul, invoice INV-2026-104 ka payment abhi pending hai. Please expected payment date confirm kar dijiye. Agar payment ho gaya hai toh reference share kar dein."],
-  ];
-
-  return (
-    <section className="px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-7xl gap-7">
-        <article className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Free payment follow-up tool</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white">Payment Reminder Message Generator for WhatsApp, Email and SMS</h2>
-          <div className="mt-5 grid gap-6 text-sm leading-7 text-slate-300 lg:grid-cols-2">
-            <div className="space-y-4">
-              <p>A payment reminder message helps a freelancer, agency, contractor or small business follow up on an unpaid invoice without sounding rude. Add the invoice number, outstanding amount and due date, then choose a friendly, professional or firm tone.</p>
-              <p>This free overdue payment reminder generator creates copy-paste messages for WhatsApp, email and SMS. It also supports Hinglish for Indian client conversations where fully formal English may feel unnatural.</p>
-            </div>
-            <div className="grid gap-3">
-              {["Generate a polite payment reminder in seconds", "Include invoice amount, number and due date", "Switch from friendly follow-up to final reminder", "Add UPI ID, bank note or payment link"].map((item) => <div className="rounded-2xl border border-white/10 bg-slate-950/70 p-4 font-semibold text-slate-200" key={item}>{item}</div>)}
-            </div>
-          </div>
-        </article>
-
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Copy-paste examples</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white">Payment reminder message templates</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {examples.map(([title, body]) => <article className="rounded-2xl bg-slate-950/70 p-5" key={title}><h3 className="font-semibold text-white">{title}</h3><p className="mt-3 text-sm leading-7 text-slate-400">{body}</p></article>)}
-          </div>
-        </section>
-
-        <section className="grid gap-6 lg:grid-cols-2">
-          <article className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Follow-up sequence</p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">When to send payment reminders</h2>
-            <div className="mt-5 grid gap-3">
-              {[["Before due date", "Send a brief courtesy reminder with the invoice and payment details."], ["On the due date", "Confirm that payment is due and ask whether any document is missing."], ["7 days overdue", "Request an expected processing date and transaction reference."], ["15+ days overdue", "Use a firmer message and refer to agreed payment terms."], ["Final reminder", "State the required action and any contractual next step without threats or abusive language."]].map(([title, body], index) => <div className="grid grid-cols-[32px_1fr] gap-3 rounded-2xl bg-slate-950/70 p-4" key={title}><span className="grid h-8 w-8 place-items-center rounded-xl bg-cyan-300/10 text-xs font-bold text-cyan-200">{index + 1}</span><div><h3 className="font-semibold text-white">{title}</h3><p className="mt-1 text-sm leading-6 text-slate-400">{body}</p></div></div>)}
-            </div>
-          </article>
-          <article className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Better replies</p>
-            <h2 className="mt-3 text-2xl font-semibold text-white">How to ask for payment politely</h2>
-            <ul className="mt-5 grid gap-3 text-sm leading-6 text-slate-300">
-              {["Use a clear invoice reference instead of saying only “payment pending”.", "Assume the delay may be accidental in the first reminder.", "Ask for a specific expected payment date.", "Make payment easy by adding UPI, bank or payment-link details.", "Keep WhatsApp reminders shorter than email follow-ups.", "Do not add penalties that were not part of the agreed terms.", "Save follow-up history when an invoice remains unpaid."].map((item) => <li className="rounded-2xl bg-slate-950/70 p-4" key={item}>{item}</li>)}
-            </ul>
-          </article>
-        </section>
-
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Use the right channel</p>
-          <h2 className="mt-3 text-3xl font-semibold text-white">WhatsApp vs email payment reminders</h2>
-          <div className="mt-6 overflow-x-auto rounded-2xl border border-white/10">
-            <table className="w-full min-w-[650px] text-left text-sm">
-              <thead className="bg-white/[0.06] text-xs uppercase tracking-wide text-slate-400"><tr><th className="p-4">Channel</th><th className="p-4">Best use</th><th className="p-4">Recommended style</th></tr></thead>
-              <tbody>
-                {[["WhatsApp", "Regular clients and quick follow-up", "Short, conversational and specific"], ["Email", "Formal records and detailed overdue notices", "Clear subject, invoice details and action"], ["SMS", "Brief due-date reminder", "One short message with amount and reference"]].map((row) => <tr className="border-t border-white/10" key={row[0]}>{row.map((cell, index) => <td className={`p-4 ${index === 0 ? "font-semibold text-white" : "text-slate-300"}`} key={cell}>{cell}</td>)}</tr>)}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Related InvoiceWala tools</p>
-          <h2 className="mt-3 text-2xl font-semibold text-white">Create, calculate and follow up</h2>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {[["/free-invoice-generator", "Free invoice generator"], ["/tools/invoice-number-generator", "Invoice number generator"], ["/tools/gst-calculator", "GST calculator India"], ["/receipt-generator", "Payment receipt generator"]].map(([href, label]) => <Link className="rounded-2xl border border-white/10 bg-slate-950/70 p-4 font-semibold text-slate-200 transition hover:border-cyan-300/40 hover:text-cyan-100" href={href} key={href}>{label}</Link>)}
-          </div>
-        </section>
-
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">FAQs</p>
-          <h2 className="mt-3 text-3xl font-semibold text-white">Payment reminder questions</h2>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">{paymentReminderFaqs.map(([question, answer]) => <article className="rounded-2xl bg-slate-950/70 p-5" key={question}><h3 className="font-semibold text-white">{question}</h3><p className="mt-3 text-sm leading-6 text-slate-400">{answer}</p></article>)}</div>
-        </section>
-
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Related searches</p>
-          <h2 className="mt-3 text-2xl font-semibold text-white">Payment reminder keywords this tool answers</h2>
-          <div className="mt-5 flex flex-wrap gap-2">{paymentReminderKeywords.map((keyword) => <span className="rounded-full border border-white/10 bg-slate-950/70 px-3 py-1.5 text-xs font-semibold text-slate-300" key={keyword}>{keyword}</span>)}</div>
-        </section>
-
-        <section className="rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-7 text-center">
-          <h2 className="text-3xl font-semibold text-white">Create the invoice before you chase the payment</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-slate-300">Send a professional invoice with a clear number, due date and amount—then track payment status inside InvoiceWala.</p>
-          <Link className="mt-5 inline-flex min-h-12 items-center justify-center rounded-xl bg-cyan-300 px-5 text-sm font-semibold text-slate-950" href="/free-invoice">Create free invoice</Link>
-        </section>
-      </div>
-    </section>
-  );
+function ChoiceGroup({label,value,options,onChange}: {label:string;value:string;options:Array<[string,string]>;onChange:(value:string)=>void}) {
+  return <fieldset><legend className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--guide-muted)]">{label}</legend><div className="flex flex-wrap gap-2">{options.map(([optionValue,optionLabel])=><button key={optionValue} type="button" aria-pressed={value===optionValue} onClick={()=>onChange(optionValue)} className={`min-h-11 flex-1 rounded-xl border px-4 py-2 text-xs font-semibold ${value===optionValue?"border-[var(--guide-accent)] bg-[var(--guide-soft)] text-[var(--guide-accent)]":"border-[var(--guide-border)] text-[var(--guide-text)] hover:bg-[var(--guide-soft)]"}`}>{optionLabel}</button>)}</div></fieldset>;
 }

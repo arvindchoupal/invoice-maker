@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo-schemas";
 
@@ -41,10 +40,7 @@ export default function PressKitPage() {
         { name: "Home", url: siteUrl },
         { name: "Press Kit", url: `${siteUrl}/press-kit` },
       ])} />
-      <nav className="mx-auto flex max-w-5xl items-center justify-between px-5 py-6">
-        <BrandLogo href="/" imageClassName="h-10 w-10" tagline="" />
-        <Link className="text-sm font-semibold text-cyan-300" href="/contact">Contact</Link>
-      </nav>
+
 
       <article className="mx-auto max-w-5xl px-5 py-12 sm:py-16">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Official resources</p>

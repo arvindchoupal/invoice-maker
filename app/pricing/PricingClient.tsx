@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Gift, ShieldCheck, Sparkles } from "lucide-react";
 import { api, getToken } from "@/lib/api";
-import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
 import { Badge, Card, LinkButton } from "@/components/ui";
 
@@ -49,20 +48,7 @@ export function PricingClient() {
 
   return (
     <main className="min-h-screen bg-[#050816] text-white">
-      <header className="border-b border-white/10 bg-[#050816]/85 px-4 py-4 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <BrandLogo className="text-white" href="/" imageClassName="h-10 w-10" tagline="" />
-          <div className="flex items-center gap-2">
-            <Link className="hidden rounded-xl px-3 py-2 text-sm font-semibold text-slate-300 hover:bg-white/10 sm:inline-flex" href="/tools">Free tools</Link>
-            <Link className="rounded-xl border border-white/10 px-3 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10" href={isLoggedIn ? "/dashboard" : "/login"}>
-              {isLoggedIn ? "Dashboard" : "Log in"}
-            </Link>
-            <Link className="rounded-xl bg-cyan-300 px-3 py-2 text-sm font-semibold text-slate-950" href={isLoggedIn ? "/invoices/new" : "/signup?source=founding-1000"}>
-              {isLoggedIn ? "New invoice" : "Claim free account"}
-            </Link>
-          </div>
-        </div>
-      </header>
+
 
       <section className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:py-16">
         <div className="mx-auto max-w-4xl text-center">

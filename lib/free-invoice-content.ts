@@ -1,0 +1,18 @@
+export const freeInvoiceFaqs: Array<[string, string]> = [
+  ["Is this invoice generator free to use?", "You can create an invoice and download your first PDF free without signup. Create a free account to save invoice history, reuse customers and track payments."],
+  ["How do I create an invoice online?", "Enter your business and customer details, choose an invoice number and dates, then add the products or services you supplied. Check quantities, prices, discounts, tax and the balance due before downloading the PDF."],
+  ["Can I add tax and discounts?", "Yes. Each item row includes a tax percentage and discount controls. Enter the rates that apply to your transaction and check the calculated totals before sharing your invoice."],
+  ["Can I record a partial payment?", "Yes. Enter the amount received in the Amount paid field in the invoice totals. The balance due updates to reflect the remaining amount."],
+  ["Can I use this for freelance or shop invoices?", "Yes. Use service descriptions for freelance work, consulting or repairs, and item names with quantities for products. Add payment terms and notes to explain the work and when payment is due."],
+  ["Can I change the invoice currency?", "Yes. Open Invoice settings beside the form to select INR, USD, EUR, GBP or AED. Check that your prices match the selected currency; changing currency does not convert amounts."],
+  ["Will my draft be saved?", "The page keeps a draft on this device using browser storage when available. A local draft is not a saved account invoice. Sign in and save the invoice to keep it in your invoice history."],
+  ["What should I check before sending the PDF?", "Review the customer name, invoice number, dates, item descriptions, currency, tax, total and payment terms. Preview the downloaded PDF before sending it to your customer."],
+  ["What is the difference between an invoice and a receipt?", "An invoice requests payment and shows what is owed. A receipt acknowledges money received. Use the invoice to explain the bill and a receipt when you need a separate payment acknowledgement."],
+  ["Can I invoice for hourly work?", "Yes. Describe the service, enter the number of hours as the quantity and your hourly price as the rate. For fixed-price work, use quantity 1 and enter the agreed project or milestone price."],
+  ["How should I number my invoices?", "Use a consistent pattern and check your records before assigning a new number. For example, INV-2026-001 can be followed by INV-2026-002. Keep project references in the notes when that makes the number easier to read."],
+  ["Can I add my business logo?", "Yes. Use Add your logo at the top of the invoice form to choose an image from your device. Review the downloaded PDF to make sure the logo is clear and the business details are correct."],
+  ["Do I need a spreadsheet or document editor?", "No. Enter your details directly in the online form and download the invoice as a PDF. You do not need to create a separate spreadsheet or format a document before using this page."],
+  ["How do I invoice for a project milestone?", "Describe the milestone in the item row and enter the amount agreed for that stage. Add the project reference and scope in the notes, and choose the due date from your payment agreement."],
+  ["Does the tool send the invoice to my customer?", "This page lets you prepare and download an invoice PDF. Review the document and share it through your usual email or customer communication channel."],
+  ["Can I use the tool on my phone?", "The invoice form works in a mobile browser. Enter the details, review all item columns and check the totals before downloading. You can also use a desktop browser when entering longer invoices."],
+];

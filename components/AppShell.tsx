@@ -130,7 +130,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="invoicewala-shell min-h-screen text-slate-950 dark:text-white">
       <aside
-        className={`fixed inset-y-3 left-3 z-30 hidden rounded-xl border border-slate-200 bg-white p-3 shadow-sm shadow-slate-950/[0.03] transition-[width] duration-200 dark:border-[#2b3138] dark:bg-[#12161b] dark:shadow-none lg:block ${
+        className={`fixed bottom-3 top-[92px] left-3 z-30 hidden rounded-xl border border-slate-200 bg-white p-3 shadow-sm shadow-slate-950/[0.03] transition-[width] duration-200 dark:border-[#2b3138] dark:bg-[#12161b] dark:shadow-none lg:block ${
           compactSidebar ? "w-[72px]" : "w-[236px]"
         }`}
       >
@@ -226,7 +226,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       <div className={`transition-[padding] duration-200 ${compactSidebar ? "lg:pl-[96px]" : "lg:pl-[260px]"}`}>
-        <header className={`sticky top-0 z-20 border-b border-slate-200 px-4 py-2.5 transition-colors duration-200 dark:border-[#2b3138] lg:px-5 ${headerScrolled ? "bg-white/95 backdrop-blur-xl dark:bg-[#0f1216]/95" : "bg-transparent backdrop-blur-none"}`}>
+        <header className={`sticky top-[76px] z-20 border-b border-slate-200 px-4 py-2.5 transition-colors duration-200 dark:border-[#2b3138] lg:px-5 ${headerScrolled ? "bg-white/95 backdrop-blur-xl dark:bg-[#0f1216]/95" : "bg-transparent backdrop-blur-none"}`}>
           <div className="mx-auto flex max-w-[100rem] items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3 lg:hidden">
               <BrandLogo href="/dashboard" imageClassName="h-9 w-9" showText={false} />

@@ -3,6 +3,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { paymentReminderFaqs } from "@/lib/payment-reminder-content";
 import { breadcrumbSchema, faqSchema, howToSchema, webApplicationSchema } from "@/lib/seo-schemas";
 import { toolByHref } from "@/lib/tools-catalog";
+import { PaymentReminderSeoContent } from "@/components/tools/PaymentReminderSeoContent";
 import PaymentReminderGeneratorClient from "./PaymentReminderGeneratorClient";
 
 const tool = toolByHref("/tools/payment-reminder-generator")!;
@@ -51,7 +52,7 @@ export default function PaymentReminderGeneratorPage() {
           ]),
         ]}
       />
-      <PaymentReminderGeneratorClient />
+      <PaymentReminderGeneratorClient seoContent={<PaymentReminderSeoContent />} />
     </>
   );
 }

@@ -1,0 +1,31 @@
+.page, .guide {
+  --guide-bg: #f8fafc;
+  --guide-panel: #fff;
+  --guide-soft: #eef4fb;
+  --guide-text: #334155;
+  --guide-heading: #0f172a;
+  --guide-muted: #475569;
+  --guide-accent: #1d4ed8;
+  --guide-border: #dbe5f1;
+  background: var(--guide-bg);
+  color: var(--guide-text);
+}
+:global(html.dark) .page, :global(html.dark) .guide {
+  --guide-bg: #0f1216;
+  --guide-panel: #171b20;
+  --guide-soft: #202833;
+  --guide-text: #cbd5e1;
+  --guide-heading: #f8fafc;
+  --guide-muted: #b0bdce;
+  --guide-accent: #7dd3fc;
+  --guide-border: #334155;
+}
+.guide section[id] { scroll-margin-top: 7rem; }
+.guide a:focus-visible, .guide summary:focus-visible { outline: 3px solid var(--guide-accent); outline-offset: 4px; }
+ .panel { border: 1px solid var(--guide-border); border-radius: 1rem; background: var(--guide-panel); padding: 1.5rem; min-width: 0; }
+.field { display: grid; gap: .65rem; font-size: .875rem; font-weight: 500; color: var(--guide-text); }
+.field input { width: 100%; min-width: 0; min-height: 3rem; border: 1px dotted var(--guide-border); border-radius: .75rem; padding: .8rem 1rem; background: var(--guide-bg); color: var(--guide-heading); outline: none; }
+.field input:hover { border-color: var(--guide-accent); }
+.field input:focus { border: 1px solid var(--guide-accent); box-shadow: 0 0 0 3px var(--guide-soft); }
+:global(html.dark) .field input { color-scheme: dark; }
+.guide code { overflow-wrap: anywhere; }

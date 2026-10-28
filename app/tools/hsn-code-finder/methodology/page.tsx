@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo-schemas";
 import { HSN_DATA_LAST_REVIEWED, HSN_SAC_ENTRIES } from "@/lib/hsn-sac-data";
@@ -19,10 +18,7 @@ export default function HsnMethodologyPage() {
         { name: "HSN Code Finder", url: "https://invoicewala.shop/tools/hsn-code-finder" },
         { name: "Methodology", url: "https://invoicewala.shop/tools/hsn-code-finder/methodology" },
       ])} />
-      <nav className="mx-auto flex max-w-5xl items-center justify-between px-5 py-6">
-        <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-        <Link className="text-sm font-semibold text-cyan-300" href="/tools/hsn-code-finder">Open finder</Link>
-      </nav>
+
       <article className="mx-auto max-w-4xl px-5 py-12">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Data transparency</p>
         <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-5xl">HSN/SAC Finder methodology and correction policy</h1>

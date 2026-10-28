@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { BrandLogo } from "@/components/BrandLogo";
-import { PublicToolNavActions } from "@/components/PublicToolNavActions";
 import { HSN_DATA_LAST_REVIEWED, HSN_SAC_CATEGORIES, HSN_SAC_ENTRIES } from "@/lib/hsn-sac-data";
 
 type Props = { faqs: Array<[string, string]> };
@@ -67,10 +65,7 @@ export default function HsnCodeFinderClient({ faqs }: Props) {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_34%),radial-gradient(circle_at_top_right,rgba(99,102,241,0.15),transparent_30%)] px-4 py-5 sm:px-6 lg:px-8">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-          <PublicToolNavActions signupSource="hsn-code-finder" />
-        </nav>
+
 
         <div className="mx-auto max-w-7xl py-12 sm:py-16">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">Free GST classification tool</p>

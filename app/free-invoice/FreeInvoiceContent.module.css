@@ -1,0 +1,34 @@
+.content {
+  --guide-bg: #f8fafc;
+  --guide-panel: #ffffff;
+  --guide-soft: #eef4fb;
+  --guide-text: #334155;
+  --guide-heading: #0f172a;
+  --guide-muted: #475569;
+  --guide-accent: #1d4ed8;
+  --guide-border: #dbe5f1;
+  background: var(--guide-bg);
+  color: var(--guide-text);
+  border-top: 1px solid var(--guide-border);
+}
+:global(html.dark) .content {
+  --guide-bg: #0f1216;
+  --guide-panel: #171b20;
+  --guide-soft: #202833;
+  --guide-text: #cbd5e1;
+  --guide-heading: #f8fafc;
+  --guide-muted: #b0bdce;
+  --guide-accent: #7dd3fc;
+  --guide-border: #334155;
+}
+.content section[id] { scroll-margin-top: 7rem; }
+.content a:focus-visible, .content summary:focus-visible {
+  outline: 3px solid var(--guide-accent);
+  outline-offset: 5px;
+}
+.tableWrap { overflow-x: auto; border: 1px solid var(--guide-border); border-radius: 1rem; }
+.tableWrap table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.tableWrap th, .tableWrap td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--guide-border); vertical-align: top; }
+.tableWrap th { background: var(--guide-soft); color: var(--guide-heading); font-weight: 600; }
+.tableWrap tr:last-child td { border-bottom: 0; }
+.tableWrap caption { text-align: left; padding: 1rem; font-weight: 600; color: var(--guide-heading); background: var(--guide-panel); }

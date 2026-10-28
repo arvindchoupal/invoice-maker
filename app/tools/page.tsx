@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
-import { PublicNavActions } from "@/components/PublicNavActions";
 import { PublicPrimaryCta } from "@/components/PublicPrimaryCta";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TOOLS_CATALOG } from "@/lib/tools-catalog";
@@ -93,10 +91,7 @@ export default function ToolsPage() {
         ]}
       />
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_34%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.15),transparent_30%)] px-5 py-6 sm:px-8">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-          <PublicNavActions showBlog={false} />
-        </nav>
+
 
         <div className="mx-auto grid max-w-7xl gap-10 py-16 lg:grid-cols-[1.04fr_0.96fr] lg:items-center">
           <div>

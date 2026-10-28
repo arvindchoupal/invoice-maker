@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, FileCheck2 } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
-import { PublicNavActions } from "@/components/PublicNavActions";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PurchaseOrderGeneratorClient } from "@/app/purchase-order-generator/PurchaseOrderGeneratorClient";
 
@@ -103,10 +101,7 @@ export default function QuotationMakerPage() {
     <main className="min-h-screen bg-slate-950 text-white">
       <JsonLd data={schemas} />
       <section className="mx-auto max-w-7xl px-5 py-5 sm:px-6 sm:py-6">
-        <nav className="flex items-center justify-between">
-          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-          <PublicNavActions />
-        </nav>
+
         <div className="grid gap-10 py-12 lg:grid-cols-[1fr_430px] lg:items-center">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Free quotation generator India</p>

@@ -2,17 +2,11 @@ import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema, faqSchema, webApplicationSchema } from "@/lib/seo-schemas";
 import { getInvoiceTemplatePage } from "@/lib/invoice-template-pages";
+import { FreeInvoiceContent } from "./FreeInvoiceContent";
+import { freeInvoiceFaqs } from "@/lib/free-invoice-content";
 import { FreeInvoiceClient } from "./FreeInvoiceClient";
 
 const siteUrl = "https://invoicewala.shop";
-
-const faqs: Array<[string, string]> = [
-  ["Is this a free invoice generator?", "Yes. You can create an invoice and download your first PDF free without signup. A free account is only needed to save invoice history, reuse customers and track payments."],
-  ["Can I create an invoice without signup?", "Yes. Add your invoice details and download your first PDF without creating an account."],
-  ["Can I download the invoice PDF?", "Yes. Your first invoice PDF downloads free without signup. Create a free account when you want to save invoices and make repeat billing faster."],
-  ["Who is this free invoice page for?", "It is built for freelancers, contractors, consultants, local shops, service businesses and anyone who needs a simple customer invoice."],
-  ["Does it support GST or tax?", "Yes. You can add tax percentage on invoice item rows and use GST-ready invoice workflows when needed."],
-];
 
 export const metadata: Metadata = {
   title: "Free Invoice Generator | Download PDF Without Signup",
@@ -54,10 +48,11 @@ export default async function FreeInvoicePage({ searchParams }: FreeInvoicePageP
             { name: "Home", url: siteUrl },
             { name: "Free Invoice Generator", url: `${siteUrl}/free-invoice` },
           ]),
-          faqSchema(faqs),
+          faqSchema(freeInvoiceFaqs),
         ]}
       />
       <FreeInvoiceClient
+        initialTaxMode={firstParam(params.taxMode) === "intra" ? "intra" : firstParam(params.taxMode) === "inter" ? "inter" : undefined}
         initialSaveError={firstParam(params.saveError) === "1"}
         initialTemplate={template ? { slug: template.slug, label: template.profession, style } : undefined}
         initialItem={{
@@ -65,7 +60,9 @@ export default async function FreeInvoicePage({ searchParams }: FreeInvoicePageP
           taxRate: firstParam(params.gstRate),
           unitPrice: firstParam(params.amount),
         }}
-      />
+      >
+        <FreeInvoiceContent />
+      </FreeInvoiceClient>
     </>
   );
 }

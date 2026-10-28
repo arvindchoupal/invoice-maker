@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, FileText } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
-import { PublicNavActions } from "@/components/PublicNavActions";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PurchaseOrderGeneratorClient } from "./PurchaseOrderGeneratorClient";
 
@@ -134,10 +132,7 @@ export default function PurchaseOrderGeneratorPage() {
     <main className="min-h-screen bg-slate-950 text-white">
       <JsonLd data={[faqSchema(), softwareSchema(), breadcrumbSchema(), howToSchema()]} />
       <section className="mx-auto max-w-7xl px-5 py-5 sm:px-6 sm:py-6">
-        <nav className="flex items-center justify-between">
-          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-          <PublicNavActions />
-        </nav>
+
 
         <div className="grid gap-10 py-12 lg:grid-cols-[1fr_460px] lg:items-center">
           <div>

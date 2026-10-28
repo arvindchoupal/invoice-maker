@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
-import { PublicNavActions } from "@/components/PublicNavActions";
 
 const siteUrl = "https://invoicewala.shop";
 
@@ -15,10 +13,7 @@ export default function PrivacyPolicyPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="border-b border-white/10 px-5 py-6 sm:px-8">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-          <PublicNavActions />
-        </nav>
+
       </section>
       <article className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Privacy</p>

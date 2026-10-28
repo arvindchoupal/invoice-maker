@@ -1,6 +1,4 @@
-import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
-import { PublicToolNavActions } from "@/components/PublicToolNavActions";
 import type { ToolCatalogEntry } from "@/lib/tools-catalog";
 
 export function ToolPageLayout({
@@ -17,10 +15,7 @@ export function ToolPageLayout({
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_32%),radial-gradient(circle_at_top_right,rgba(99,102,241,0.14),transparent_30%)] px-4 py-5 sm:px-6 lg:px-8">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-          <PublicToolNavActions signupSource={tool.signupSource} />
-        </nav>
+
 
         <div className={`mx-auto grid max-w-7xl gap-8 py-10 sm:py-12 lg:items-start ${wideTool ? "lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1fr)]" : "lg:grid-cols-[minmax(0,0.9fr)_minmax(420px,0.8fr)] xl:grid-cols-[minmax(0,0.95fr)_minmax(460px,0.78fr)]"}`}>
           <div className="lg:sticky lg:top-6">

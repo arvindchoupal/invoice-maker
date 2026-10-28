@@ -1,9 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, CheckCircle2, FileText, ReceiptIndianRupee } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
-import { PublicNavActions } from "@/components/PublicNavActions";
 import { InvoiceTemplatePreview } from "@/components/seo/InvoiceTemplatePreview";
 import { PeopleAlsoUse } from "@/components/seo/PeopleAlsoUse";
 import type { InvoiceTemplatePage as InvoiceTemplatePageData } from "@/lib/invoice-template-pages";
@@ -16,10 +14,7 @@ export function InvoiceTemplatePage({ page }: { page: InvoiceTemplatePageData })
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.17),transparent_34%),radial-gradient(circle_at_top_right,rgba(79,70,229,0.16),transparent_32%)]">
         <div className="mx-auto max-w-7xl px-5 py-5 sm:px-6">
-          <nav className="flex items-center justify-between">
-            <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-            <PublicNavActions />
-          </nav>
+
 
           <div className="mt-7 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-400" aria-label="Breadcrumb">
             <Link className="hover:text-cyan-200" href="/">Home</Link><span>/</span>

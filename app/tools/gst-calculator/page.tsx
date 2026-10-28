@@ -3,6 +3,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { toolByHref } from "@/lib/tools-catalog";
 import { breadcrumbSchema, faqSchema, howToSchema, webApplicationSchema } from "@/lib/seo-schemas";
 import { gstCalculatorSeoContent } from "@/lib/tool-seo-content";
+import { GstCalculatorSeoContent } from "@/components/tools/GstCalculatorSeoContent";
 import GstCalculatorClient from "./GstCalculatorClient";
 
 const tool = toolByHref("/tools/gst-calculator")!;
@@ -34,7 +35,7 @@ export default function GstCalculatorPage() {
           ]),
         ]}
       />
-      <GstCalculatorClient />
+      <GstCalculatorClient seoContent={<GstCalculatorSeoContent content={gstCalculatorSeoContent} />} />
     </>
   );
 }

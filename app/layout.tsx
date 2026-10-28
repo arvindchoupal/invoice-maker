@@ -1,3 +1,4 @@
+import { GlobalSiteHeader } from "@/components/GlobalSiteHeader";
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Suspense } from "react";
@@ -45,6 +46,7 @@ export default function RootLayout({
         </Script>
         <AnalyticsEvents />
         <Suspense fallback={null}><UserActivityTracker /></Suspense>
+        <GlobalSiteHeader />
         {children}
         <ThemeToggle />
       </body>

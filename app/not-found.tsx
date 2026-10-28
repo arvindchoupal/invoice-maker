@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowRight, FileText, Search } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
 
 const helpfulLinks = [
   { href: "/free-invoice", label: "Create free invoice", body: "Start with the invoice maker and preview your bill before signup." },
@@ -13,12 +12,7 @@ export default function NotFound() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="mx-auto max-w-5xl px-5 py-6 sm:px-6">
-        <nav className="flex items-center justify-between">
-          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-          <Link className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950" data-event="not_found_home_click" data-event-category="navigation" href="/">
-            Home
-          </Link>
-        </nav>
+
 
         <div className="py-16 text-center sm:py-24">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-cyan-300/10 ring-1 ring-cyan-300/20">

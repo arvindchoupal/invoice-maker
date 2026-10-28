@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
-import { PublicNavActions } from "@/components/PublicNavActions";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 const siteUrl = "https://invoicewala.shop";
@@ -25,10 +23,7 @@ export default function AboutPage() {
         description: metadata.description,
       }} />
       <section className="border-b border-white/10 px-5 py-6 sm:px-8">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-          <PublicNavActions />
-        </nav>
+
       </section>
       <section className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">About</p>

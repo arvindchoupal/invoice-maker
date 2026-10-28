@@ -7,6 +7,15 @@ export const paymentReminderFaqs: Array<[string, string]> = [
   ["Is this payment reminder generator free?", "Yes. InvoiceWala's payment reminder generator is free to use for WhatsApp, email and SMS-style invoice follow-ups."],
   ["Does the generator support Hinglish payment reminders?", "Yes. You can generate natural Hinglish reminders for Indian customers while keeping invoice details and the payment request professional."],
   ["Can I add UPI or bank details to the reminder?", "Yes. Add your UPI ID, payment link or bank instructions in the optional payment details field before copying the message."],
+  ["Does this tool send payment reminders automatically?", "No. It creates a draft for you to review. Copy or download the text, or open WhatsApp or your email app, then choose the recipient and decide when to send it."],
+  ["Can I edit the generated payment reminder?", "Yes. Edit the message directly in the preview. Copy, download and share actions use the edited text. Changing an invoice detail or style option refreshes the draft from those inputs."],
+  ["How do I remind a client after a partial payment?", "Enter the remaining unpaid balance as the outstanding amount. In the editable preview, acknowledge the amount already received and ask when the balance will be paid."],
+  ["Can I use the reminder as an SMS?", "Yes. Select SMS for a message without the email subject or WhatsApp greeting format. Review its character count and shorten it if needed; your SMS app may split a long message into multiple messages."],
+  ["Does the reminder stage update automatically from the due date?", "No. You choose the stage manually. Check that the stage matches the invoice due date and payment status before sharing the reminder."],
+  ["Can I download the payment reminder?", "Yes. Download the current message as a text file. If you edited the preview, the downloaded text includes those edits."],
+  ["Will the tool save my client and payment details?", "The fields and draft are held in this page while you use it. They are not saved as an account invoice or reminder history. Copy or download the wording if you want to keep it."],
+  ["What should I do if a client says they have already paid?", "Check your payment records and ask for the transaction reference if you need it to identify the payment. Update the outstanding balance before preparing another reminder."],
+
 ];
 
 export const paymentReminderKeywords = [

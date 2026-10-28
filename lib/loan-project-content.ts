@@ -9,6 +9,13 @@ export const LOAN_REPORT_FAQS: Array<[string, string]> = [
   ["Is this a CMA data generator or a CC loan report?", "No. This version models a new business with a term loan. It does not calculate a cash-credit limit, drawing power or a complete bank-specific CMA statement."],
   ["Is the report accepted by every bank or guaranteed to get a loan?", "No. The report is a planning draft based on your inputs, not audited or certified accounts. Ask your lender for its required format and projection period, and have your accountant review it before submission."],
   ["Can I use this as a Mudra or PMEGP project report?", "It can help draft financial projections, but it does not calculate scheme-specific eligibility, subsidy, margin money or prescribed application forms. Check the current scheme and lender requirements separately."],
+  ["What does a negative opening cash figure mean?", "Owner contribution plus the term loan is below the total project cost entered in the form. The difference is shown as a funding gap. The generator does not assume another loan to fill it."],
+  ["Can I edit the financial projections in the Excel workbook?", "The workbook contains the calculated report values, not live formulas. Update the assumptions in the online generator and download a new workbook when you want the linked statements to recalculate."],
+  ["Are sales and expenses entered monthly or annually?", "Enter first-year sales and operating expenses as monthly amounts. The model multiplies them by 12 for the first full financial year. Owner drawings are entered annually, and the loan tenure is entered in months."],
+  ["Does the report include a loan moratorium?", "No. This model assumes the term loan is fully drawn at the start and repayments begin through monthly EMI without a moratorium. It does not model staged disbursements or repayment holidays."],
+  ["Will my project details be saved after refreshing?", "Inputs are held in the current browser session and clear when the page is refreshed. Download your report before leaving and keep a record of your assumptions if you need to enter them again."],
+  ["Can I enter Hindi business details?", "Use English or Roman Hindi for the PDF business details. The Excel workbook supports Hindi text. Check the downloaded file to confirm that the business information displays as intended."],
+
 ];
 
 export const LOAN_REPORT_STEPS = [

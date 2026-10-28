@@ -1,0 +1,18 @@
+export const marginCalculatorFaqs: Array<[string,string]> = [
+  ["What is a margin calculator?", "A margin calculator shows profit margin, markup and profit from cost and selling price."],
+  ["Who should use a margin calculator?", "Freelancers, shops, agencies, contractors and small businesses can use it before quoting or invoicing."],
+  ["What is the difference between margin and markup?", "Margin compares profit to selling price, while markup compares profit to cost."],
+  ["How do I calculate profit margin?", "Subtract cost from selling price to find profit, then divide profit by selling price and multiply by 100. A ₹300 profit on a ₹1,000 selling price gives a 30% margin."],
+  ["How do I calculate markup?", "Divide profit by cost and multiply by 100. With cost of ₹700 and selling price of ₹1,000, the ₹300 profit gives a 42.86% markup."],
+  ["Is a 30% margin the same as a 30% markup?", "No. A 30% markup on ₹700 cost gives a selling price of ₹910. The resulting ₹210 profit is 23.08% of the selling price. A 30% margin on that cost requires a selling price of ₹1,000."],
+  ["Can the calculator show a negative margin?", "Yes. If cost exceeds selling price, the result is a loss. For example, ₹1,200 cost and ₹1,000 selling price gives a ₹200 loss and a negative 20% margin."],
+  ["Why is margin not defined when selling price is zero?", "Margin divides profit by selling price. A zero selling price makes that percentage undefined. The calculator still shows the profit or loss amount."],
+  ["Why is markup not defined when cost is zero?", "Markup divides profit by cost. With zero cost, the percentage is undefined rather than zero. Profit and margin can still be shown when the selling price is positive."],
+  ["What cost should I enter?", "Enter the costs you want to include for the same item, order or project as the selling price. The calculator does not decide which costs belong in your accounts or automatically add missing costs."],
+  ["Can I use this calculator for a service quote?", "Yes. Enter the cost estimate for the service and the proposed selling price for the same scope. Update either amount to compare the resulting profit, margin and markup."],
+  ["Does this calculate GST or income tax?", "No. It uses the two amounts you enter. It does not add GST, calculate income tax or classify a cost. Review taxes separately when preparing an invoice."],
+  ["Can I copy or download the result?", "Yes. Copy result copies a short summary, and Download CSV exports the cost, selling price, profit, margin and markup. Undefined percentages are labelled Not defined."],
+  ["Can I turn the result into an invoice?", "Yes. The invoice link carries the selling price into the invoice maker as the starting item price. Your cost and internal profit are not added as separate customer charges."],
+  ["Are the calculations saved automatically?", "No. The inputs are held on the page while you use it and reset on refresh. Copy or download the result if you want to keep a record."],
+  ["Is the margin calculator free?", "Yes. Calculating margin, markup and profit does not require signup. An account is used separately for saving invoices and managing billing history."],
+];

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, FileText } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
-import { PublicNavActions } from "@/components/PublicNavActions";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { breadcrumbSchema } from "@/lib/seo-schemas";
 import { INVOICE_TEMPLATE_PAGES, invoiceTemplateUrl } from "@/lib/invoice-template-pages";
@@ -54,7 +52,7 @@ export default function InvoiceTemplatesPage() {
       ]} />
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_34%),radial-gradient(circle_at_top_right,rgba(79,70,229,0.16),transparent_30%)]">
         <div className="mx-auto max-w-7xl px-5 py-5 sm:px-6">
-          <nav className="flex items-center justify-between"><BrandLogo href="/" imageClassName="h-9 w-9" tagline="" /><PublicNavActions /></nav>
+
           <div className="max-w-4xl py-14 sm:py-20">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Invoice templates</p>
             <h1 className="mt-4 text-4xl font-semibold tracking-tight sm:text-6xl">Invoice formats built around how you actually bill</h1>

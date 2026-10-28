@@ -1,0 +1,47 @@
+.page, .guide {
+  --guide-bg: #f8fafc;
+  --guide-panel: #fff;
+  --guide-soft: #eef4fb;
+  --guide-text: #334155;
+  --guide-heading: #0f172a;
+  --guide-muted: #475569;
+  --guide-accent: #1d4ed8;
+  --guide-border: #dbe5f1;
+  background: var(--guide-bg);
+  color: var(--guide-text);
+}
+:global(html.dark) .page, :global(html.dark) .guide {
+  --guide-bg: #0f1216;
+  --guide-panel: #171b20;
+  --guide-soft: #202833;
+  --guide-text: #cbd5e1;
+  --guide-heading: #f8fafc;
+  --guide-muted: #b0bdce;
+  --guide-accent: #7dd3fc;
+  --guide-border: #334155;
+}
+.sheet { background: #fff; color: #0f172a; border: 1px solid #dbe5f1; border-radius: 1rem; overflow: hidden; color-scheme: light; }
+.sheet section { scroll-margin-top: 7rem; border-top: 1px solid #e2e8f0; padding-block: 1.75rem; }
+.field { display: grid; gap: .5rem; align-content: start; font-size: .875rem; font-weight: 500; color: #334155; }
+.field input, .field select { width: 100%; min-width: 0; border: 1px dotted #cbd5e1; border-radius: .5rem; padding: .75rem; background: #fafcff; color: #0f172a; font-weight: 400; outline: none; }
+.field input:hover, .field select:hover { border-color: #94a3b8; }
+.field input:focus, .field select:focus { border-style: solid; border-color: #2563eb; box-shadow: 0 0 0 3px #dbeafe; }
+.field input::placeholder { color: #64748b; }
+.hint { font-size: .75rem; line-height: 1.5; color: #64748b; font-weight: 400; }
+.table { overflow-x: auto; border: 1px solid var(--guide-border); border-radius: .75rem; }
+.table table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.table th, .table td { padding: .875rem; border-bottom: 1px solid var(--guide-border); text-align: left; vertical-align: top; }
+.table th { background: var(--guide-soft); color: var(--guide-heading); font-weight: 600; }
+.table tr:last-child td { border-bottom: 0; }
+.guide section[id] { scroll-margin-top: 7rem; }
+.guide a:focus-visible, .guide summary:focus-visible { outline: 3px solid var(--guide-accent); outline-offset: 4px; }
+.panel { border: 1px solid var(--guide-border); border-radius: 1rem; background: var(--guide-panel); padding: 1.5rem; min-width: 0; }
+.formField { display: grid; gap: .5rem; font-size: .875rem; font-weight: 500; color: var(--guide-text); }
+.formField input, .formField select, .message {
+  width: 100%; min-width: 0; border: 1px dotted var(--guide-border); border-radius: .65rem; padding: .8rem; background: var(--guide-bg); color: var(--guide-heading); outline: none; font-weight: 400;
+}
+.formField input:hover, .formField select:hover { border-color: var(--guide-accent); }
+.formField input:focus, .formField select:focus, .message:focus { border: 1px solid var(--guide-accent); box-shadow: 0 0 0 2px var(--guide-soft); }
+.formField input::placeholder { color: var(--guide-muted); }
+.message { resize: vertical; min-height: 360px; line-height: 1.85; font-size: .875rem; }
+:global(html.dark) .formField input, :global(html.dark) .formField select { color-scheme: dark; }

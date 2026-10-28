@@ -11,18 +11,13 @@ import {
   Plus,
   Save,
   Send,
-  ShieldCheck,
   Trash2,
   X,
 } from "lucide-react";
 import { PublicSiteFooter } from "@/components/PublicSiteFooter";
-import { PublicSiteNav } from "@/components/PublicSiteNav";
-import { InvoicePdfPreview } from "@/components/InvoicePdfPreview";
-import { InvoiceAdditionalDetails } from "@/components/InvoiceAdditionalDetails";
 import { invoiceValidationErrors, invoiceLogoData, invoiceDates } from "@/lib/invoice-document";
-import type { PdfStyleMeta } from "@/lib/pdf-styles";
 import { calculateInvoice, currency } from "@/lib/invoice";
-import { getToken, api, apiBlob } from "@/lib/api";
+import { getToken, apiBlob } from "@/lib/api";
 import { trackAnalyticsEvent } from "@/lib/client-analytics";
 import { attachPublicInvoiceDraft, savePublicInvoiceDraft, getPublicInvoiceDraft, PUBLIC_INVOICE_DRAFT_KEY } from "@/lib/public-invoice-draft";
 import type { Invoice, InvoiceItem } from "@/types";
@@ -63,6 +58,8 @@ function blankItem(initialItem?: FreeInvoiceClientProps["initialItem"]): Invoice
 }
 
 type FreeInvoiceClientProps = {
+  initialTaxMode?: "intra" | "inter";
+  children?: React.ReactNode;
   initialSaveError?: boolean;
   initialTemplate?: { slug: string; label: string; style: string };
   initialItem?: {
@@ -76,12 +73,10 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
   return <span className="mb-1.5 block text-xs font-semibold text-slate-600">{children}</span>;
 }
 
-export function FreeInvoiceClient({ initialItem, initialTemplate, initialSaveError }: FreeInvoiceClientProps) {
+export function FreeInvoiceClient({ children, initialItem, initialTemplate, initialSaveError, initialTaxMode }: FreeInvoiceClientProps) {
   const router = useRouter();
   const journey = useInvoiceJourney();
   const logoInputRef = useRef<HTMLInputElement>(null);
-  const [styles, setStyles] = useState<PdfStyleMeta[]>([]);
-  const [showPreview, setShowPreview] = useState(false);
   const [busy, setBusy] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [discountOpen, setDiscountOpen] = useState(false);
@@ -93,7 +88,7 @@ export function FreeInvoiceClient({ initialItem, initialTemplate, initialSaveErr
   const [pendingDraft, setPendingDraft] = useState<Invoice | null>(null);
   const [invoice, setInvoice] = useState<Invoice>(() => ({
     invoiceNumber: "",
-    amountPaid: 0, logoData: null, taxMode: "tax", documentTitle: "INVOICE",
+    amountPaid: 0, logoData: null, taxMode: initialTaxMode || "tax", documentTitle: "INVOICE",
     sourceTemplate: initialTemplate?.slug,
     status: "Draft",
     ...invoiceDates(),
@@ -124,7 +119,6 @@ export function FreeInvoiceClient({ initialItem, initialTemplate, initialSaveErr
   const isLoggedIn = Boolean(getToken());
 
   useEffect(() => {
-    api<PdfStyleMeta[]>("/invoice-preview/styles").then(setStyles).catch(() => undefined);
     const syncFreeDownloadState = window.setTimeout(() => {
       setHasUsedFreeDownload(window.localStorage.getItem(freePdfStorageKey) === "1");
       const draft = getPublicInvoiceDraft();
@@ -254,37 +248,23 @@ export function FreeInvoiceClient({ initialItem, initialTemplate, initialSaveErr
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <fieldset disabled={busy} className="contents">
-      <header className="mx-auto w-full max-w-7xl px-5 py-5 sm:px-6 sm:py-6">
-        <PublicSiteNav />
-      </header>
 
-      <section className="mx-auto max-w-7xl px-5 pb-12 pt-7 sm:px-6 sm:pb-16 sm:pt-10">
+
+      <section id="invoice-maker" className="mx-auto max-w-7xl px-5 pb-12 pt-7 sm:px-6 sm:pb-16 sm:pt-10">
         <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Free invoice generator</p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">Create a professional invoice online</h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-400">Create your invoice and download your first PDF free without signup. Create an account only when you want to save invoices, reuse customers and track payments.</p>
-          </div>
-          <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
-            <ShieldCheck className="h-4 w-4 text-cyan-300" />
-            Your draft stays on this device until you save it.
           </div>
         </div>
 
         {initialItem?.unitPrice || initialItem?.taxRate ? (
           <div className="mb-4 rounded-xl border border-cyan-200 bg-cyan-50 px-4 py-3 text-sm text-cyan-900">
-            Calculator result added: ₹{Number(numericParam(initialItem.unitPrice)).toLocaleString("en-IN")} taxable value with {numericParam(initialItem.taxRate)}% tax.
+            Starting values added: ₹{Number(numericParam(initialItem.unitPrice)).toLocaleString("en-IN")} taxable value with {numericParam(initialItem.taxRate)}% tax.
           </div>
         ) : null}
 
         {pendingDraft ? <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950"><p>A previous invoice draft is saved on this device. Resume it or start fresh?</p><div className="mt-3 flex gap-3"><button className="rounded-lg bg-blue-600 px-3 py-2 text-white" onClick={() => { setInvoice({ ...pendingDraft, logoData: pendingDraft.logoData || null }); invoiceStartedRef.current = true; setPendingDraft(null); setDraftReady(true); }}>Resume draft</button><button className="rounded-lg border border-amber-400 px-3 py-2" onClick={() => { localStorage.removeItem(PUBLIC_INVOICE_DRAFT_KEY); setPendingDraft(null); setDraftReady(true); }}>Start fresh</button></div></div> : null}
-        <div className="mb-5 grid gap-4">
-          <label className="grid gap-2 text-sm font-semibold">PDF template<select className={fieldClass} value={invoice.pdfStyle || "classic"} onChange={e => update("pdfStyle", e.target.value)}>{styles.length ? styles.map(style => <option value={style.id} key={style.id}>{style.label}</option>) : <option value={invoice.pdfStyle || "classic"}>{initialTemplate?.label || "Classic Professional"}</option>}</select></label>
-          <InvoiceAdditionalDetails invoice={invoice} update={update} />
-          <details className="rounded-xl border border-slate-200 bg-white p-4 text-slate-900"><summary className="cursor-pointer font-semibold">HSN / SAC codes (optional)</summary><div className="mt-3 grid gap-3 sm:grid-cols-2">{invoice.items.map((item, index) => <label key={index} className="grid gap-1 text-sm">Item {index + 1}: {item.name || "Untitled"}<input className={fieldClass} value={item.hsnCode || ""} maxLength={20} onChange={e => updateItem(index, { hsnCode: e.target.value })} /></label>)}</div></details>
-          <button className="rounded-lg bg-blue-600 px-4 py-3 text-sm font-semibold text-white" type="button" onClick={() => { setShowPreview(v => !v); journey.event("pdf_previewed", "preview"); }}>{showPreview ? "Hide PDF preview" : "Preview exact PDF"}</button>
-          {showPreview ? <InvoicePdfPreview invoice={invoice} /> : null}
-        </div>
         <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_260px]">
           <article className="overflow-hidden rounded-3xl border border-white/10 bg-white text-slate-950 shadow-2xl shadow-black/30">
             <div className="h-1.5 bg-gradient-to-r from-cyan-300 via-blue-500 to-indigo-500" />
@@ -643,8 +623,9 @@ export function FreeInvoiceClient({ initialItem, initialTemplate, initialSaveErr
         </div>
       </section>
 
-      <PublicSiteFooter />
       </fieldset>
+      {children}
+      <PublicSiteFooter />
     </main>
   );
 }

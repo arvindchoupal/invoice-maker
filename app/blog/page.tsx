@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
-import { PublicNavActions } from "@/components/PublicNavActions";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getIndexablePosts } from "@/lib/blog/posts";
 import { websiteSchema } from "@/lib/seo-schemas";
@@ -51,10 +49,7 @@ export default function BlogIndexPage() {
     <main className="min-h-screen bg-slate-950 text-white">
       <JsonLd data={[websiteSchema(), blogListSchema]} />
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.14),transparent_34%)] px-5 py-6 sm:px-8">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-          <PublicNavActions showBlog={false} />
-        </nav>
+
         <div className="mx-auto max-w-7xl py-16">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">Blog</p>
           <h1 className="mt-5 max-w-4xl text-4xl font-semibold tracking-tight sm:text-6xl">

@@ -1,3 +1,5 @@
+import { HeroDesktopWorkspace } from "@/components/HeroDesktopWorkspace";
+import { HomeFeatureVisual } from "@/components/HomeFeatureVisual";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,7 +7,6 @@ import { ArrowRight, Check, CheckCircle2, Clock3, FileCheck2, FileText, MessageC
 import { PublicHeroActions } from "@/components/PublicHeroActions";
 import { PublicPrimaryCta } from "@/components/PublicPrimaryCta";
 import { PublicSiteFooter } from "@/components/PublicSiteFooter";
-import { PublicSiteNav } from "@/components/PublicSiteNav";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { TOOLS_CATALOG } from "@/lib/tools-catalog";
 import { faqSchema, organizationSchema, toolsItemListSchema, websiteSchema } from "@/lib/seo-schemas";
@@ -54,49 +55,25 @@ const featuredTools = TOOLS_CATALOG.filter((tool) => featuredToolHrefs.has(tool.
 
 function InvoiceWorkspacePreview() {
   return (
-    <div className="relative min-w-0" id="demo">
+    <div className="laptop-preview relative min-w-0" id="demo" aria-label="InvoiceWala invoice preview on laptop and phone screens">
       <div className="absolute -inset-8 rounded-full bg-blue-500/10 blur-3xl" />
-      <div className="relative overflow-hidden rounded-[1.75rem] border border-[#cbd8ea] bg-white p-2 shadow-2xl shadow-blue-950/20 dark:border-[#2a313a] dark:bg-white/[0.04] dark:shadow-blue-950/30">
-        <div className="flex items-center gap-2 border-b border-[#cbd8ea] px-3 py-3 dark:border-[#2a313a]">
-          <span className="h-2.5 w-2.5 rounded-full bg-rose-400" /><span className="h-2.5 w-2.5 rounded-full bg-amber-300" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-          <span className="ml-2 text-xs font-semibold text-[#52647d] dark:text-slate-400">InvoiceWala · New invoice</span>
-          <span className="ml-auto rounded-lg bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">AUTO-SAVED</span>
+      <div className="laptop-display"><div className="laptop-camera" /><div className="laptop-viewport"><div className="laptop-app overflow-hidden bg-white"><HeroDesktopWorkspace />
+      </div></div><div className="laptop-chin">InvoiceWala</div></div>
+      <div className="laptop-base"><div className="laptop-notch" /></div>
+      <div className="laptop-shadow" />
+      <div className="hero-phone" aria-label="Mobile invoice preview">
+        <div className="hero-phone-island" />
+        <div className="hero-phone-content">
+          <div className="phone-app-heading"><span className="phone-app-logo">IW</span><b>InvoiceWala</b><span>•••</span></div>
+          <p className="phone-eyebrow">INVOICE DETAILS</p>
+          <div className="phone-title"><b>INV-0024</b><span>Pending</span></div>
+          <div className="phone-customer"><span>AE</span><div><b>Aarav Enterprises</b><p>New Delhi, India</p></div></div>
+          <div className="phone-invoice-paper"><div className="phone-paper-head"><b>Northstar Studio</b><FileText size={20}/></div><p>Website design & development</p><div><span>Subtotal</span><b>₹25,000</b></div><div><span>GST · 18%</span><b>₹4,500</b></div><div className="phone-total"><span>Total payable</span><b>₹29,500</b></div></div>
+          <p className="phone-due"><Clock3 size={12}/> Due 24 Oct 2026</p>
+          <div className="phone-share"><Send size={14}/> Share invoice</div>
+          <div className="phone-tabs"><span><FileText size={16}/>Invoices</span><span><CheckCircle2 size={16}/>Payments</span><span><Sparkles size={16}/>Tools</span></div>
         </div>
-        <div className="grid min-h-[520px] grid-cols-[54px_minmax(0,1fr)] sm:grid-cols-[144px_minmax(0,1fr)]">
-          <div className="border-r border-[#cbd8ea] bg-[#e8f0fb] p-2 sm:p-3 dark:border-[#2a313a] dark:bg-[#11161c]">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-blue-600 text-sm font-bold text-white">IW</div>
-            <div className="mt-6 grid gap-2">
-              {["Invoice", "Customer", "Items", "Payment"].map((item, index) => (
-                <div className={`rounded-xl px-2 py-2 text-xs font-semibold ${index === 0 ? "bg-blue-600 text-white" : "text-[#52647d] dark:text-slate-400"}`} key={item}>
-                  <span className="sm:hidden">{index + 1}</span><span className="hidden sm:inline">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="min-w-0 bg-[#f4f7fb] p-3 sm:p-5">
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <div><p className="text-xs font-bold text-slate-950">Create invoice</p><p className="mt-0.5 text-[10px] text-slate-500">Draft INV-0024</p></div>
-              <div className="flex gap-2"><span className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-[10px] font-bold text-slate-700">Preview</span><span className="rounded-lg bg-blue-600 px-2.5 py-1.5 text-[10px] font-bold text-white">Save invoice</span></div>
-            </div>
-            <div className="mx-auto max-w-md rounded-xl bg-white p-4 text-slate-950 shadow-xl shadow-slate-300/40 sm:p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div><div className="grid h-9 w-9 place-items-center rounded-xl bg-blue-600 text-[10px] font-bold text-white">LOGO</div><p className="mt-3 text-sm font-bold">Your Business</p><p className="text-[10px] text-slate-500">GSTIN: 07ABCDE1234F1Z5</p></div>
-                <div className="text-right"><p className="text-xl font-black text-blue-600 sm:text-2xl">INVOICE</p><p className="mt-1 text-[10px] text-slate-500">#INV-0024</p></div>
-              </div>
-              <div className="mt-5 grid grid-cols-2 gap-3 rounded-xl bg-slate-50 p-3 text-[10px]">
-                <div><p className="font-bold uppercase text-slate-400">Bill to</p><p className="mt-1 font-semibold">Aarav Enterprises</p><p className="text-slate-500">New Delhi, India</p></div>
-                <div className="text-right text-slate-600"><p>Issue: 10 Oct 2026</p><p className="mt-1">Due: 24 Oct 2026</p></div>
-              </div>
-              <div className="mt-4 overflow-hidden rounded-lg border border-slate-200 text-[10px]">
-                <div className="grid grid-cols-[1fr_36px_60px] bg-[#0f172a] px-3 py-2 font-bold uppercase text-white"><span>Service</span><span>Qty</span><span className="text-right">Amount</span></div>
-                <div className="grid grid-cols-[1fr_36px_60px] px-3 py-3"><span className="font-semibold">Website design</span><span>1</span><span className="text-right">₹25,000</span></div>
-                <div className="grid grid-cols-[1fr_36px_60px] border-t border-slate-100 px-3 py-3"><span className="font-semibold">GST 18%</span><span /><span className="text-right">₹4,500</span></div>
-              </div>
-              <div className="ml-auto mt-4 max-w-[150px] border-t border-slate-200 pt-3 text-right"><p className="text-[10px] text-slate-500">Total due</p><p className="text-xl font-black">₹29,500</p></div>
-              <div className="mt-4 flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-[10px] font-semibold text-emerald-700"><CheckCircle2 className="h-3.5 w-3.5" /> GST-ready PDF</div>
-            </div>
-          </div>
-        </div>
+        <div className="hero-phone-home" />
       </div>
     </div>
   );
@@ -139,20 +116,44 @@ function AiImportPreview() {
   );
 }
 
+const businessFeatures = [
+  { id: "quotations", eyebrow: "Estimates & quotations", title: "Start every project with a clear quotation.", body: "Give customers a clear breakdown before work begins. Add your services, quantities, GST, discounts and payment terms to a professional quotation. Review the totals and download a PDF that makes your proposal easy to understand and approve.", href: "/quotation-maker", cta: "Create a quotation", heading: "Project quotation", subtitle: "Website redesign · QT-0042", rows: [["Design & development", "₹35,000"], ["Content setup", "₹5,000"], ["GST · 18%", "₹7,200"]], total: "Quotation total", amount: "₹47,200", note: "Valid for 15 days · 50% advance" },
+  { id: "customers", eyebrow: "Customer management", title: "Keep customer details ready for the next invoice.", body: "Build a useful customer history as your business grows. Save billing addresses, contact details and GST information with your account, then reuse them when you prepare another invoice. Spend less time entering the same information and keep your business records consistent.", href: "/signup", cta: "Organize your customers", heading: "Your customers", subtitle: "Billing details, together in one place", rows: [["Aarav Enterprises", "New Delhi"], ["Northstar Studio", "Bengaluru"], ["Riya Consulting", "Mumbai"]], total: "Ready for your next invoice", amount: "3 clients", note: "Sample customer records" },
+  { id: "reports", eyebrow: "Business reports", title: "See the numbers behind your daily work.", body: "Bring invoice activity and payment information into a clearer business overview. Use your account to review reports and understand your records, then explore our free calculators when you need to check margins, tax or expenses. Keep everyday decisions grounded in the figures you already have.", href: "/tools/business-expense-calculator", cta: "Calculate business expenses", heading: "Business overview", subtitle: "October · illustrative figures", rows: [["Invoices issued", "₹1,38,500"], ["Payments received", "₹84,000"], ["Outstanding balance", "₹54,500"]], total: "Payments received", amount: "₹84,000", note: "Illustrative report · sample data" },
+  { id: "receipts", eyebrow: "Payment receipts", title: "Give every payment a professional receipt.", body: "Help customers keep a clear record of what they have paid. Create a receipt with business details, payment information and a description of the goods or services. Check the amount and download a PDF for your customer, whether you work independently or run a growing local business.", href: "/receipt-generator", cta: "Generate a receipt", heading: "Payment receipt", subtitle: "RCT-0018 · Aarav Enterprises", rows: [["Payment for", "INV-0024"], ["Payment method", "Bank transfer"], ["Amount received", "₹29,500"]], total: "Payment recorded", amount: "₹29,500", note: "Thank you for your business" },
+  { id: "sharing", eyebrow: "Download & share", title: "Send a polished invoice wherever business happens.", body: "Prepare your invoice in the browser and download a professional PDF when it is ready. Share the document with your customer on WhatsApp or through your usual business channels. From the first quote to the final payment reminder, keep the next step simple and easy to follow.", href: "/tools/payment-reminder-generator", cta: "Prepare a payment reminder", heading: "Ready to share", subtitle: "INV-0024 · Professional PDF", rows: [["Customer", "Aarav Enterprises"], ["Document", "GST invoice"], ["Next step", "Download & share"]], total: "Invoice total", amount: "₹29,500", note: "Your details · your logo · your invoice" },
+];
+
+function BusinessFeatureSections() {
+  return businessFeatures.map((feature, index) => (
+    <section id={feature.id} key={feature.id} className={`border-t border-white/10 ${index % 2 ? "bg-white/[0.025]" : ""}`}>
+      <div className="homepage-container mx-auto grid items-center gap-12 px-3 py-[100px] lg:min-h-[650px] lg:grid-cols-2 lg:gap-20">
+        <div className={index % 2 ? "lg:order-2" : ""}>
+          <p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">{feature.eyebrow}</p>
+          <h2 className="mt-4 max-w-xl text-[33.6px] font-bold leading-[1.2]">{feature.title}</h2>
+          <p className="mt-5 max-w-xl text-base leading-6 text-slate-300">{feature.body}</p>
+          <Link href={feature.href} className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-base font-semibold text-white hover:bg-blue-500">{feature.cta}<ArrowRight className="h-4 w-4" /></Link>
+        </div>
+        <div id={`visual-${feature.id}`} className={`min-w-0 ${index % 2 ? "lg:order-1" : ""}`}><HomeFeatureVisual kind={feature.id} /></div>
+      </div>
+    </section>
+  ));
+}
+
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-x-clip bg-slate-950 text-white">
+    <main className="invoice-home min-h-screen overflow-x-clip bg-slate-950 text-white">
       <JsonLd data={[organizationSchema(), websiteSchema(), toolsItemListSchema(), faqSchema(faqs)]} />
+
 
       <section className="relative overflow-hidden">
         <div className="absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(circle_at_70%_18%,rgba(37,99,235,0.13),transparent_32%),radial-gradient(circle_at_15%_8%,rgba(34,211,238,0.06),transparent_26%)]" />
-        <div className="relative mx-auto w-full max-w-7xl px-5 py-5 sm:px-6 sm:py-6">
-          <PublicSiteNav />
-          <div className="grid min-w-0 items-center gap-12 py-14 sm:py-20 lg:min-h-[760px] lg:grid-cols-[minmax(0,0.78fr)_minmax(560px,1.22fr)]">
-            <div className="min-w-0">
+        <div className="relative mx-auto w-full homepage-container px-3 py-5 sm:px-3 sm:py-6">
+          <div className="mx-auto grid min-w-0 items-center gap-14 py-14 sm:py-20 lg:max-w-[1120px]">
+            <div className="hero-copy mx-auto min-w-0 lg:max-w-[800px] lg:text-center">
               <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-sm font-semibold text-cyan-100"><Sparkles className="h-4 w-4" />Your first invoice PDF is free</div>
-              <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.06] tracking-[-0.045em] sm:text-6xl lg:text-7xl">Create a professional GST invoice. Send it. Track payment.</h1>
-              <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">InvoiceWala gives Indian freelancers and small businesses one simple place to create tax-ready invoices, share polished PDFs and follow up on payments.</p>
+              <h1 className="mx-auto mt-6 max-w-3xl text-[48px] font-bold leading-[1.2] tracking-normal">Invoice Maker for Small Businesses</h1>
+              <p className="mx-auto mt-6 max-w-xl text-base leading-6 text-slate-300">Create professional GST invoices in minutes with InvoiceWala. Manage customers, calculate taxes, download polished PDFs and track payments in one place, giving your small business more time to focus on what matters.</p>
               <PublicHeroActions />
               <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-slate-300">{["Instant PDF download", "Add your own logo", "GST-ready fields"].map((item) => <span className="inline-flex items-center gap-1.5" key={item}><Check className="h-4 w-4 text-emerald-400" />{item}</span>)}</div>
             </div>
@@ -162,36 +163,38 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl scroll-mt-8 px-5 py-16 sm:px-6 sm:py-24" id="workflow">
-        <div className="mx-auto max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">One clean workflow</p><h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">From work completed to payment tracked.</h2><p className="mt-5 text-lg leading-8 text-slate-300">No accounting maze. Complete the invoice, share it with your customer and always know what needs attention.</p></div>
+      <section className="mx-auto homepage-container scroll-mt-8 px-3 pt-[120px] pb-[100px] sm:px-3" id="workflow">
+        <div className="mx-auto max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">One clean workflow</p><h2 className="mt-4 text-[33.6px] font-bold leading-[1.2] tracking-normal">From work completed to payment tracked.</h2><p className="mt-5 text-base leading-6 text-slate-300">No accounting maze. Complete the invoice, share it with your customer and always know what needs attention.</p></div>
         <div className="mt-12 grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
-          <div className="grid gap-3">{workflow.map(([number, title, body], index) => <div className={`rounded-2xl border p-5 ${index === 0 ? "border-blue-400/40 bg-blue-500/10" : "border-white/10 bg-white/[0.04]"}`} key={number}><div className="flex gap-4"><span className="text-sm font-black text-cyan-300">{number}</span><div><h3 className="text-xl font-semibold">{title}</h3><p className="mt-2 text-[15px] leading-7 text-slate-300">{body}</p></div></div></div>)}</div>
+          <div className="grid gap-3">{workflow.map(([number, title, body], index) => <div className={`rounded-2xl border p-5 ${index === 0 ? "border-blue-400/40 bg-blue-500/10" : "border-white/10 bg-white/[0.04]"}`} key={number}><div className="flex gap-4"><span className="text-sm font-black text-cyan-300">{number}</span><div><h3 className="text-xl font-semibold">{title}</h3><p className="mt-2 text-base leading-6 text-slate-300">{body}</p></div></div></div>)}</div>
           <WorkflowPreview />
         </div>
       </section>
 
-      <section className="border-y border-blue-100 bg-blue-50 py-16 dark:border-white/10 dark:bg-white/[0.025] sm:py-24">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
-          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end"><div><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Invoice templates</p><h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight sm:text-5xl">Look professional before your customer reads a word.</h2><p className="mt-5 max-w-2xl text-base leading-7 text-slate-300">Choose a format that fits your business. Every preview is built from InvoiceWala&apos;s downloadable 1200 × 1698 invoice assets.</p></div><Link className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start rounded-xl border border-white/15 px-4 text-sm font-semibold text-white transition hover:bg-white/10 sm:self-auto" href="/bill-format">Explore bill formats <ArrowRight className="h-4 w-4" /></Link></div>
-          <div className="mt-10 grid gap-5 md:grid-cols-3">{templates.map(([src, title, badge], index) => <Link className={`group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white p-3 shadow-2xl shadow-black/15 transition hover:-translate-y-1 ${index === 1 ? "md:-translate-y-5 md:hover:-translate-y-6" : ""}`} href="/bill-format" key={src}><div className="absolute left-6 top-6 z-10 rounded-full bg-slate-950/90 px-3 py-1.5 text-xs font-bold text-white">{badge}</div><Image alt={`${title} preview`} className="h-auto w-full rounded-2xl" height={1698} sizes="(max-width: 768px) 100vw, 33vw" src={src} width={1200} /><div className="flex items-center justify-between px-2 pb-1 pt-4 text-slate-950"><p className="font-semibold">{title}</p><ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" /></div></Link>)}</div>
+      <section id="templates" className="border-y border-blue-100 bg-blue-50 pt-[120px] pb-[100px] dark:border-white/10 dark:bg-white/[0.025]">
+        <div className="mx-auto homepage-container px-3 sm:px-3">
+          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end"><div><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Invoice templates</p><h2 className="mt-4 max-w-2xl text-[32px] font-bold leading-[1.2] tracking-normal">Professional Invoice Templates Made Simple</h2><p className="mt-5 max-w-2xl text-base leading-6 text-slate-300">Find the right invoice format for your business, from GST billing to freelance projects and retail sales. Add your logo, update customer details and download a clear, professional PDF that is ready to share.</p></div><Link className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start rounded-xl border border-white/15 px-4 text-sm font-semibold text-white transition hover:bg-white/10 sm:self-auto" href="/bill-format">Explore bill formats <ArrowRight className="h-4 w-4" /></Link></div>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">{templates.map(([src, title, badge], index) => <Link className={`group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white p-3 shadow-2xl shadow-black/15 transition hover:-translate-y-1 ${index === 1 ? "md:-translate-y-5 md:hover:-translate-y-6" : ""}`} href="/bill-format" key={src}><div className="absolute left-6 top-6 z-10 rounded-full bg-slate-950/90 px-3 py-1.5 text-xs font-bold text-white">{badge}</div><Image alt={`${title} preview`} className="h-auto w-full rounded-2xl" height={1698} sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1199px) 30vw, 476px" src={src} width={1200} /><div className="flex items-center justify-between px-2 pb-1 pt-4 text-slate-950"><p className="font-semibold">{title}</p><ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" /></div></Link>)}</div>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-6 sm:py-24 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+      <section className="mx-auto grid homepage-container gap-10 px-3 pt-[120px] pb-[100px] sm:px-3 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
         <PaymentPreview />
-        <div className="lg:pl-10"><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Payment tracking</p><h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">Know what is paid, pending and overdue.</h2><p className="mt-5 text-lg leading-8 text-slate-300">Invoice history stays organized around the question that matters: what has been paid and who needs a reminder?</p><div className="mt-7 grid gap-3 text-sm text-slate-300">{["See every invoice status at a glance", "Keep customer and amount details together", "Prepare a polite WhatsApp payment reminder"].map((item) => <p className="flex items-center gap-3" key={item}><span className="grid h-6 w-6 place-items-center rounded-full bg-emerald-500/10 text-emerald-300"><Check className="h-3.5 w-3.5" /></span>{item}</p>)}</div><Link className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-cyan-300 hover:text-cyan-200" href="/tools/payment-reminder-generator">Create a payment reminder <ArrowRight className="h-4 w-4" /></Link></div>
+        <div className="lg:pl-10"><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Payment tracking</p><h2 className="mt-4 text-[33.6px] font-bold leading-[1.2] tracking-normal">Know what is paid, pending and overdue.</h2><p className="mt-5 text-base leading-6 text-slate-300">Keep your invoices and payment details organized in one place. Check which customers have paid, see outstanding amounts and identify overdue invoices without searching through spreadsheets. When a payment needs a follow-up, prepare a polite WhatsApp reminder and keep the conversation moving.</p><div className="mt-7 grid gap-3 text-sm text-slate-300">{["See every invoice status at a glance", "Keep customer and amount details together", "Prepare a polite WhatsApp payment reminder"].map((item) => <p className="flex items-center gap-3" key={item}><span className="grid h-6 w-6 place-items-center rounded-full bg-emerald-500/10 text-emerald-300"><Check className="h-3.5 w-3.5" /></span>{item}</p>)}</div><Link className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-cyan-300 hover:text-cyan-200" href="/tools/payment-reminder-generator">Create a payment reminder <ArrowRight className="h-4 w-4" /></Link></div>
       </section>
 
-      <section className="border-y border-blue-100 bg-blue-50 dark:border-white/10 dark:bg-white/[0.025]"><div className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-6 sm:py-24 lg:grid-cols-[0.9fr_1.1fr] lg:items-center"><div><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">AI bill import</p><h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">Turn a vendor bill into structured data.</h2><p className="mt-5 text-lg leading-8 text-slate-300">Upload a bill, receipt or GST invoice. InvoiceWala can extract vendor details, dates, tax and totals for you to review before saving.</p><div className="mt-8 flex flex-col gap-3 sm:flex-row"><Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-500" href="/tools/pdf-to-invoice-extractor"><UploadCloud className="h-4 w-4" />Upload bill or receipt</Link><Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 px-5 text-sm font-semibold text-white transition hover:bg-white/10" href="/free-invoice"><ReceiptIndianRupee className="h-4 w-4" />Create invoice manually</Link></div></div><AiImportPreview /></div></section>
+      <section className="border-y border-blue-100 bg-blue-50 dark:border-white/10 dark:bg-white/[0.025]"><div className="mx-auto grid homepage-container gap-12 px-3 pt-[120px] pb-[100px] sm:px-3 lg:grid-cols-[0.9fr_1.1fr] lg:items-center"><div><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">AI bill import</p><h2 className="mt-4 text-[33.6px] font-bold leading-[1.2] tracking-normal">Turn a vendor bill into structured data.</h2><p className="mt-5 text-base leading-6 text-slate-300">Bring your vendor bills, receipts and GST invoices into one clear workflow. Upload a document and let InvoiceWala extract vendor details, invoice dates, taxes and totals. Review the information, correct anything that needs attention and save the details without typing every field from scratch.</p><div className="mt-8 flex flex-col gap-3 sm:flex-row"><Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-3 text-sm font-semibold text-white transition hover:bg-blue-500" href="/tools/pdf-to-invoice-extractor"><UploadCloud className="h-4 w-4" />Upload bill or receipt</Link><Link className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 px-3 text-sm font-semibold text-white transition hover:bg-white/10" href="/free-invoice"><ReceiptIndianRupee className="h-4 w-4" />Create invoice manually</Link></div></div><AiImportPreview /></div></section>
 
-      <section className="mx-auto max-w-7xl px-5 py-16 sm:px-6 sm:py-24">
-        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Free business tools</p><h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">Solve the job around the invoice.</h2></div><Link className="inline-flex items-center gap-2 self-start text-sm font-bold text-cyan-300 hover:text-cyan-200 sm:self-auto" href="/tools">View all tools <ArrowRight className="h-4 w-4" /></Link></div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{featuredTools.map((tool, index) => { const icons = [ReceiptIndianRupee, FileText, FileCheck2, Send]; const ToolIcon = icons[index]; return <Link className="group rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:-translate-y-1 hover:border-blue-400/40" href={tool.href} key={tool.href}><div className="grid h-11 w-11 place-items-center rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300"><ToolIcon className="h-5 w-5" /></div><h3 className="mt-5 text-lg font-semibold">{tool.title}</h3><p className="mt-2 text-[15px] leading-7 text-slate-300">{tool.body}</p><span className="mt-5 inline-flex items-center gap-1 text-sm font-bold text-cyan-300">Open tool <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" /></span></Link>; })}</div>
+      <BusinessFeatureSections />
+
+      <section className="mx-auto homepage-container px-3 pt-[120px] pb-[100px] sm:px-3">
+        <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Free business tools</p><h2 className="mt-4 text-[33.6px] font-bold leading-[1.2] tracking-normal">Solve the job around the invoice.</h2></div><Link className="inline-flex items-center gap-2 self-start text-sm font-bold text-cyan-300 hover:text-cyan-200 sm:self-auto" href="/tools">View all tools <ArrowRight className="h-4 w-4" /></Link></div>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{featuredTools.map((tool, index) => { const icons = [ReceiptIndianRupee, FileText, FileCheck2, Send]; const ToolIcon = icons[index]; return <Link className="group rounded-2xl border border-white/10 bg-white/[0.04] p-5 transition hover:-translate-y-1 hover:border-blue-400/40" href={tool.href} key={tool.href}><div className="grid h-11 w-11 place-items-center rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300"><ToolIcon className="h-5 w-5" /></div><h3 className="mt-5 text-lg font-semibold">{tool.title}</h3><p className="mt-2 text-base leading-6 text-slate-300">{tool.body}</p><span className="mt-5 inline-flex items-center gap-1 text-sm font-bold text-cyan-300">Open tool <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-1" /></span></Link>; })}</div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 pb-16 sm:px-6 sm:pb-24"><div className="overflow-hidden rounded-[2rem] border border-blue-400/25 bg-blue-600 p-7 text-white sm:p-10"><div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_240px] lg:items-center"><div><p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-100">Founding customer offer</p><h2 className="mt-3 max-w-4xl text-3xl font-semibold tracking-tight sm:text-4xl lg:text-[2.7rem]">Create your first invoice free. Save your work with Founding Pro.</h2><p className="mt-4 max-w-3xl text-blue-100">The first 1,000 accounts get saved invoices, reminders, reports and business tracking for ₹0. No card or automatic charge.</p></div><div className="flex flex-col gap-3 sm:flex-row lg:flex-col"><PublicPrimaryCta guestHref="/free-invoice" guestLabel="Create free invoice" authedHref="/invoices/new" authedLabel="Create invoice" className="inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-5 text-sm font-bold text-blue-700 transition hover:-translate-y-0.5 hover:bg-blue-50" /><Link className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/25 px-5 text-sm font-bold text-white transition hover:bg-white/10" href="/pricing">See what is included</Link></div></div></div></section>
+      <section className="mx-auto homepage-container px-3 pb-[100px] sm:px-3"><div className="overflow-hidden rounded-[2rem] border border-blue-400/25 bg-blue-600 p-7 text-white sm:p-10"><div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_240px] lg:items-center"><div><p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-100">Founding customer offer</p><h2 className="mt-3 max-w-4xl text-[33.6px] font-bold leading-[1.2] tracking-normal">Create your first invoice free. Save your work with Founding Pro.</h2><p className="mt-4 max-w-3xl text-blue-100">The first 1,000 accounts get saved invoices, reminders, reports and business tracking for ₹0. No card or automatic charge.</p></div><div className="flex flex-col gap-3 sm:flex-row lg:flex-col"><PublicPrimaryCta guestHref="/free-invoice" guestLabel="Create free invoice" authedHref="/invoices/new" authedLabel="Create invoice" className="inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-3 text-sm font-bold text-blue-700 transition hover:-translate-y-0.5 hover:bg-blue-50" /><Link className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/25 px-3 text-sm font-bold text-white transition hover:bg-white/10" href="/pricing">See what is included</Link></div></div></div></section>
 
-      <section className="mx-auto max-w-6xl px-5 pb-16 sm:px-6 sm:pb-24"><div className="text-center"><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Frequently asked</p><h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">Questions before your first invoice?</h2></div><div className="mt-10 divide-y divide-white/10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04]">{faqs.map(([question, answer], index) => <details className="group p-5 sm:p-6" key={question} open={index === 0}><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold"><span>{question}</span><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-white/10 text-lg text-cyan-300 transition group-open:rotate-45">+</span></summary><p className="mt-4 max-w-4xl text-[15px] leading-7 text-slate-300">{answer}</p></details>)}</div></section>
+      <section id="faq" className="mx-auto homepage-container px-3 pb-[100px] sm:px-3"><div className="text-center"><p className="text-sm font-bold uppercase tracking-[0.2em] text-cyan-300">Frequently asked</p><h2 className="mt-4 text-[33.6px] font-bold leading-[1.2] tracking-normal">Questions before your first invoice?</h2></div><div className="mt-10 divide-y divide-white/10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04]">{faqs.map(([question, answer], index) => <details className="group p-5 sm:p-6" key={question} open={index === 0}><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold"><span>{question}</span><span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-white/10 text-lg text-cyan-300 transition group-open:rotate-45">+</span></summary><p className="mt-4 max-w-4xl text-base leading-6 text-slate-300">{answer}</p></details>)}</div></section>
 
       <PublicSiteFooter />
     </main>

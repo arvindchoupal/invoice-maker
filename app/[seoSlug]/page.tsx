@@ -3,9 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
-import { BrandLogo } from "@/components/BrandLogo";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
-import { PublicNavActions } from "@/components/PublicNavActions";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PeopleAlsoUse } from "@/components/seo/PeopleAlsoUse";
 import { seoPageBySlug, seoPageImageAlt, seoPageImageUrl, seoPages } from "@/lib/seo-pages";
@@ -119,10 +117,7 @@ export default async function SeoLandingPage({ params }: PageProps) {
     <main className="min-h-screen bg-slate-950 text-white">
       <JsonLd data={schemas} />
       <section className="mx-auto w-full max-w-7xl px-5 py-5 sm:px-6 sm:py-6">
-        <nav className="flex items-center justify-between">
-          <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-          <PublicNavActions />
-        </nav>
+
 
         <div className="grid gap-10 py-12 sm:py-16 lg:grid-cols-[1fr_440px] lg:items-center">
           <div>

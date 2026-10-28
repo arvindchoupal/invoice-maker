@@ -1,17 +1,10 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { profitCalculatorFaqs as faqs } from "@/lib/profit-calculator-content";
+import { ProfitCalculatorSeoContent } from "@/components/tools/ProfitCalculatorSeoContent";
 import ProfitCalculatorClient from "./ProfitCalculatorClient";
 
 const siteUrl = "https://invoicewala.shop";
-
-const faqs: Array<[string, string]> = [
-  ["What is profit?", "Profit is the money left after subtracting business expenses from revenue. Profit = Revenue - Expenses."],
-  ["How do I calculate profit margin?", "Profit margin is calculated as Net Profit divided by Revenue multiplied by 100. For example, ₹400 profit on ₹1,000 revenue gives a 40% margin."],
-  ["What is markup?", "Markup compares profit to cost or expenses. Markup % = Net Profit divided by Expenses multiplied by 100."],
-  ["Can I create an invoice from the result?", "Yes. After calculating profit, you can use InvoiceWala's invoice generator to create a professional invoice with the same pricing."],
-  ["Is this calculator free?", "Yes. InvoiceWala's profit calculator is free to use and does not require signup for calculation."],
-  ["How do freelancers use a profit calculator?", "Freelancers use a profit calculator to compare project revenue with expenses such as software, outsourcing, ads, travel or time cost before sending invoices."],
-];
 
 export const metadata: Metadata = {
   title: "Profit Calculator | Profit Margin & Markup Calculator",
@@ -67,7 +60,7 @@ export default function ProfitCalculatorPage() {
   return (
     <>
       <JsonLd data={[faqSchema(), softwareSchema(), breadcrumbSchema()]} />
-      <ProfitCalculatorClient />
+      <ProfitCalculatorClient seoContent={<ProfitCalculatorSeoContent />} />
     </>
   );
 }
