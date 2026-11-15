@@ -17,6 +17,7 @@ type TemplateSeed = {
   tips: string[];
   relatedSlugs: string[];
   searchIntents: string[];
+  practicalSections?: Array<{ title: string; body: string; bullets: string[] }>;
 };
 
 function makeTemplate(seed: TemplateSeed): InvoiceTemplatePage {
@@ -54,6 +55,7 @@ function makeTemplate(seed: TemplateSeed): InvoiceTemplatePage {
     ],
     relatedSlugs: seed.relatedSlugs,
     searchIntents: seed.searchIntents,
+    practicalSections: seed.practicalSections,
     updatedAt,
   };
 }
@@ -98,6 +100,10 @@ export const INVOICE_TEMPLATE_BATCH_FOUR: InvoiceTemplatePage[] = [
     tips: ["Keep client confidentiality in mind.", "Use a clear matter reference.", "Show reimbursements separately from professional fees."],
     relatedSlugs: ["lawyer-invoice-template", "consultant-invoice-template", "real-estate-agent-invoice-template"],
     searchIntents: ["advocate invoice template", "advocate bill format", "legal bill format", "court fee invoice", "advocate professional fee bill"],
+    practicalSections: [
+      { title: "Advocate bill format example for Indian legal work", body: "A useful advocate bill separates professional fees from expenses paid on the client's behalf. Keep descriptions specific enough for approval without putting confidential case strategy or sensitive facts on the invoice.", bullets: ["Professional consultation: ₹3,500", "Notice drafting and document review: ₹9,000", "Appearance fee for one listed hearing: ₹12,000", "Court fee, filing, clerkage and travel: show separately with actual references"] },
+      { title: "Professional fee, reimbursement and GST notes", body: "Use a matter or client reference, hearing date and service period so the client can match the bill to the engagement. Tax treatment can depend on the supplier, client and service, so confirm the applicable GST and TDS handling with a qualified professional.", bullets: ["Do not describe reimbursed court fees as professional fees", "Show advance or retainer already received before balance due", "Add PAN, GSTIN and payment details only when applicable", "Keep client-confidential information out of line-item descriptions"] },
+    ],
   }),
   makeTemplate({
     slug: "doctor-invoice-template",

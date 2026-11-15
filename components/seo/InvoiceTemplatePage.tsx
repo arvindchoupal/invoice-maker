@@ -54,6 +54,22 @@ export function InvoiceTemplatePage({ page }: { page: InvoiceTemplatePageData })
         </div>
       </section>
 
+      {page.practicalSections?.length ? (
+        <section className="mx-auto max-w-7xl px-5 pb-14 sm:px-6">
+          <div className="grid gap-5 lg:grid-cols-2">
+            {page.practicalSections.map((section) => (
+              <article className="rounded-[2rem] border border-cyan-300/15 bg-cyan-300/[0.05] p-6 sm:p-7" key={section.title}>
+                <h2 className="text-2xl font-semibold">{section.title}</h2>
+                <p className="mt-4 text-sm leading-7 text-slate-300">{section.body}</p>
+                <ul className="mt-5 space-y-3 text-sm leading-6 text-slate-300">
+                  {section.bullets.map((bullet) => <li className="flex gap-3" key={bullet}><CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-cyan-300" /><span>{bullet}</span></li>)}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       <section className="mx-auto max-w-7xl px-5 py-14 sm:px-6">
         <div className="max-w-3xl">
           <p className="text-sm font-bold uppercase tracking-[0.18em] text-cyan-300">Required details</p>

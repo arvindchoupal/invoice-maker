@@ -28,7 +28,24 @@ export type SeoPage = {
     rows: string[][];
   }>;
   educationBlocks?: Array<{ title: string; body: string }>;
+  workedExamples?: Array<{
+    title: string;
+    context: string;
+    rows: Array<{ item: string; calculation: string; amount: string }>;
+    summary: Array<{ label: string; value: string }>;
+    note: string;
+  }>;
   comparisons?: Array<{ title: string; invoiceWala: string; alternative: string }>;
+  supportingVisual?: {
+    src: string;
+    alt: string;
+    eyebrow: string;
+    title: string;
+    body: string;
+    caption: string;
+    width: number;
+    height: number;
+  };
 };
 
 const defaultLinks = [
@@ -550,30 +567,135 @@ const allSeoPages: SeoPage[] = [
   {
     slug: "bill-book-format",
     primaryKeyword: "bill book format",
-    secondaryKeywords: ["bill book sample", "bill book template", "GST bill book format", "bill book format for shop", "invoice book format"],
+    secondaryKeywords: ["bill book sample", "bill book template", "GST bill book format", "bill book format for shop", "bill book format in word", "bill book format pdf", "excel bill book format", "invoice book format"],
     intent: "Understand the fields in a practical bill book format, then create a professional customer bill online.",
     title: "Bill Book Format | Sample Template for Shops and Services",
     description: "Use this bill book format for shops and service businesses. See the essential bill fields, sample line items, GST notes and a simple way to create bills online.",
     h1: "Bill Book Format for Shops and Service Businesses",
     intro: "Use this practical bill book format to create clear customer bills for products or services. It covers seller details, customer details, bill number, item rows, tax, total and payment terms.",
+    featureBullets: [
+      "Keep a unique bill number and date on every copy",
+      "Show seller and customer details clearly",
+      "Separate item, quantity, rate and amount columns",
+      "Add GST fields only when they apply",
+      "Keep the customer copy readable and complete",
+      "Use a fixed PDF when sharing a digital bill",
+    ],
+    benefits: [
+      { title: "Readable shop bills", body: "A consistent bill-book layout helps customers understand what they bought, how the amount was calculated and which bill number to quote for a return or question." },
+      { title: "Cleaner duplicate records", body: "When a physical bill book uses original and duplicate copies, both copies should carry the same bill number, date, item rows and final amount." },
+      { title: "GST and non-GST clarity", body: "A non-GST bill can stay simple. When GST applies, use the appropriate supplier, customer, taxable-value and tax-breakup fields for the transaction." },
+    ],
     sections: [
       { title: "What a bill book format should include", body: "A clean bill book starts with your business name, address, phone and GSTIN when applicable. Add a unique bill number and date, then list the customer, items or services, quantity, rate, tax, total and payment details." },
       { title: "Bill book format for shops", body: "For product sales, use item rows with product name, quantity, unit rate, discount, GST and total. Keep every bill number unique so returns, payment follow-up and records stay easy to manage." },
       { title: "Bill book format for services", body: "For services, write the work completed, service date, hours or quantity, rate, tax and due date. Clear descriptions make customer approval and payment easier." },
     ],
     howItWorks: ["Add your business details and a unique bill number.", "Enter customer details and bill date.", "List the products or services with quantity and rate.", "Add GST or tax when it applies and check the total.", "Preview, save and download a professional PDF bill."],
+    contentTables: [
+      {
+        title: "GST bill book format vs non-GST bill book",
+        intro: "Use the simpler layout when GST does not apply, and add tax-specific fields only when the seller and transaction require them.",
+        headers: ["Bill-book field", "Non-GST bill", "GST bill"],
+        rows: [
+          ["Seller details", "Business name and contact details", "Business details and supplier GSTIN"],
+          ["Customer details", "Name or contact details as needed", "Buyer details and GSTIN for applicable B2B invoices"],
+          ["Item rows", "Item, quantity, rate and amount", "Item, HSN/SAC where relevant, taxable value and GST rate"],
+          ["Tax section", "No GST breakup", "CGST/SGST or IGST breakup as applicable"],
+          ["Final amount", "Subtotal, discount and total", "Taxable value, tax and invoice total"],
+        ],
+      },
+    ],
+    workedExamples: [
+      {
+        title: "Non-GST kirana shop bill",
+        context: "A simple cash bill for everyday goods where GST is not being shown in this illustrative example.",
+        rows: [
+          { item: "Rice bag", calculation: "2 × ₹650", amount: "₹1,300" },
+          { item: "Cooking oil", calculation: "2 × ₹140", amount: "₹280" },
+          { item: "Delivery charge", calculation: "1 × ₹50", amount: "₹50" },
+        ],
+        summary: [{ label: "Subtotal", value: "₹1,630" }, { label: "Tax", value: "—" }, { label: "Total", value: "₹1,630" }],
+        note: "Use a unique bill number, date and payment mode even for a short cash bill.",
+      },
+      {
+        title: "GST retail shop bill",
+        context: "An intra-state office-furniture sale using an illustrative 18% GST rate split equally between CGST and SGST.",
+        rows: [
+          { item: "Office chair", calculation: "2 × ₹4,500", amount: "₹9,000" },
+          { item: "Taxable value", calculation: "Before GST", amount: "₹9,000" },
+          { item: "CGST + SGST", calculation: "9% + 9%", amount: "₹1,620" },
+        ],
+        summary: [{ label: "Taxable value", value: "₹9,000" }, { label: "GST", value: "₹1,620" }, { label: "Invoice total", value: "₹10,620" }],
+        note: "The rate and CGST/SGST or IGST treatment must match the actual product, seller, buyer and place of supply.",
+      },
+      {
+        title: "Mobile repair service bill",
+        context: "A service bill that keeps the replacement part and technician labour separate for easier customer review.",
+        rows: [
+          { item: "Display replacement", calculation: "1 × ₹2,500", amount: "₹2,500" },
+          { item: "Repair labour", calculation: "1 × ₹600", amount: "₹600" },
+          { item: "Diagnostic fee", calculation: "Waived", amount: "₹0" },
+        ],
+        summary: [{ label: "Subtotal", value: "₹3,100" }, { label: "Amount paid", value: "₹3,100" }, { label: "Balance", value: "₹0" }],
+        note: "Mention the device or job reference and any genuine part or workmanship warranty.",
+      },
+      {
+        title: "Freelancer service bill",
+        context: "A milestone bill that shows the agreed service, advance already received and the remaining amount.",
+        rows: [
+          { item: "Logo design milestone", calculation: "Fixed fee", amount: "₹12,000" },
+          { item: "Extra revision", calculation: "1 × ₹1,000", amount: "₹1,000" },
+          { item: "Advance received", calculation: "Previously paid", amount: "−₹5,000" },
+        ],
+        summary: [{ label: "Service total", value: "₹13,000" }, { label: "Advance", value: "−₹5,000" }, { label: "Balance due", value: "₹8,000" }],
+        note: "Add the project or milestone reference and the agreed due date so the client can approve the bill quickly.",
+      },
+      {
+        title: "Shop bill with discount and partial payment",
+        context: "A product bill that shows the discount separately and avoids requesting an amount the customer has already paid.",
+        rows: [
+          { item: "Storage racks", calculation: "3 × ₹2,000", amount: "₹6,000" },
+          { item: "Agreed discount", calculation: "5% of ₹6,000", amount: "−₹300" },
+          { item: "Payment received", calculation: "UPI advance", amount: "−₹2,000" },
+        ],
+        summary: [{ label: "Subtotal", value: "₹6,000" }, { label: "After discount", value: "₹5,700" }, { label: "Balance due", value: "₹3,700" }],
+        note: "Keep subtotal, discount, paid amount and balance due as separate figures on both customer and duplicate copies.",
+      },
+    ],
+    industryTips: [
+      "Do not reuse a bill number for a different customer or sale.",
+      "Keep the original and duplicate copy totals identical.",
+      "Write product or service descriptions clearly instead of using vague labels.",
+      "Show discount and tax separately when they affect the final amount.",
+      "Confirm the applicable GST rate and place-of-supply treatment for the actual transaction.",
+    ],
     faqs: [
       ["What is a bill book format?", "A bill book format is a structured layout used by shops and service businesses to record a sale or payment request with business details, bill number, customer details, item rows, tax and total."],
       ["What should I write in a bill book?", "Write the seller details, bill number, date, customer name, product or service details, quantity, rate, GST or tax, final total and payment terms."],
       ["Can a bill book include GST?", "Yes. A GST bill book format can include supplier GSTIN, customer GSTIN when needed, item tax rate, taxable value and CGST/SGST or IGST breakup."],
       ["Can I create a bill book online?", "Yes. Use InvoiceWala to create professional bills online, preview them and save or download a PDF after signup."],
+      ["What is the difference between a GST and non-GST bill book?", "A non-GST bill records the sale without a GST breakup. A GST bill book adds applicable GST details such as GSTIN, taxable value, GST rate and CGST/SGST or IGST. Use the format that matches the seller and transaction."],
+      ["Should the customer and duplicate copy have the same bill number?", "Yes. The customer copy and retained duplicate should carry the same bill number, date, items and total so both records refer to the same transaction."],
+      ["Can I see a filled bill book example?", "Yes. The worked examples on this page show non-GST shop billing, an illustrative GST retail bill, a repair bill, a freelancer service bill and a bill with discount and partial payment."],
+      ["How should a partial payment appear in a bill book?", "Show the full bill total, the amount already paid and the remaining balance separately. Do not replace the original total with only the unpaid amount."],
     ],
     cta: "Create a bill online",
     ctaHref: "/free-invoice",
-    internalLinks: [{ href: "/online-bill-generator", label: "Online bill generator" }, { href: "/gst-invoice-generator", label: "GST bill generator" }, { href: "/invoice-template-india", label: "Invoice template India" }],
+    internalLinks: [{ href: "/online-bill-generator", label: "Online bill generator" }, { href: "/gst-invoice-generator", label: "GST bill generator" }, { href: "/invoice-template-india", label: "Invoice template India" }, { href: "/tools/invoice-due-date-calculator", label: "Invoice due date calculator" }],
     schema: ["FAQPage", "SoftwareApplication", "BreadcrumbList", "HowTo"],
     trustBadges: ["Bill book sample", "GST-ready fields", "PDF after signup", "Mobile-friendly"],
-    longTailKeywords: ["bill book format for shop", "simple bill book format", "GST bill book format India", "bill book sample for services"],
+    longTailKeywords: ["bill book format for shop", "bill format for shop", "shop bill", "simple bill book format", "GST bill book format India", "bill book sample for services", "bill book format in Word", "bill book format PDF", "Excel bill book format"],
+    supportingVisual: {
+      src: "/images/seo-guides/indian-shop-bill-book-format-sample.jpg",
+      alt: "Open Indian shop bill book sample with bill number, date, customer, item, quantity, rate, amount, tax, total and signature fields",
+      eyebrow: "Bill book sample",
+      title: "See how a clear shop bill book is organised",
+      body: "This illustrative sample keeps the bill number and customer fields at the top, item calculations in the middle and the final total and signature area at the bottom. Replace every sample value with the real transaction details.",
+      caption: "Illustrative shop bill book format; field requirements and tax treatment depend on the actual business and transaction.",
+      width: 1672,
+      height: 941,
+    },
   },
   {
     slug: "billing-format-in-excel",
@@ -893,20 +1015,75 @@ const allSeoPages: SeoPage[] = [
     description: "Create freelance invoices for design, development, writing, consulting and services. Preview free and save PDF invoices with InvoiceWala.",
     h1: "Freelancer Invoice Generator",
     intro: "Finished a project or monthly retainer? Create a professional invoice your client can understand quickly.",
+    featureBullets: [
+      "Invoice fixed-price projects and milestones",
+      "Bill hourly work with a clear period or quantity",
+      "Create repeat monthly-retainer invoices",
+      "Add due dates and payment terms",
+      "Include GST fields when they apply",
+      "Preview first, then save and download after login",
+    ],
+    benefits: [
+      { title: "Project invoices", body: "Describe the completed project or milestone, agreed fee, approved extras and amount already paid so the client can verify the balance quickly." },
+      { title: "Hourly invoices", body: "Show the service period, hours or units, rate and line total. Attach a timesheet separately when the client requires detailed time records." },
+      { title: "Retainer invoices", body: "Use a consistent description for the covered month, included scope, due date and any work outside the retainer." },
+    ],
     sections: [
       { title: "Made for client work", body: "Add project work, hourly services, retainers, milestones, taxes, discounts and notes in a simple invoice flow." },
       { title: "Send cleaner invoices", body: "A clear PDF invoice helps clients process payment faster than casual WhatsApp messages or messy spreadsheets." },
       { title: "Track payment status", body: "After saving, mark invoices as draft, sent, paid or overdue and follow up when needed." },
     ],
+    contentTables: [
+      {
+        title: "Freelancer invoice examples by billing model",
+        intro: "Choose item descriptions and supporting details that match how the client agreed to pay you.",
+        headers: ["Billing model", "Useful line-item example", "Helpful detail"],
+        rows: [
+          ["Fixed project", "Website design — final milestone", "Project name, milestone and agreed fee"],
+          ["Hourly", "Development support — 12 hours", "Service period, hours and hourly rate"],
+          ["Monthly retainer", "SEO consulting retainer — November 2026", "Covered month, scope and due date"],
+          ["Advance", "Project advance — 30%", "Reference the proposal or agreed project value"],
+        ],
+      },
+    ],
+    industryTips: [
+      "Use a unique invoice number and a specific issue date.",
+      "Name the project, milestone or retainer month in the line item.",
+      "State the payment due date and accepted payment method clearly.",
+      "For foreign clients, agree the invoice currency and payment charges before billing.",
+      "Add GST only when it applies to your registration and transaction; confirm uncertain treatment with a qualified professional.",
+      "A payment receipt confirms money received, while an invoice requests payment—use the correct document for the stage.",
+    ],
+    howItWorks: [
+      "Add your freelancer or business details and a unique invoice number.",
+      "Enter the client, project and billing-period details.",
+      "Add project, hourly, milestone or retainer line items.",
+      "Review tax, discounts, payment terms and the final total.",
+      "Preview the invoice, then sign up or log in to save and download the PDF.",
+    ],
     faqs: [
       ["Can freelancers use InvoiceWala free?", "Yes. You can create and preview invoices free, then sign up to save and download PDFs."],
       ["Can I add GST?", "Yes. Add GST/VAT details when your freelance business requires it."],
       ["Can I reuse client details?", "Yes. After signup, save clients and reuse details for future invoices."],
+      ["How should I invoice a monthly retainer?", "Mention the covered month, included service scope, retainer amount, due date and any separately approved work outside the retainer."],
+      ["Can I invoice a foreign freelance client?", "Yes. Agree the invoice currency, payment method, bank or platform charges and tax treatment before sending it. Confirm GST or export-of-service treatment with a qualified professional when applicable."],
+      ["Is a freelancer invoice the same as a payment receipt?", "No. An invoice requests payment for work, while a receipt confirms that payment was received. Keep both records when the client needs proof of payment."],
     ],
     cta: "Create freelancer invoice",
     ctaHref: "/free-invoice",
     internalLinks: defaultLinks,
     schema: ["FAQPage", "SoftwareApplication", "BreadcrumbList", "HowTo"],
+    longTailKeywords: ["freelancer invoice generator India", "freelance invoice for monthly retainer", "hourly freelancer invoice format", "freelancer invoice PDF for client"],
+    supportingVisual: {
+      src: "/images/seo-guides/freelancer-invoice-project-hourly-retainer.jpg",
+      alt: "Indian freelancer creating a PDF invoice for project, hourly and monthly retainer work",
+      eyebrow: "Freelancer invoice workflow",
+      title: "Turn project, hourly or retainer work into one clear invoice",
+      body: "Use the billing model agreed with the client, describe the work precisely and check the due date and total before saving the invoice. The amount shown is illustrative only.",
+      caption: "Illustrative freelancer invoice workflow for project, hourly and retainer billing; PDF save and download require signup or login.",
+      width: 1672,
+      height: 941,
+    },
   },
   {
     slug: "contractor-invoice-generator",

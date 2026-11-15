@@ -6,6 +6,7 @@ export const paymentReminderFaqs: Array<[string, string]> = [
   ["How often should I follow up on an unpaid invoice?", "A practical sequence is a friendly reminder on the due date, a firm reminder after seven days and a final follow-up after fourteen or thirty days, depending on your payment terms."],
   ["Is this payment reminder generator free?", "Yes. InvoiceWala's payment reminder generator is free to use for WhatsApp, email and SMS-style invoice follow-ups."],
   ["Does the generator support Hinglish payment reminders?", "Yes. You can generate natural Hinglish reminders for Indian customers while keeping invoice details and the payment request professional."],
+  ["Can I create a payment reminder in Hindi?", "Yes. Choose Hindi to generate a Devanagari payment reminder, then review the client name, invoice number, amount and due date before sharing."],
   ["Can I add UPI or bank details to the reminder?", "Yes. Add your UPI ID, payment link or bank instructions in the optional payment details field before copying the message."],
   ["Does this tool send payment reminders automatically?", "No. It creates a draft for you to review. Copy or download the text, or open WhatsApp or your email app, then choose the recipient and decide when to send it."],
   ["Can I edit the generated payment reminder?", "Yes. Edit the message directly in the preview. Copy, download and share actions use the edited text. Changing an invoice detail or style option refreshes the draft from those inputs."],
@@ -36,6 +37,7 @@ export const paymentReminderKeywords = [
   "invoice follow up email",
   "payment reminder SMS",
   "Hinglish payment reminder",
+  "Hindi payment reminder message",
   "payment due reminder",
   "unpaid invoice reminder template",
 ];

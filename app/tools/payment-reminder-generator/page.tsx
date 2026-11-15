@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     "gentle reminder for payment message",
     "polite payment reminder",
     "Hinglish payment reminder",
+    "Hindi payment reminder message",
   ],
   alternates: { canonical: `https://invoicewala.shop${tool.href}` },
   openGraph: {
@@ -47,7 +48,7 @@ export default function PaymentReminderGeneratorPage() {
           howToSchema("How to create a payment reminder message", [
             "Enter the client and invoice details.",
             "Choose the payment reminder stage and tone.",
-            "Select English or Hinglish.",
+            "Select English, Hindi or Hinglish.",
             "Copy the reminder for WhatsApp, email or SMS.",
           ]),
         ]}

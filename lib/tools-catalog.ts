@@ -72,8 +72,20 @@ export const TOOLS_CATALOG: ToolCatalogEntry[] = [
     metaDescription:
       "Create a polite payment reminder for WhatsApp, email or SMS. Add invoice details, choose a tone and generate a ready-to-send message in English or Hinglish.",
     headline: "Write a polite payment reminder without the awkwardness.",
-    highlights: ["WhatsApp, email and SMS templates", "Friendly, firm and final reminder tones", "English and Hinglish payment messages"],
+    highlights: ["WhatsApp, email and SMS templates", "Before-due, overdue and final stages", "English, Hindi and Hinglish payment messages"],
     signupSource: "payment-reminder-generator",
+  },
+  {
+    href: "/tools/invoice-due-date-calculator",
+    title: "Invoice due date calculator",
+    body: "Calculate invoice payment dates for Net 7, 15, 30, 45, 60, 90, end-of-month or custom terms.",
+    tag: "Invoice",
+    intent: "Best for payment terms",
+    metaTitle: "Invoice Due Date Calculator | Net 30 & Payment Terms",
+    metaDescription: "Calculate an invoice due date from the invoice date using Net 7, 15, 30, 45, 60, 90, end-of-month or custom terms. Choose how weekends are handled.",
+    headline: "Calculate an invoice due date from your payment terms.",
+    highlights: ["Net 7 to Net 90 terms", "End-of-month and custom days", "Optional weekend adjustment"],
+    signupSource: "invoice-due-date-calculator",
   },
   {
     href: "/tools/gst-calculator",

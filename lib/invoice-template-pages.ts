@@ -21,6 +21,7 @@ export type InvoiceTemplatePage = {
   faqs: Array<[string, string]>;
   relatedSlugs: string[];
   searchIntents?: string[];
+  practicalSections?: Array<{ title: string; body: string; bullets: string[] }>;
   updatedAt: string;
 };
 

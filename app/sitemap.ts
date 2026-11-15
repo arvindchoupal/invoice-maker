@@ -84,7 +84,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.85,
-      images: [`${siteUrl}${seoPageImageUrl(page.slug)}`],
+      images: [
+        `${siteUrl}${seoPageImageUrl(page.slug)}`,
+        ...(page.supportingVisual ? [`${siteUrl}${page.supportingVisual.src}`] : []),
+      ],
     }));
 
   const blogRoutes = getIndexablePosts()

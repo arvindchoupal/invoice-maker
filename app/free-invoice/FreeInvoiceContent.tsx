@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import styles from "./FreeInvoiceContent.module.css";
 import { freeInvoiceFaqs } from "@/lib/free-invoice-content";
@@ -33,6 +34,19 @@ export function FreeInvoiceContent() {
           <ol className="mt-8 grid gap-5 md:grid-cols-3">
             {steps.map(([title, description], index) => <li key={title} className={panel}><span className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--guide-soft)] font-semibold text-[var(--guide-accent)]">{index + 1}</span><h3 className="text-lg font-semibold text-[var(--guide-heading)]">{title}</h3><p className="mt-3 text-sm leading-7">{description}</p></li>)}
           </ol>
+          <figure className="mt-8 overflow-hidden rounded-3xl border border-[var(--guide-border)] bg-[var(--guide-panel)] shadow-sm">
+            <Image
+              src="/images/invoice-guides/free-invoice-workflow.png"
+              alt="Freelancer creating an invoice with customer details, line items and a PDF preview"
+              width={1672}
+              height={941}
+              sizes="(min-width: 1280px) 1152px, (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2.5rem)"
+              className="h-auto w-full"
+            />
+            <figcaption className="border-t border-[var(--guide-border)] px-5 py-4 text-sm leading-6">
+              Add the customer and line-item details first, review the calculated total, and check the finished PDF before sharing it.
+            </figcaption>
+          </figure>
         </section>
 
         <section id="invoice-examples" className="scroll-mt-24" aria-labelledby="examples-heading">
@@ -61,6 +75,38 @@ export function FreeInvoiceContent() {
           <p className="mt-4 text-sm leading-7">In the form above, enter quantity 2 and rate 2500, open Discount and enter 10, leave the tax at 0 for this example, and enter 1000 under Amount paid. Review the total and remaining balance before downloading.</p>
         </section>
 
+        <section aria-labelledby="gst-invoice-heading" className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+          <div>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[var(--guide-accent)]">Indian GST context</p>
+            <h2 id="gst-invoice-heading" className={heading}>Create a GST-ready invoice when tax applies</h2>
+            <p className="mt-5 leading-8">For an Indian GST invoice, check the supplier and customer details, GSTIN where applicable, invoice number and date, HSN or SAC, place of supply, taxable value, tax rate and tax amount. The exact fields and rate depend on the transaction, so confirm the current requirements before sending the invoice.</p>
+            <p className="mt-4 leading-8">Choose the tax mode in Invoice settings. A typical intra-state taxable supply uses CGST and SGST, while a typical inter-state taxable supply uses IGST. Place of supply can involve special rules, so do not choose the split only from the customer address when the transaction is more complex.</p>
+            <div className="mt-6 rounded-2xl border border-[var(--guide-border)] bg-[var(--guide-soft)] p-5">
+              <h3 className="text-lg font-semibold text-[var(--guide-heading)]">Illustrative ₹5,000 service calculation</h3>
+              <dl className="mt-4 grid grid-cols-[1fr_auto] gap-x-6 gap-y-3 text-sm leading-6">
+                <dt>Taxable website design service</dt><dd className="font-semibold text-[var(--guide-heading)]">₹5,000</dd>
+                <dt>Illustrative GST at 18%</dt><dd className="font-semibold text-[var(--guide-heading)]">₹900</dd>
+                <dt className="border-t border-[var(--guide-border)] pt-3 font-semibold text-[var(--guide-heading)]">Invoice total</dt><dd className="border-t border-[var(--guide-border)] pt-3 font-semibold text-[var(--guide-heading)]">₹5,900</dd>
+              </dl>
+              <p className="mt-4 text-sm leading-7">If this example were an intra-state supply, the ₹900 tax could appear as ₹450 CGST plus ₹450 SGST. If it were an inter-state supply, it could appear as ₹900 IGST. This explains the calculation only; 18% is not a universal GST rate.</p>
+            </div>
+            <p className="mt-5 text-sm leading-7">Use the <Link href="/tools/gst-calculator" className="font-semibold text-[var(--guide-accent)] underline">GST calculator</Link> to check a basic tax split, or open the <Link href="/gst-invoice-generator" className="font-semibold text-[var(--guide-accent)] underline">GST invoice generator</Link> when you need a GST-focused workflow. For uncertain tax treatment, confirm with a qualified tax professional.</p>
+          </div>
+          <figure className="overflow-hidden rounded-3xl border border-[var(--guide-border)] bg-[var(--guide-panel)] shadow-sm">
+            <Image
+              src="/images/invoice-guides/free-invoice-gst-calculation.png"
+              alt="Invoice calculation flow from line items and subtotal to tax and final balance"
+              width={1672}
+              height={941}
+              sizes="(min-width: 1024px) 44vw, calc(100vw - 2.5rem)"
+              className="h-auto w-full"
+            />
+            <figcaption className="border-t border-[var(--guide-border)] px-5 py-4 text-sm leading-6">
+              Keep the taxable value, applicable tax and final total separate so the customer can follow the calculation.
+            </figcaption>
+          </figure>
+        </section>
+
         <section aria-labelledby="descriptions-heading">
           <h2 id="descriptions-heading" className={heading}>Write invoice descriptions your customers can recognise</h2><p className="mt-4 max-w-3xl leading-8">Specific descriptions help the person checking the invoice connect a charge to the work or order. Include the service period, deliverable, quantity or project reference where it helps. Keep private project information out of a description if it is unnecessary for billing.</p>
           <div className={`mt-7 ${styles.tableWrap}`}><table><thead><tr><th scope="col">Business</th><th scope="col">Too vague</th><th scope="col">More useful description</th></tr></thead><tbody>{[["Designer", "Design work", "Landing page design — approved homepage layout"], ["Consultant", "Consulting", "Operations review — 3 sessions for October"], ["Repair service", "Repair charges", "Laptop keyboard replacement — labour charge"], ["Shop", "Products", "A5 ruled notebook — pack of 10"], ["Developer", "Website work", "Website maintenance — October service period"]].map(([business, vague, better]) => <tr key={business}><td>{business}</td><td>{vague}</td><td>{better}</td></tr>)}</tbody></table></div>
@@ -71,7 +117,7 @@ export function FreeInvoiceContent() {
           <div className="mt-7 grid gap-5 md:grid-cols-3">{[["Quotation", "Use a quotation to propose products, services and prices before the customer approves the work. Include the scope and any conditions so the customer knows what the estimate covers.", "/quotation-maker", "Create a quotation"], ["Invoice", "Use an invoice to request payment at the agreed billing stage. Include the items, invoice number, dates and amount due. If part of the payment has arrived, record it separately from the total.", "#invoice-maker", "Create an invoice"], ["Receipt", "Use a receipt to acknowledge a payment you have received. It helps the customer keep a payment record. An invoice with an outstanding balance still needs payment even if an earlier instalment has been received.", "/receipt-generator", "Create a receipt"]].map(([title, description, href, label]) => <article key={title} className={panel}><h3 className="text-lg font-semibold text-[var(--guide-heading)]">{title}</h3><p className="mt-3 text-sm leading-7">{description}</p><Link href={href} className="mt-5 inline-block text-sm font-semibold text-[var(--guide-accent)] hover:underline">{label} →</Link></article>)}</div>
         </section>
 
-        <section aria-labelledby="numbering-heading" className={panel}><h2 id="numbering-heading" className={heading}>Choose invoice numbers and payment terms that are easy to follow</h2><div className="mt-6 grid gap-8 md:grid-cols-2"><div><h3 className="text-lg font-semibold text-[var(--guide-heading)]">Keep a consistent numbering pattern</h3><p className="mt-3 leading-8">A pattern such as INV-2026-001, INV-2026-002 and INV-2026-003 helps you find documents later. Choose a sequence that fits your records and check existing invoices before assigning the next number. Avoid using the same number for separate invoices.</p><p className="mt-3 leading-8">If you bill across several projects, add the project reference in the notes rather than making the invoice number difficult to read. Our <Link href="/tools/invoice-number-generator" className="font-semibold text-[var(--guide-accent)] underline">invoice number generator</Link> can help you plan a numbering pattern.</p></div><div><h3 className="text-lg font-semibold text-[var(--guide-heading)]">Make the payment request specific</h3><p className="mt-3 leading-8">Use the due date and Terms field to explain when and how the customer should pay. Match the terms you agreed with the customer. For a milestone bill, say which milestone it covers; for a monthly service, name the billing period.</p><p className="mt-3 rounded-xl bg-[var(--guide-soft)] p-4 text-sm leading-7">Example: “Payment is due by 15 November 2026. Please include invoice INV-2026-001 as the payment reference. This invoice covers the approved homepage design milestone.”</p></div></div></section>
+        <section aria-labelledby="numbering-heading" className={panel}><h2 id="numbering-heading" className={heading}>Choose invoice numbers and payment terms that are easy to follow</h2><div className="mt-6 grid gap-8 md:grid-cols-2"><div><h3 className="text-lg font-semibold text-[var(--guide-heading)]">Keep a consistent numbering pattern</h3><p className="mt-3 leading-8">A pattern such as INV-2026-001, INV-2026-002 and INV-2026-003 helps you find documents later. Choose a sequence that fits your records and check existing invoices before assigning the next number. Avoid using the same number for separate invoices.</p><p className="mt-3 leading-8">If you bill across several projects, add the project reference in the notes rather than making the invoice number difficult to read. Our <Link href="/tools/invoice-number-generator" className="font-semibold text-[var(--guide-accent)] underline">invoice number generator</Link> can help you plan a numbering pattern.</p></div><div><h3 className="text-lg font-semibold text-[var(--guide-heading)]">Make the payment request specific</h3><p className="mt-3 leading-8">Use the due date and Terms field to explain when and how the customer should pay. Match the terms you agreed with the customer. For a milestone bill, say which milestone it covers; for a monthly service, name the billing period.</p><p className="mt-3 leading-8">If the agreement uses Net 7, Net 30 or end-of-month terms, use the <Link href="/tools/invoice-due-date-calculator" className="font-semibold text-[var(--guide-accent)] underline">invoice due date calculator</Link> to check the calendar date before entering it.</p><p className="mt-3 rounded-xl bg-[var(--guide-soft)] p-4 text-sm leading-7">Example: “Payment is due by 15 November 2026. Please include invoice INV-2026-001 as the payment reference. This invoice covers the approved homepage design milestone.”</p></div></div></section>
 
         <section aria-labelledby="mistakes-heading"><h2 id="mistakes-heading" className={heading}>Common invoice mistakes to check before downloading</h2><div className="mt-7 grid gap-5 md:grid-cols-2">{[["Wrong customer or billing details", "Check the billing name and address against the details the customer provided. The person receiving the invoice may need to forward it to a separate accounts team."], ["Unclear quantities or prices", "Separate different items into their own rows. Confirm whether the rate is per hour, session, unit or project, and make sure the quantity uses the same basis."], ["Missing due date or payment instructions", "A total alone does not explain the payment schedule. Include the agreed due date and enough information in the terms for your customer to make the payment."], ["Confusing the total with the balance due", "The invoice total describes the bill. The balance due reflects payments already received. Check the Amount paid field so you do not request the same payment twice."], ["Using the wrong currency", "Select the currency before entering prices. Switching the currency changes how amounts are labelled; it does not perform an exchange rate conversion."], ["Sharing without reviewing the PDF", "Open the downloaded document and check names, dates, amounts and notes. Confirm that long item descriptions are readable and that the document reflects the agreement."]].map(([title, description]) => <article key={title} className={panel}><h3 className="text-lg font-semibold text-[var(--guide-heading)]">{title}</h3><p className="mt-3 text-sm leading-7">{description}</p></article>)}</div></section>
 

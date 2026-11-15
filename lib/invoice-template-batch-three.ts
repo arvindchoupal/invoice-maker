@@ -21,6 +21,7 @@ type TemplateSeed = {
   searchIntents?: string[];
   faqs?: Array<[string, string]>;
   updatedAt?: string;
+  practicalSections?: Array<{ title: string; body: string; bullets: string[] }>;
 };
 
 function makeTemplate(seed: TemplateSeed): InvoiceTemplatePage {
@@ -58,6 +59,7 @@ function makeTemplate(seed: TemplateSeed): InvoiceTemplatePage {
     ],
     relatedSlugs: seed.relatedSlugs,
     searchIntents: seed.searchIntents,
+    practicalSections: seed.practicalSections,
     updatedAt: seed.updatedAt ?? updatedAt,
   };
 }
@@ -306,6 +308,10 @@ export const INVOICE_TEMPLATE_BATCH_THREE: InvoiceTemplatePage[] = [
     tips: ["Include stay dates in every room invoice.", "Separate food and room charges.", "Use booking ID for online reservations."],
     relatedSlugs: ["travel-agency-invoice-template", "restaurant-invoice-template", "catering-invoice-template"],
     searchIntents: ["hotel bill format", "hotel bill format in word", "hotel bill format in excel", "hotel invoice format", "hotel invoice format in word", "hotel invoice format in excel", "hotel invoice pdf", "hotel bill format pdf", "hotel room bill format", "hotel bill template word", "hotel invoice template excel"],
+    practicalSections: [
+      { title: "Hotel invoice generator for genuine guest stays", body: "Use the format for a stay or service your hotel actually supplied. The bill should match the booking, folio, payment record and tax documents. InvoiceWala does not create fake receipts or imitate another hotel's branded invoice.", bullets: ["Guest name, booking ID and room number", "Check-in, check-out and number of nights", "Room tariff, food, laundry, minibar and transport as separate lines", "Deposit, payment mode, balance and authorised hotel details"] },
+      { title: "Illustrative hotel room bill calculation", body: "For a two-night stay at ₹4,500 per night, the room tariff is ₹9,000 before tax. Add genuine restaurant or laundry charges, subtract the deposit received and apply only the tax treatment that applies to the actual stay.", bullets: ["Room: 2 nights × ₹4,500 = ₹9,000", "Restaurant charges: ₹1,800", "Laundry: ₹650", "Subtotal before applicable tax and deposit: ₹11,450"] },
+    ],
     faqs: [
       ["What should a hotel bill format include?", "A hotel bill format should include hotel details, guest name, room number, booking reference, check-in and check-out dates, room tariff, other service charges, tax, deposit, balance due and payment mode."],
       ["Can I use this as a hotel bill format in Word?", "Yes. Use the same structure in Word: hotel and guest details at the top, stay details and an itemised table for room, food, laundry, tax and total."],

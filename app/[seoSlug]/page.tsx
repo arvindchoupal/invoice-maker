@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, Download, FileSpreadsheet, FileText } from "lucide-react";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PeopleAlsoUse } from "@/components/seo/PeopleAlsoUse";
@@ -229,6 +229,54 @@ export default async function SeoLandingPage({ params }: PageProps) {
         </div>
       </section>
 
+      {page.supportingVisual ? (
+        <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6">
+          <div className="grid gap-7 rounded-[2rem] border border-white/10 bg-white/[0.035] p-5 sm:p-7 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-cyan-300">{page.supportingVisual.eyebrow}</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight">{page.supportingVisual.title}</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-400">{page.supportingVisual.body}</p>
+            </div>
+            <figure>
+              <div className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-2xl shadow-black/25">
+                <Image
+                  alt={page.supportingVisual.alt}
+                  className="h-auto w-full"
+                  height={page.supportingVisual.height}
+                  sizes="(max-width: 1024px) 100vw, 760px"
+                  src={page.supportingVisual.src}
+                  width={page.supportingVisual.width}
+                />
+              </div>
+              <figcaption className="mt-3 text-center text-xs leading-5 text-slate-500">
+                {page.supportingVisual.caption}
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+      ) : null}
+
+      {page.slug === "bill-book-format" ? (
+        <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6">
+          <div className="rounded-[2rem] border border-cyan-300/20 bg-cyan-300/[0.06] p-6 sm:p-8">
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-cyan-300">Free bill book downloads</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight">Download a bill book format in Word, PDF or Excel</h2>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300">Choose the file that matches your workflow. Word is easy to edit, PDF is ready to print, and Excel includes working item, GST and balance formulas. All three are original InvoiceWala templates with blank business fields.</p>
+            <div className="mt-7 grid gap-4 md:grid-cols-3">
+              {[
+                { href: "/downloads/bill-book-format/bill-book-format-word.docx", title: "Bill book format in Word", body: "Editable A4 layout for shop and service bills.", icon: FileText, label: "Download Word" },
+                { href: "/downloads/bill-book-format/bill-book-format-printable.pdf", title: "Bill book format PDF", body: "Print-ready blank template for handwritten bills.", icon: FileText, label: "Download PDF" },
+                { href: "/downloads/bill-book-format/bill-book-format-excel.xlsx", title: "Excel bill book format", body: "Editable sheet with subtotal, GST and balance formulas.", icon: FileSpreadsheet, label: "Download Excel" },
+              ].map((file) => {
+                const Icon = file.icon;
+                return <article className="rounded-2xl border border-white/10 bg-slate-950/75 p-5" key={file.href}><Icon className="h-6 w-6 text-cyan-300" /><h3 className="mt-4 text-lg font-semibold">{file.title}</h3><p className="mt-2 text-sm leading-6 text-slate-400">{file.body}</p><a className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl bg-cyan-300 px-4 text-sm font-bold text-slate-950 hover:bg-cyan-200" download href={file.href}><Download className="h-4 w-4" />{file.label}</a></article>;
+              })}
+            </div>
+            <p className="mt-5 text-xs leading-6 text-slate-400">These files are formatting aids, not tax or legal advice. Replace all sample values and confirm the GST treatment that applies to your business and transaction.</p>
+          </div>
+        </section>
+      ) : null}
+
       {page.benefits?.length ? (
         <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6">
           <div className="grid gap-5 lg:grid-cols-3">
@@ -255,7 +303,7 @@ export default async function SeoLandingPage({ params }: PageProps) {
       {page.contentTables?.length ? (
         <section className="mx-auto grid max-w-7xl gap-6 px-5 py-12 sm:px-6">
           {page.contentTables.map((table) => (
-            <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6" key={table.title}>
+            <div className="min-w-0 rounded-[2rem] border border-white/10 bg-white/[0.04] p-6" key={table.title}>
               <h2 className="text-3xl font-semibold tracking-tight">{table.title}</h2>
               <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">{table.intro}</p>
               <div className="mt-6 overflow-x-auto rounded-2xl border border-white/10">
@@ -282,6 +330,37 @@ export default async function SeoLandingPage({ params }: PageProps) {
               </div>
             </div>
           ))}
+        </section>
+      ) : null}
+
+      {page.workedExamples?.length ? (
+        <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6">
+          <div className="max-w-3xl">
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-cyan-300">Filled bill samples</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight">Practical bill book examples with calculations</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-400">Use these examples to understand the layout and calculation flow. Replace every item, rate, tax, discount and payment with the real transaction details.</p>
+          </div>
+          <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            {page.workedExamples.map((example) => (
+              <article className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04]" key={example.title}>
+                <div className="border-b border-white/10 p-6">
+                  <h3 className="text-xl font-semibold">{example.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-400">{example.context}</p>
+                </div>
+                <div className="p-6">
+                  <div className="overflow-x-auto rounded-xl border border-white/10">
+                    <table className="w-full min-w-[480px] text-left text-sm">
+                      <thead className="bg-slate-950/80 text-xs uppercase tracking-wide text-slate-400"><tr><th className="p-3">Item</th><th className="p-3">Calculation</th><th className="p-3 text-right">Amount</th></tr></thead>
+                      <tbody>{example.rows.map((row) => <tr className="border-t border-white/10" key={`${example.title}-${row.item}`}><td className="p-3 font-semibold text-slate-200">{row.item}</td><td className="p-3 text-slate-400">{row.calculation}</td><td className="p-3 text-right text-slate-200">{row.amount}</td></tr>)}</tbody>
+                    </table>
+                  </div>
+                  <dl className="ml-auto mt-5 max-w-sm space-y-2 text-sm">{example.summary.map((row, index) => <div className={`flex items-center justify-between gap-4 ${index === example.summary.length - 1 ? "border-t border-white/10 pt-3 font-bold text-white" : "text-slate-400"}`} key={`${example.title}-${row.label}`}><dt>{row.label}</dt><dd>{row.value}</dd></div>)}</dl>
+                  <p className="mt-5 rounded-xl bg-slate-950/70 p-4 text-xs leading-6 text-slate-400">{example.note}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+          <p className="mt-6 text-xs leading-6 text-slate-500">GST values above are illustrative. Confirm the applicable registration, rate, HSN/SAC and place-of-supply treatment for the actual transaction.</p>
         </section>
       ) : null}
 

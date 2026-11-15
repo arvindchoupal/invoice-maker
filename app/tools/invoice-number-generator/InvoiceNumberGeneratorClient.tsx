@@ -109,7 +109,7 @@ const realExamples = [
 function InvoiceNumberSeoSections() {
   return (
     <section className="px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-7xl gap-6">
+      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-6">
         <article className="rounded-2xl border border-white/10 bg-slate-950/80 p-5 sm:p-6">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">Guide</p>
           <h2 className="mt-3 text-2xl font-semibold text-white">Invoice Number Generator</h2>
@@ -273,6 +273,28 @@ function InvoiceNumberSeoSections() {
             </table>
           </div>
         </section>
+
+        <article className="rounded-2xl border border-white/10 bg-slate-950/80 p-5 sm:p-6">
+          <h2 className="text-2xl font-semibold text-white">Invoice Number Formula in Excel</h2>
+          <div className="mt-4 space-y-4 text-sm leading-7 text-slate-300">
+            <p>
+              For a simple Excel invoice-number sequence, enter the formula below in the first row and fill it down. It produces INV-0001, INV-0002 and the next sequential values from the row number.
+            </p>
+            <code className="block overflow-x-auto rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-cyan-100">
+              =&quot;INV-&quot;&amp;TEXT(ROW(A1),&quot;0000&quot;)
+            </code>
+            <p>
+              For a financial-year prefix, replace INV with the series you actually use, for example <code className="text-cyan-100">=&quot;FY26-&quot;&amp;TEXT(ROW(A1),&quot;0000&quot;)</code>. If the first formula starts lower in the sheet, adjust the row reference so the sequence still begins at 0001.
+            </p>
+            <p>
+              Excel can create a neat sequence, but it does not automatically prevent two copied workbooks from issuing the same number. Keep one controlled register, never reuse a cancelled invoice number for another invoice and confirm any GST record-keeping requirement with your accountant.
+            </p>
+          </div>
+          <div className="mt-5 grid gap-3 md:grid-cols-2">
+            <InfoCard title="Sequential numbers" body="Use predictable values such as INV-0001 and INV-0002 for real invoice records and easier reconciliation." />
+            <InfoCard title="Random numbers" body="Random IDs can be useful for test data, but they are harder to audit and should not replace a controlled invoice sequence." />
+          </div>
+        </article>
 
         <article className="rounded-2xl border border-white/10 bg-slate-950/80 p-5 sm:p-6">
           <h2 className="text-2xl font-semibold text-white">How to Generate Invoice Numbers Automatically</h2>

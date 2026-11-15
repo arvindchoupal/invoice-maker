@@ -9,16 +9,18 @@ import { toolByHref } from "@/lib/tools-catalog";
 
 const tool = toolByHref("/tools/payment-reminder-generator")!;
 
-type Stage = "before" | "due" | "overdue7" | "overdue15" | "final";
+type Stage = "before" | "due" | "overdue3" | "overdue7" | "overdue15" | "overdue30" | "final";
 type Tone = "friendly" | "professional" | "firm";
-type Language = "english" | "hinglish";
+type Language = "english" | "hindi" | "hinglish";
 type Channel = "whatsapp" | "email" | "sms";
 
 const stageLabels: Record<Stage, string> = {
   before: "Due soon",
   due: "Due today",
-  overdue7: "1–7 days overdue",
+  overdue3: "1–3 days overdue",
+  overdue7: "4–7 days overdue",
   overdue15: "8–15 days overdue",
+  overdue30: "16–30+ days overdue",
   final: "Final reminder",
 };
 
@@ -57,16 +59,29 @@ export default function PaymentReminderGeneratorClient({seoContent}: {seoContent
     const englishOpenings: Record<Stage, string> = {
       before: `Just a friendly reminder that invoice ${invoiceRef} for ${money} is due on ${due}.`,
       due: `This is a friendly reminder that invoice ${invoiceRef} for ${money} is due today, ${due}.`,
+      overdue3: `I wanted to check on invoice ${invoiceRef} for ${money}, which was due on ${due}.`,
       overdue7: `I wanted to follow up on invoice ${invoiceRef} for ${money}, which was due on ${due}.`,
       overdue15: `Our records show that invoice ${invoiceRef} for ${money}, due on ${due}, is still outstanding.`,
+      overdue30: `Invoice ${invoiceRef} for ${money} remains outstanding after its ${due} due date.`,
       final: `This is a final payment reminder for invoice ${invoiceRef} for ${money}, originally due on ${due}.`,
     };
     const hinglishOpenings: Record<Stage, string> = {
       before: `Ek friendly reminder: invoice ${invoiceRef} ka ${money} payment ${due} ko due hai.`,
       due: `Friendly reminder: invoice ${invoiceRef} ka ${money} payment aaj, ${due}, due hai.`,
+      overdue3: `Invoice ${invoiceRef} ke ${money} payment ke regarding ek quick follow-up hai. Due date ${due} thi.`,
       overdue7: `Invoice ${invoiceRef} ke ${money} payment ke regarding follow up kar raha/rahi hoon. Due date ${due} thi.`,
       overdue15: `Hamare records ke according invoice ${invoiceRef} ka ${money} payment abhi pending hai. Due date ${due} thi.`,
+      overdue30: `Invoice ${invoiceRef} ka ${money} payment ${due} ki due date ke baad bhi pending hai.`,
       final: `Yeh invoice ${invoiceRef}, amount ${money}, ke liye final payment reminder hai. Original due date ${due} thi.`,
+    };
+    const hindiOpenings: Record<Stage, string> = {
+      before: `एक विनम्र स्मरण: इनवॉइस ${invoiceRef} की ${money} राशि ${due} को देय है।`,
+      due: `विनम्र स्मरण: इनवॉइस ${invoiceRef} की ${money} राशि आज, ${due}, देय है।`,
+      overdue3: `इनवॉइस ${invoiceRef} की ${money} राशि के संबंध में संक्षिप्त अनुस्मारक है। देय तिथि ${due} थी।`,
+      overdue7: `इनवॉइस ${invoiceRef} की ${money} राशि का भुगतान ${due} को देय था और अभी लंबित है।`,
+      overdue15: `हमारे रिकॉर्ड के अनुसार इनवॉइस ${invoiceRef} की ${money} राशि अभी लंबित है। देय तिथि ${due} थी।`,
+      overdue30: `इनवॉइस ${invoiceRef} की ${money} राशि ${due} की देय तिथि के बाद भी लंबित है।`,
+      final: `यह इनवॉइस ${invoiceRef}, राशि ${money}, के लिए अंतिम भुगतान स्मरण है। मूल देय तिथि ${due} थी।`,
     };
     const englishRequests: Record<Tone, string> = {
       friendly: "Could you please check and let me know when the payment is likely to be processed? If it has already been paid, kindly ignore this message.",
@@ -78,9 +93,14 @@ export default function PaymentReminderGeneratorClient({seoContent}: {seoContent
       professional: "Kindly payment earliest possible date par process karke expected date confirm kar dijiye. Payment ho chuka ho toh transaction reference share kar dein.",
       firm: "Please outstanding payment immediately process karein ya ek confirmed payment date share karein. Further delay par ongoing work hold ya agreed late-payment terms apply ho sakte hain.",
     };
-    const opening = language === "hinglish" ? hinglishOpenings[stage] : englishOpenings[stage];
-    const request = language === "hinglish" ? hinglishRequests[tone] : englishRequests[tone];
-    const payment = paymentDetails.trim() ? `${language === "hinglish" ? "Payment details" : "Payment details"}: ${paymentDetails.trim()}` : "";
+    const hindiRequests: Record<Tone, string> = {
+      friendly: "कृपया जाँच कर अपेक्षित भुगतान तिथि बता दें। यदि भुगतान हो चुका है तो इस संदेश को अनदेखा करें।",
+      professional: "कृपया भुगतान शीघ्र संसाधित कर अपेक्षित तिथि बताएँ। भुगतान हो चुका हो तो लेन-देन संदर्भ साझा करें।",
+      firm: "कृपया लंबित भुगतान तुरंत करें या निश्चित भुगतान तिथि बताएँ। आगे की देरी पर सहमत शर्तों के अनुसार काम रोका जा सकता है।",
+    };
+    const opening = language === "hindi" ? hindiOpenings[stage] : language === "hinglish" ? hinglishOpenings[stage] : englishOpenings[stage];
+    const request = language === "hindi" ? hindiRequests[tone] : language === "hinglish" ? hinglishRequests[tone] : englishRequests[tone];
+    const payment = paymentDetails.trim() ? `${language === "hindi" ? "भुगतान विवरण" : "Payment details"}: ${paymentDetails.trim()}` : "";
 
     if (channel === "email") {
       const subject = stage === "final" ? `Final payment reminder: ${invoiceRef}` : `Payment reminder: ${invoiceRef}`;
@@ -153,7 +173,7 @@ export default function PaymentReminderGeneratorClient({seoContent}: {seoContent
             {amountError && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-300">Enter a valid outstanding amount of zero or more.</p>}
             <div className="mt-6 grid gap-5 border-t border-[var(--guide-border)] pt-6">
               <ChoiceGroup label="Tone" value={tone} onChange={value=>setTone(value as Tone)} options={[["friendly","Friendly"],["professional","Professional"],["firm","Firm"]]} />
-              <ChoiceGroup label="Language" value={language} onChange={value=>setLanguage(value as Language)} options={[["english","English"],["hinglish","Hinglish"]]} />
+              <ChoiceGroup label="Language" value={language} onChange={value=>setLanguage(value as Language)} options={[["english","English"],["hindi","Hindi"],["hinglish","Hinglish"]]} />
               <ChoiceGroup label="Message format" value={channel} onChange={value=>setChannel(value as Channel)} options={[["whatsapp","WhatsApp"],["email","Email"],["sms","SMS"]]} />
               <Field label="Payment link, UPI or bank note (optional)"><input value={paymentDetails} onChange={e=>setPaymentDetails(e.target.value)} placeholder="UPI: yourname@upi or payment link" /></Field>
             </div>
