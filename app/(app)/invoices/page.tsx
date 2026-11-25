@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Download, MessageCircle, Search, Trash2 } from "lucide-react";
+import { ChevronDown, Download, MessageCircle, Plus, Search, Trash2 } from "lucide-react";
 import { api, downloadApiFile } from "@/lib/api";
 import { currency } from "@/lib/invoice";
 import type { PdfStyleMeta } from "@/lib/pdf-styles";
 import { TemplateGallery } from "@/components/TemplateGallery";
-import { Badge, Button, Card, EmptyState, LinkButton, PageHeader, Skeleton, inputClass } from "@/components/ui";
+import { Badge, Button, Card, EmptyState, LinkButton, Skeleton, inputClass } from "@/components/ui";
 
 interface InvoiceRow {
   id: number;
@@ -143,41 +143,52 @@ export default function InvoicesPage() {
   }
 
   return (
-    <div className="grid gap-5">
-      <PageHeader title="Invoices" description="Search, filter, edit, share, and download invoices with real PDF templates." action={<LinkButton href="/invoices/new">Create invoice</LinkButton>} />
-
-      <Card className="p-5">
-        <div className="grid gap-3 lg:grid-cols-[1fr_auto_auto]">
+    <div className="grid gap-4">
+      <Card className="p-4 sm:p-5">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4 dark:border-white/10">
+          <div>
+            <div className="flex flex-wrap items-center gap-3">
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">Invoices</h2>
+              <span className="rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1 font-mono text-sm font-semibold text-blue-700 dark:border-blue-500/25 dark:bg-blue-500/10 dark:text-blue-300">{response?.pagination.total ?? 0} Total</span>
+            </div>
+          </div>
+          <LinkButton href="/invoices/new" className="min-h-10"><Plus className="h-4 w-4" /><span className="hidden sm:inline">Create invoice</span><span className="sm:hidden">New invoice</span></LinkButton>
+        </div>
+        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-[#2b3138] dark:bg-[#12161b] sm:p-4">
+        <div className="grid gap-2.5 lg:grid-cols-[minmax(0,1fr)_230px_auto]">
           <label className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-            <input className={`${inputClass} w-full pl-10`} placeholder="Search invoice number, client, email, GSTIN" value={search} onChange={(event) => setSearch(event.target.value)} onKeyDown={(event) => {
+            <input className={`${inputClass} min-h-11 w-full pl-10`} placeholder="Search invoice number, client, email, GSTIN" value={search} onChange={(event) => setSearch(event.target.value)} onKeyDown={(event) => {
               if (event.key === "Enter") {
                 setPage(1);
                 setAppliedSearch(search.trim());
               }
             }} />
           </label>
-          <select className={inputClass} value={`${sortBy}:${sortDir}`} onChange={(event) => {
-            const [nextSortBy, nextSortDir] = event.target.value.split(":");
-            setSortBy(nextSortBy);
-            setSortDir(nextSortDir);
-          }}>
-            <option value="created_at:desc">Newest first</option>
-            <option value="due_date:asc">Due date soonest</option>
-            <option value="total:desc">Amount high to low</option>
-            <option value="total:asc">Amount low to high</option>
-            <option value="invoice_number:asc">Invoice number</option>
-          </select>
+          <div className="relative">
+            <select aria-label="Sort invoices" className={`${inputClass} min-h-11 w-full appearance-none pr-10`} value={`${sortBy}:${sortDir}`} onChange={(event) => {
+              const [nextSortBy, nextSortDir] = event.target.value.split(":");
+              setSortBy(nextSortBy);
+              setSortDir(nextSortDir);
+            }}>
+              <option value="created_at:desc">Newest first</option>
+              <option value="due_date:asc">Due date soonest</option>
+              <option value="total:desc">Amount high to low</option>
+              <option value="total:asc">Amount low to high</option>
+              <option value="invoice_number:asc">Invoice number</option>
+            </select>
+            <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-400" />
+          </div>
           <Button onClick={() => {
             setPage(1);
             setAppliedSearch(search.trim());
           }}>Apply</Button>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-2">
           {statusTabs.map((tab) => (
             <button
-              className={`min-h-11 rounded-full px-4 py-2 text-sm font-semibold transition ${status === tab ? "bg-slate-950 text-white dark:bg-white dark:text-slate-950" : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-white/[0.06] dark:text-slate-300 dark:hover:bg-white/[0.1]"}`}
+              className={`min-h-9 rounded-lg px-3.5 py-2 text-sm font-medium transition ${status === tab ? "bg-blue-600 text-white shadow-sm" : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-slate-300 dark:hover:bg-[#1c2229]"}`}
               key={tab}
               onClick={() => {
                 setStatus(tab);
@@ -188,6 +199,7 @@ export default function InvoicesPage() {
               <span className="ml-2 text-xs opacity-70">{tab === "all" ? response?.pagination.total ?? 0 : facetMap.get(tab) ?? 0}</span>
             </button>
           ))}
+        </div>
         </div>
       </Card>
 
@@ -203,39 +215,39 @@ export default function InvoicesPage() {
           </div>
         ) : response?.data.length ? (<>
           <div className="hidden overflow-x-auto premium-scrollbar md:block">
-            <table className="w-full min-w-[860px] text-left text-sm">
-              <thead className="border-b border-slate-200/80 bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:border-white/10 dark:bg-white/[0.04]">
+            <table className="w-full min-w-[960px] text-left text-sm">
+              <thead className="border-b border-slate-200 bg-slate-100 text-xs uppercase tracking-[0.08em] text-slate-700 dark:border-white/10 dark:bg-[#20252c] dark:text-slate-300">
                 <tr>
-                  <th className="p-4">Invoice</th>
-                  <th className="p-4">Client</th>
-                  <th className="p-4">Issue</th>
-                  <th className="p-4">Due</th>
-                  <th className="p-4">Total</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4">Actions</th>
+                  <th className="px-5 py-3.5">Invoice</th>
+                  <th className="px-5 py-3.5">Client</th>
+                  <th className="px-5 py-3.5">Issue</th>
+                  <th className="px-5 py-3.5">Due</th>
+                  <th className="px-5 py-3.5">Total</th>
+                  <th className="px-5 py-3.5">Status</th>
+                  <th className="px-5 py-3.5">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {response.data.map((invoice) => (
-                  <tr className="group border-b border-slate-100 transition hover:bg-blue-50/40 dark:border-white/5 dark:hover:bg-white/[0.04]" key={invoice.id}>
-                    <td className="p-4 font-semibold">{invoice.invoice_number}</td>
-                    <td className="p-4">
+                  <tr className="group border-b border-slate-200 transition hover:bg-slate-50 dark:border-white/10 dark:hover:bg-white/[0.04]" key={invoice.id}>
+                    <td className="px-5 py-4 font-semibold">{invoice.invoice_number}</td>
+                    <td className="px-5 py-4">
                       <div className="font-medium">{invoice.customer_name}</div>
                       <div className="text-xs text-slate-500">{invoice.customer_email}</div>
                     </td>
-                    <td className="p-4">{String(invoice.issue_date).slice(0, 10)}</td>
-                    <td className="p-4">{String(invoice.due_date).slice(0, 10)}</td>
-                    <td className="p-4 font-semibold">{currency(Number(invoice.total), invoice.currency)}</td>
-                    <td className="p-4"><Badge tone={statusTone(invoice.status)}>{invoice.status}</Badge></td>
-                    <td className="p-4">
+                    <td className="whitespace-nowrap px-5 py-4 text-slate-600 dark:text-slate-300">{String(invoice.issue_date).slice(0, 10)}</td>
+                    <td className="whitespace-nowrap px-5 py-4 text-slate-600 dark:text-slate-300">{String(invoice.due_date).slice(0, 10)}</td>
+                    <td className="whitespace-nowrap px-5 py-4 font-semibold">{currency(Number(invoice.total), invoice.currency)}</td>
+                    <td className="px-5 py-4"><Badge tone={statusTone(invoice.status)}>{invoice.status}</Badge></td>
+                    <td className="px-5 py-4">
                       <div className="flex flex-wrap gap-2">
-                        <Link className="inline-flex min-h-10 items-center rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold dark:border-white/10" href={`/invoices/${invoice.id}/edit`}>Edit</Link>
-                        <a className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-emerald-200 px-3 py-2 text-sm font-semibold text-emerald-700 dark:border-emerald-500/20 dark:text-emerald-200" href={whatsappUrl(invoice)} target="_blank" rel="noreferrer"><MessageCircle className="h-4 w-4" />WA</a>
-                        <Button className="px-3" onClick={() => {
+                        <Link className="inline-flex min-h-9 items-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium hover:bg-slate-50 dark:border-white/10 dark:bg-[#171b20]" href={`/invoices/${invoice.id}/edit`}>Edit</Link>
+                        <a className="inline-flex min-h-9 items-center gap-2 rounded-lg border border-emerald-200 bg-white px-3 py-1.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50 dark:border-emerald-500/20 dark:bg-[#171b20] dark:text-emerald-200" href={whatsappUrl(invoice)} target="_blank" rel="noreferrer"><MessageCircle className="h-4 w-4" />WA</a>
+                        <Button className="min-h-9 rounded-lg px-3 py-1.5" onClick={() => {
                           setDownloadInvoice(invoice);
                           setSelectedStyle(invoice.pdf_style || styles[0]?.id || "classic");
                         }}><Download className="h-4 w-4" />PDF</Button>
-                        <Button variant="danger" className="px-3" onClick={() => setDeleteInvoice(invoice)} aria-label={`Delete invoice ${invoice.invoice_number}`}><Trash2 className="h-4 w-4" /></Button>
+                        <Button variant="danger" className="min-h-9 rounded-lg px-3 py-1.5" onClick={() => setDeleteInvoice(invoice)} aria-label={`Delete invoice ${invoice.invoice_number}`}><Trash2 className="h-4 w-4" /></Button>
                       </div>
                     </td>
                   </tr>
@@ -256,15 +268,14 @@ export default function InvoicesPage() {
         ) : (
           <EmptyState contained title="No invoices found" body="Adjust filters or create a new invoice to populate this table." action={<LinkButton href="/invoices/new">New invoice</LinkButton>} />
         )}
-      </Card>
-
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-500">Page {page} of {totalPages} · {response?.pagination.total ?? 0} invoices</p>
-        <div className="flex gap-2">
-          <Button variant="secondary" disabled={page <= 1} onClick={() => setPage((current) => Math.max(current - 1, 1))}>Previous</Button>
-          <Button variant="secondary" disabled={page >= totalPages} onClick={() => setPage((current) => current + 1)}>Next</Button>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-slate-50 px-4 py-3 dark:border-[#2b3138] dark:bg-[#12161b]">
+          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Page {page} of {totalPages} · {response?.pagination.total ?? 0} invoices</p>
+          <div className="flex gap-2">
+            <Button variant="secondary" disabled={page <= 1} onClick={() => setPage((current) => Math.max(current - 1, 1))}>Previous</Button>
+            <Button variant="secondary" disabled={page >= totalPages} onClick={() => setPage((current) => current + 1)}>Next</Button>
+          </div>
         </div>
-      </div>
+      </Card>
 
       {downloadInvoice ? (
         <TemplateGallery

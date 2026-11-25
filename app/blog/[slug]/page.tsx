@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MarkdownContent } from "@/components/blog/MarkdownContent";
 import { PublicFooterLinks } from "@/components/PublicFooterLinks";
-import { PublicNavActions } from "@/components/PublicNavActions";
 import { PublicPrimaryCta } from "@/components/PublicPrimaryCta";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getAllPosts, getPostBySlug, isNoindexBlogSlug, type BlogPost } from "@/lib/blog/posts";
@@ -147,15 +146,6 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <JsonLd data={schemas} />
-      <section className="border-b border-white/10 px-5 py-6 sm:px-8">
-        <nav className="mx-auto flex max-w-3xl items-center justify-between gap-4">
-          <Link className="text-sm font-semibold text-cyan-300" href="/blog">
-            ← All articles
-          </Link>
-          <PublicNavActions showBlog={false} />
-        </nav>
-      </section>
-
       <article className="mx-auto max-w-3xl px-5 py-12 sm:px-8">
         <div className="mb-8 flex flex-wrap items-center gap-2 text-sm text-slate-500">
           <Link className="transition hover:text-cyan-200" href="/">Home</Link>

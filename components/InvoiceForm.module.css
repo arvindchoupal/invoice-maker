@@ -1,8 +1,8 @@
 /* The editable sheet stays paper-white in either workspace theme. */
-.paper.paper.paper { background: #fff; color: #0f172a; color-scheme: light; }
+.paper.paper.paper { --editor-accent: #2563eb; --editor-accent-dark: #1e3a8a; --editor-text: #0f172a; --editor-muted: #64748b; --editor-soft: #eff6ff; width: min(100%, 210mm); min-height: 297mm; margin-inline: auto; background: #fff; color: var(--editor-text); color-scheme: light; }
 .paper.paper.paper label { color: #475569; }
 .paper.paper.paper a { color: #1d4ed8; }
-.paper.paper.paper table thead { background: #f1f5f9; color: #475569; }
+.paper.paper.paper table thead { color: var(--editor-accent-dark); }
 .paper.paper.paper table tbody tr:hover { background: #f8fafc; }
 .paper.paper.paper input, .paper.paper.paper textarea, .paper.paper.paper select { color: #0f172a; }
 .paper.paper.paper input::placeholder, .paper.paper.paper textarea::placeholder { color: #64748b; }
@@ -23,6 +23,19 @@
 .paper.paper.paper textarea:focus,
 .paper.paper.paper select:focus {
   border-style: solid;
-  border-color: #3b82f6;
-  background-color: #eff6ff;
+  border-color: var(--editor-accent);
+  background-color: color-mix(in srgb, var(--editor-soft) 45%, #ffffff);
 }
+
+.accentBar { height: 0.375rem; }
+.paper.paper.paper .sectionLabel { color: var(--editor-accent-dark); }
+.paper.paper.paper .balanceDue { background: var(--editor-soft); color: var(--editor-accent-dark); }
+.paper.paper.paper[data-editor-header="solid"] .titleInput,
+.paper.paper.paper[data-editor-header="solid"] .numberInput {
+  border-color: rgba(255, 255, 255, 0.28);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+.paper.paper.paper[data-editor-header="solid"] .titleInput::placeholder,
+.paper.paper.paper[data-editor-header="solid"] .numberInput::placeholder,
+.paper.paper.paper[data-editor-header="solid"] .numberLabel { color: rgba(255, 255, 255, 0.75); }

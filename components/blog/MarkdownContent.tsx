@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 function renderInline(text: string) {
-  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*)/g);
   return parts.map((part, index) => {
     const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
     if (link) {
@@ -20,6 +20,8 @@ function renderInline(text: string) {
         </a>
       );
     }
+    const strong = part.match(/^\*\*(.+)\*\*$/);
+    if (strong) return <strong key={index}>{strong[1]}</strong>;
     return <span key={index}>{part}</span>;
   });
 }

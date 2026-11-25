@@ -588,10 +588,10 @@ export function FreeInvoiceClient({ children, initialItem, initialTemplate, init
               ) : null}
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06]">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-white/10 dark:bg-[#151a20]">
               <button
                 aria-expanded={settingsOpen}
-                className="flex w-full items-center justify-between px-4 py-3 text-sm font-bold text-white transition hover:bg-white/10"
+                className="flex w-full items-center justify-between px-4 py-3 text-sm font-bold text-slate-900 transition hover:bg-slate-50 dark:text-white dark:hover:bg-white/10"
                 onClick={() => setSettingsOpen((open) => !open)}
                 type="button"
               >
@@ -599,9 +599,9 @@ export function FreeInvoiceClient({ children, initialItem, initialTemplate, init
                 <ChevronDown className={`h-4 w-4 transition ${settingsOpen ? "rotate-180" : ""}`} />
               </button>
               {settingsOpen ? (
-                <div className="grid gap-3 border-t border-white/10 p-4">
+                <div className="grid gap-3 border-t border-slate-200 p-4 dark:border-white/10">
                   <label>
-                    <span className="mb-1.5 block text-xs font-semibold text-slate-300">Currency</span>
+                    <span className="mb-1.5 block text-xs font-semibold text-slate-600 dark:text-slate-300">Currency</span>
                     <select className={compactFieldClass} onFocus={() => journey.visit(stepForField("currency"))} onChange={(event) => update("currency", event.target.value)} value={invoice.currency}>
                       <option value="INR">INR — Indian Rupee</option>
                       <option value="USD">USD — US Dollar</option>
@@ -610,14 +610,14 @@ export function FreeInvoiceClient({ children, initialItem, initialTemplate, init
                       <option value="AED">AED — UAE Dirham</option>
                     </select>
                   </label>
-                  <p className="text-xs leading-5 text-slate-400">Add tax on each item row. Discounts and tax selections are preserved when you save.</p>
+                  <p className="text-xs leading-5 text-slate-600 dark:text-slate-400">Add tax on each item row. Discounts and tax selections are preserved when you save.</p>
                 </div>
               ) : null}
             </div>
 
-            <div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-4 text-sm text-cyan-100">
-              <p className="font-bold text-white">A clean invoice, in minutes.</p>
-              <p className="mt-1 text-xs leading-5 text-cyan-100/70">No complicated setup. Add details, check the total and save.</p>
+            <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm shadow-sm dark:border-cyan-300/20 dark:bg-cyan-300/10">
+              <p className="font-bold text-slate-900 dark:text-white">A clean invoice, in minutes.</p>
+              <p className="mt-1 text-xs leading-5 text-slate-700 dark:text-slate-300">No complicated setup. Add details, check the total and save.</p>
             </div>
           </aside>
         </div>

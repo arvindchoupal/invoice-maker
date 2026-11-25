@@ -60,7 +60,7 @@ export function ThemeToggle({ inline = false, showLabel = true }: { inline?: boo
     <button
       aria-label={`Theme: ${preference}. Switch theme mode`}
       className={inline
-        ? "inline-flex h-9 items-center gap-2 rounded-lg border border-slate-200 bg-white px-2.5 text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-slate-300 dark:hover:bg-[#1c2229]"
+        ? "inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 p-0 text-slate-600 transition hover:border-blue-200 hover:bg-blue-50/70 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-slate-300 dark:hover:bg-[#1c2229]"
         : "theme-toggle-global fixed bottom-20 right-4 z-[70] inline-flex h-11 items-center gap-2 rounded-xl border border-blue-200 bg-white/92 px-3 text-blue-700 shadow-xl shadow-blue-950/15 backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-blue-50 dark:border-[#2b3138] dark:bg-[#171b20] dark:text-blue-300 dark:shadow-black/35 dark:hover:bg-[#1c2229] lg:bottom-5 lg:right-5"}
       onClick={toggleTheme}
       title={`Theme mode: ${preference}`}

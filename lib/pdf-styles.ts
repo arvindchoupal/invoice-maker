@@ -9,6 +9,7 @@ export interface PdfStyleMeta {
   header?: string;
   table?: string;
   category?: string;
+  layout?: "classic" | "modern" | "ledger" | "minimal" | "project" | "retail";
   noLogo?: boolean;
 }
 

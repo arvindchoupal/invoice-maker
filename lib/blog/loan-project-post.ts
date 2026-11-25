@@ -7,6 +7,8 @@ const faqs: Array<[string, string]> = [
   ["Is there one project report format accepted by all banks?", "Do not assume a universal format. Ask the lender about the facility, projection period, financial schedules, supporting documents and any professional review it requires."],
   ["Is a projected balance sheet the same as an actual balance sheet?", "No. A projected balance sheet estimates a future financial position using assumptions. An actual balance sheet reports a past or current position supported by accounting records. Keep actual, estimated and projected figures clearly labelled."],
   ["Can I download a bank loan project report in Excel and PDF?", "The InvoiceWala generator exports a PDF planning report and an .xlsx workbook after you enter and review the inputs. The workbook is a calculated snapshot, so edit assumptions in the tool and export again to recalculate."],
+  ["Can I download a project report sample in Excel?", "Yes. Open the bank loan project report generator, choose Load example, review the fictional retail shop figures, then choose Download Excel (.xlsx). The workbook contains six report sheets and a Read me sheet. This article does not provide a separate blank Excel template."],
+  ["Can I use this project report for a personal loan?", "This format is for a business project and proposed term loan, with project costs, business projections and repayment assumptions. It is not a personal consumer-loan application format; ask your lender which personal-loan documents it requires."],
   ["Can a project report guarantee loan approval?", "No. A report helps explain a proposal. Loan approval depends on the lender's appraisal and requirements; a generated report is not a sanction, audit or certification."],
 ];
 
@@ -22,7 +24,24 @@ export const LOAN_PROJECT_POST: BlogPost = {
   content: `
 Looking for a project report for bank loan format or a sample you can use to prepare your own report? This guide explains the sections, shows a fictional retail shop funding and P&L example, and walks through creating a bank loan project report in PDF and Excel. A useful report connects the business plan to project cost, means of finance, projected balance sheet and cash flow so the figures tell the same story.
 
-This guide uses a fictional new retail shop to explain the format. It is an educational example, not a bank-approved template or a recommendation to borrow. To work with your own assumptions, open the [bank loan project report PDF and Excel tool](${LOAN_TOOL_HREF}).
+This guide is for a **business project / term-loan report**, not a personal consumer-loan application. It uses a fictional new retail shop to explain the format; it is an educational example, not a bank-approved template or a recommendation to borrow.
+
+**Looking for a project report format in Excel?** The article shows the sample figures and workbook structure below. For an actual .xlsx sample, open the [bank loan project report PDF and Excel tool](${LOAN_TOOL_HREF}), select **Load example**, review the sample, then choose **Download Excel (.xlsx)**. This creates a populated workbook; this page does not offer a separate blank Excel file.
+
+### Project report Excel sample: workbook sheets
+
+The downloaded sample workbook has these six report sheets and a short Read me sheet:
+
+| Excel sheet | What the sample contains |
+| --- | --- |
+| Business profile | Business, proprietor, address, activity and project purpose |
+| Project cost & funding | Setup costs, owner contribution, term loan, opening cash and EMI |
+| Projected Profit & Loss | Sales, cost of goods, expenses, interest, depreciation and projected profit |
+| Projected Balance Sheet | Assets, capital, current and non-current loan balances, liabilities and balance check |
+| Cash flow & repayment | Cash movement, working capital, principal repayments and closing loan balance |
+| Assumptions & methodology | Rates, tenure, working-capital days, timing and review notes |
+
+The workbook is a calculated snapshot, not a formula-driven model. Change assumptions in the online tool and export again to recalculate. The example figures below let you check the main cost, funding and first-year P&L schedules before downloading.
 
 ## Project report for bank loan format: sections to include
 

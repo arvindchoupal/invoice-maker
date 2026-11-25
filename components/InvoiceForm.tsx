@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./InvoiceForm.module.css";
@@ -182,6 +182,33 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
   const totals = useMemo(() => calculateInvoice(invoice.items, invoice.taxMode), [invoice.items, invoice.taxMode]);
   const validationErrors = useMemo(() => invoiceValidationErrors(toApiInvoice(invoice, pdfStyle)), [invoice, pdfStyle]);
   const styleMeta = pdfStyles.find(item => item.id === pdfStyle);
+  const editorLayout = styleMeta?.layout ?? "classic";
+  const editorSectionOrder: SectionId[] = editorLayout === "modern" || editorLayout === "ledger" || editorLayout === "retail"
+    ? ["details", "parties", "items"]
+    : ["parties", "details", "items"];
+  const editorHeader = styleMeta?.header ?? "solid";
+  const editorTable = styleMeta?.table ?? "dark";
+  const editorThemeStyle = {
+    "--editor-accent": styleMeta?.accent ?? "#2563eb",
+    "--editor-accent-dark": styleMeta?.accentDark ?? "#1e3a8a",
+    "--editor-text": styleMeta?.text ?? "#0f172a",
+    "--editor-muted": styleMeta?.muted ?? "#64748b",
+    "--editor-soft": styleMeta?.soft ?? "#eff6ff",
+  } as CSSProperties;
+  const editorTableStyle: CSSProperties = editorTable === "dark"
+    ? { backgroundColor: styleMeta?.accentDark ?? "#1e3a8a", color: "#ffffff" }
+    : editorTable === "soft"
+      ? { backgroundColor: styleMeta?.soft ?? "#eff6ff", color: styleMeta?.accentDark ?? "#1e3a8a" }
+      : { backgroundColor: "transparent", color: styleMeta?.accentDark ?? "#1e3a8a" };
+  const editorHeaderStyle: CSSProperties = editorHeader === "solid"
+    ? { backgroundColor: styleMeta?.accentDark ?? "#1e3a8a", color: "#ffffff" }
+    : editorHeader === "split"
+      ? { backgroundColor: styleMeta?.soft ?? "#eff6ff", color: styleMeta?.accentDark ?? "#1e3a8a" }
+      : editorHeader === "side"
+        ? { borderLeft: `5px solid ${styleMeta?.accent ?? "#2563eb"}`, color: styleMeta?.accentDark ?? "#1e3a8a" }
+        : editorHeader === "bar"
+          ? { borderTop: `4px solid ${styleMeta?.accent ?? "#2563eb"}`, color: styleMeta?.accentDark ?? "#1e3a8a" }
+          : { borderTop: "1px solid #e2e8f0", color: styleMeta?.accentDark ?? "#1e3a8a" };
   const logoSrc = invoice.logoData === undefined ? assetUrl(branding.logo_url) : invoice.logoData || "";
 
   useEffect(() => {
@@ -383,6 +410,32 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
   async function removeLogo() { update("logoData", null); setShareMessage("Invoice logo removed."); }
 
+  function renderInvoiceActions(stacked = false) {
+    const widthClass = stacked ? "w-full justify-start" : "";
+    return <>
+      <Button type="button" variant="secondary" className={widthClass} onClick={() => setShowGallery((open) => !open)}>
+        <LayoutGrid className="h-4 w-4" />{styleMeta?.label ?? "Template"}
+      </Button>
+      <label className={`inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-100 dark:hover:bg-white/[0.08] ${widthClass}`}>
+        Logo
+        <input className="sr-only" type="file" accept="image/png,image/jpeg" onChange={(event) => uploadLogo(event.target.files?.[0] ?? null)} />
+      </label>
+      {logoSrc ? <Button type="button" variant="secondary" className={widthClass} onClick={removeLogo}>Remove logo</Button> : null}
+      {invoiceId ? <>
+        <Button type="button" variant="secondary" className={widthClass} onClick={() => void downloadPdf()}>Download PDF</Button>
+        <Button type="button" variant="secondary" className={widthClass} onClick={sendEmail}><Mail className="h-4 w-4" />Email</Button>
+        <a className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100 ${widthClass}`} href={whatsappShareUrl()} target="_blank" rel="noreferrer">
+          <MessageCircle className="h-4 w-4" />WhatsApp
+        </a>
+      </> : <span className={`text-xs text-slate-500 ${stacked ? "px-1" : ""}`}>Saves invoice, then downloads PDF</span>}
+      <Button type="button" variant="secondary" className={widthClass} onClick={() => setShowPreview(open => !open)} aria-expanded={showPreview}>
+        <Maximize2 className="h-4 w-4" />{showPreview ? "Hide PDF preview" : "Preview PDF"}
+      </Button>
+      <Button type="button" variant="secondary" className={widthClass} onClick={() => void save()}><Save className="h-4 w-4" />Save invoice</Button>
+      <Button type="button" className={widthClass} onClick={() => void downloadPdf()}>Save & download PDF</Button>
+    </>;
+  }
+
   async function downloadPdf(style = pdfStyle) {
     const id = await save(false, style);
     if (!id) return;
@@ -438,9 +491,9 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
 
     if (id === "parties") {
       return sectionShell(id, (
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="min-w-0">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">From</p>
+        <div className={`grid gap-6 ${editorLayout === "ledger" || editorLayout === "minimal" ? "grid-cols-1" : "md:grid-cols-2"}`}>
+          <div className={`min-w-0 ${editorLayout === "retail" ? "order-2" : "order-1"}`}>
+            <p className={`${styles.sectionLabel} mb-3 text-xs font-semibold uppercase tracking-wide`}>From</p>
             <p className="mb-3 text-xs text-slate-500">{branding.company_name ? "Prefilled from your company settings. Edit these details for this invoice." : <>Add your business profile in <Link className="font-semibold text-blue-600 underline dark:text-blue-300" href="/settings?returnTo=%2Finvoices%2Fnew" onClick={preserveDraftBeforeSettings}>Settings</Link> to fill these details automatically.</>}</p>
             <div className="grid gap-2">
               <Field label="Business name (required)"><input className={compactInput} autoComplete="organization" required value={invoice.businessName} onFocus={() => journey.visit(stepForField("businessName"))} onChange={(e) => update("businessName", e.target.value)} /></Field>
@@ -449,9 +502,9 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
               <Field label="Business address (optional)"><textarea className={`${compactInput} min-h-16`} autoComplete="street-address" value={invoice.businessAddress} onFocus={() => journey.visit(stepForField("businessAddress"))} onChange={(e) => update("businessAddress", e.target.value)} /></Field>
             </div>
           </div>
-          <div className="min-w-0">
+          <div className={`min-w-0 ${editorLayout === "retail" ? "order-1" : "order-2"}`}>
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Bill to</p>
+              <p className={`${styles.sectionLabel} text-xs font-semibold uppercase tracking-wide`}>Bill to</p>
               {clients.length ? (
                 <select className={`${compactInput} text-xs sm:max-w-[220px]`} defaultValue="" onChange={(e) => applyClient(e.target.value)}>
                   <option value="">Pick saved client</option>
@@ -476,7 +529,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
       return sectionShell(id, <div>
         <div className="overflow-x-auto rounded-xl border border-slate-200">
           <table className="w-full min-w-[760px] text-sm">
-            <thead className="bg-slate-100 text-xs uppercase tracking-wide text-slate-600"><tr>{["Item / description", "Qty", "Rate", "Tax %", "Disc %", "Amount", ""].map((label, index) => <th key={index} scope="col" className="px-3 py-3 text-left font-semibold">{label || <span className="sr-only">Item actions</span>}</th>)}</tr></thead>
+            <thead className="text-xs uppercase tracking-wide" style={editorTableStyle}><tr>{["Item / description", "Qty", "Rate", "Tax %", "Disc %", "Amount", ""].map((label, index) => <th key={index} scope="col" className="px-3 py-3 text-left font-semibold">{label || <span className="sr-only">Item actions</span>}</th>)}</tr></thead>
             <tbody className="divide-y divide-slate-200">{invoice.items.map((item, index) => <tr key={item.localId} draggable onDragStart={() => setDraggedItemId(item.localId)} onDragOver={event => event.preventDefault()} onDrop={() => dropItemOn(item.localId)} className={draggedItemId === item.localId ? "opacity-50" : ""}>
               <td className="min-w-60 px-2 py-3 align-top"><input aria-label={`Item ${index + 1} name (required)`} className={compactInput} placeholder="Product or service" required value={item.name} onChange={event => updateItem(item.localId, {name:event.target.value})} /><input aria-label={`Item ${index + 1} description`} className={compactInput} placeholder="Additional details (optional)" value={item.description || ""} onChange={event => updateItem(item.localId, {description:event.target.value})} /><details className="px-2 text-xs text-slate-500"><summary className="cursor-pointer py-2">HSN / SAC</summary><input aria-label={`Item ${index + 1} HSN / SAC`} className={compactInput} value={item.hsnCode || ""} onChange={event => updateItem(item.localId, {hsnCode:event.target.value})} /></details></td>
               <td className="w-20 px-1 py-3 align-top"><input aria-label={`Item ${index + 1} quantity`} className={compactInput} type="number" min="0.01" step="0.01" value={item.quantity} onChange={event => updateItem(item.localId,{quantity:Number(event.target.value)})} /></td>
@@ -488,7 +541,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
             </tr>)}</tbody>
           </table>
         </div>
-        <button type="button" onClick={addItem} className="mt-4 inline-flex items-center gap-2 rounded-lg border border-blue-200 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50"><Plus className="h-4 w-4" />Add line item</button>
+        <button type="button" onClick={addItem} style={{ borderColor: styleMeta?.accent ?? "#2563eb", color: styleMeta?.accentDark ?? "#1e3a8a" }} className="mt-4 inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold hover:bg-blue-50"><Plus className="h-4 w-4" />Add line item</button>
       </div>);
     }
 
@@ -503,8 +556,8 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
   return (
     <fieldset disabled={loading} className="relative grid min-w-0 gap-4 border-0 p-0">
       {pendingDraft ? <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950"><p className="font-semibold">We found an invoice draft saved on this device.</p><p className="mt-1">Resume it to keep your work, or start a new invoice. Starting fresh removes this saved draft from this device.</p>{pendingDraft.localDraftSavedAt ? <p className="mt-1 text-xs text-amber-800">Last saved {new Date(pendingDraft.localDraftSavedAt).toLocaleString()}</p> : null}<div className="mt-3 flex flex-wrap gap-2"><Button type="button" onClick={() => { setInvoice(toBuilderInvoice(pendingDraft)); setPdfStyle(pendingDraft.pdfStyle || pdfStyle); dirty.current = true; setPendingDraft(null); setDraftReady(true); }}>Resume saved draft</Button><Button type="button" variant="secondary" onClick={() => { localStorage.removeItem(draftKey); setPendingDraft(null); setDraftReady(true); }}>Start a new invoice</Button></div></div> : null}
-      <Card className="p-5">
-        <div className="grid gap-4 xl:grid-cols-[1fr_auto] xl:items-center">
+      <Card className="p-4 sm:p-5">
+        <div className="grid gap-4">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
             <Badge tone={autosaveState === "saved" ? "green" : autosaveState === "saving" ? "amber" : "slate"}>
               {pendingDraft ? "Draft found · choose Resume or Start new" : autosaveState === "saved" ? "Saved on this device" : autosaveState === "saving" ? "Autosaving..." : "Ready"}
@@ -514,33 +567,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
               Ctrl/⌘+S save · Ctrl/⌘+Enter item · Ctrl/⌘+P PDF
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2 xl:justify-end">
-            <Button variant="secondary" onClick={() => setShowGallery((open) => !open)}>
-              <LayoutGrid className="h-4 w-4" />
-              {styleMeta?.label ?? "Template"}
-            </Button>
-            <label className="inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-100 dark:hover:bg-white/[0.08]">
-              Logo
-              <input className="sr-only" type="file" accept="image/png,image/jpeg" onChange={(event) => uploadLogo(event.target.files?.[0] ?? null)} />
-            </label>
-            {logoSrc ? <Button variant="secondary" onClick={removeLogo}>Remove logo</Button> : null}
-            {invoiceId ? (
-              <>
-                <button className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition-all duration-200 hover:-translate-y-0.5 hover:bg-slate-50 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-100 dark:hover:bg-white/[0.08]" onClick={() => void downloadPdf()} type="button">
-                  Download PDF
-                </button>
-                <Button variant="secondary" onClick={sendEmail}><Mail className="h-4 w-4" />Email</Button>
-                <a className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100" href={whatsappShareUrl()} target="_blank" rel="noreferrer">
-                  <MessageCircle className="h-4 w-4" />WhatsApp
-                </a>
-              </>
-            ) : (
-              <span className="text-xs text-slate-500">Saves invoice, then downloads PDF</span>
-            )}
-            <Button variant="secondary" onClick={() => setShowPreview(open => !open)} aria-expanded={showPreview}><Maximize2 className="h-4 w-4" />{showPreview ? "Hide PDF preview" : "Preview PDF"}</Button>
-            <Button variant="secondary" onClick={() => void save()}><Save className="h-4 w-4" />Save invoice</Button>
-            <Button onClick={() => void downloadPdf()}>Save & download</Button>
-          </div>
+          <div className="flex flex-wrap items-center gap-2 xl:hidden">{renderInvoiceActions()}</div>
         </div>
         {shareMessage ? <p role="status" className="mt-2 text-sm text-slate-600 dark:text-slate-300">{shareMessage}</p> : null}
         {error ? <div role="alert" className="mt-3 whitespace-pre-line rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-200">{error}</div> : null}
@@ -563,20 +590,29 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
         />
       ) : null}
 
-      <div className="grid min-w-0 items-start gap-5 2xl:grid-cols-[minmax(0,1fr)_240px]">
-        <article className={`${styles.paper} min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg`} aria-label="Editable invoice document">
-          <div className="h-1.5 bg-blue-600" />
+      <div className="grid min-w-0 items-start gap-5 xl:grid-cols-[210mm_240px] xl:justify-center">
+        <article
+          className={`${styles.paper} min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg`}
+          data-editor-header={editorHeader}
+          data-editor-table={editorTable}
+          data-editor-layout={editorLayout}
+          style={editorThemeStyle}
+          aria-label={`Editable invoice document using ${styleMeta?.label ?? "selected"} template`}
+        >
+          <div className={styles.accentBar} style={{ backgroundColor: editorHeader === "solid" ? styleMeta?.accentDark ?? "#1e3a8a" : styleMeta?.accent ?? "#2563eb" }} />
           <div className="p-4 sm:p-8 lg:p-10">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <label className="inline-flex min-h-20 cursor-pointer items-center rounded-xl border border-dashed border-slate-300 px-5 py-3 text-sm font-semibold text-slate-500 hover:bg-slate-50">
-                {logoSrc ? <Image src={logoSrc} alt="Invoice business logo" width={160} height={64} unoptimized className="max-h-16 max-w-40 object-contain" /> : "+ Add your logo"}
-                <input className="sr-only" aria-label="Invoice logo" type="file" accept="image/png,image/jpeg" onChange={event => uploadLogo(event.target.files?.[0] ?? null)} />
-              </label>
-              <div className="max-w-full sm:max-w-72"><input aria-label="Document title" className={`${compactInput.replace("text-sm", "text-3xl")} text-right font-bold tracking-tight`} value={invoice.documentTitle || "INVOICE"} onChange={event => update("documentTitle", event.target.value)} /><label className="mt-2 flex items-center justify-end gap-2 text-sm text-slate-500"><span>#</span><input aria-label="Invoice number" className={`${compactInput} max-w-48 text-right`} value={invoice.invoiceNumber || ""} placeholder="Assigned on save" onChange={event => update("invoiceNumber", event.target.value)} /></label></div>
+            <div className={`flex flex-wrap items-center justify-between gap-4 rounded-lg px-4 py-4 ${editorHeader === "solid" || editorHeader === "split" ? "mb-2" : ""}`} style={editorHeaderStyle}>
+              {styleMeta?.noLogo ? (
+                <div className="grid min-h-16 place-items-center rounded-lg border border-dashed border-slate-300 px-4 text-center text-xs text-slate-500">Logo hidden in this template</div>
+              ) : (
+                <label className="inline-flex min-h-20 cursor-pointer items-center rounded-xl border border-dashed border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-500 hover:bg-slate-50">
+                  {logoSrc ? <Image src={logoSrc} alt="Invoice business logo" width={160} height={64} unoptimized className="max-h-16 max-w-40 object-contain" /> : "+ Add your logo"}
+                  <input className="sr-only" aria-label="Invoice logo" type="file" accept="image/png,image/jpeg" onChange={event => uploadLogo(event.target.files?.[0] ?? null)} />
+                </label>
+              )}
+              <div className="max-w-full sm:max-w-72"><input aria-label="Document title" className={`${styles.titleInput} ${compactInput.replace("text-sm", "text-3xl")} text-right font-bold tracking-tight`} value={invoice.documentTitle || "INVOICE"} onChange={event => update("documentTitle", event.target.value)} /><label className={`${styles.numberLabel} mt-2 flex items-center justify-end gap-2 text-sm text-slate-500`}><span>#</span><input aria-label="Invoice number" className={`${styles.numberInput} ${compactInput} max-w-48 text-right`} value={invoice.invoiceNumber || ""} placeholder="Assigned on save" onChange={event => update("invoiceNumber", event.target.value)} /></label></div>
             </div>
-            {renderSection("parties")}
-            {renderSection("details")}
-            {renderSection("items")}
+            {editorSectionOrder.map(section => <Fragment key={section}>{renderSection(section)}</Fragment>)}
             <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
               {renderSection("notes")}
               <section className="py-6 text-sm" aria-label="Invoice totals">
@@ -584,18 +620,18 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                   {[["Subtotal", totals.subtotal], ["Discount", -totals.discountTotal], ["Tax", totals.taxTotal], ["Total", totals.total]].map(([label, amount]) => <div key={label} className={`flex justify-between gap-3 ${label === "Total" ? "border-t border-slate-200 pt-4 text-lg font-bold" : ""}`}><dt>{label}</dt><dd className="font-semibold">{currency(Number(amount), invoice.currency)}</dd></div>)}
                 </dl>
                 <label className="mt-5 flex items-center justify-between gap-3 border-t border-slate-200 pt-4"><span>Amount paid</span><input aria-label="Amount paid" className={`${compactInput} max-w-32 text-right`} type="number" min="0" step="0.01" value={invoice.amountPaid || 0} onChange={event => update("amountPaid", Number(event.target.value))} /></label>
-                <div className="mt-5 flex justify-between gap-3 rounded-xl bg-blue-50 px-4 py-4 text-lg font-bold text-blue-950"><span>Balance due</span><span>{currency(Math.max(0, totals.total - Number(invoice.amountPaid || 0)), invoice.currency)}</span></div>
+                <div className={`${styles.balanceDue} mt-5 flex justify-between gap-3 rounded-xl px-4 py-4 text-lg font-bold`}><span>Balance due</span><span>{currency(Math.max(0, totals.total - Number(invoice.amountPaid || 0)), invoice.currency)}</span></div>
               </section>
             </div>
           </div>
         </article>
-        <aside className="grid min-w-0 gap-4 2xl:sticky 2xl:top-24">
-          <Card className="grid gap-3 p-4">
-            <p className="text-sm font-semibold">Your invoice</p>
-            <p className="text-xs leading-6 text-slate-500">Fill the document directly. Preview the PDF when you are ready to check the final template.</p>
-            <Button onClick={() => void downloadPdf()}>Save & download PDF</Button>
-            <Button variant="secondary" onClick={() => void save()}><Save className="h-4 w-4" />Save invoice</Button>
-            <Button variant="secondary" onClick={() => setShowPreview(open => !open)} aria-expanded={showPreview}>Preview PDF</Button>
+        <aside className="grid min-w-0 gap-4 xl:sticky xl:top-24">
+          <Card className="hidden gap-3 p-4 xl:grid">
+            <div>
+              <p className="text-sm font-semibold">Invoice actions</p>
+              <p className="mt-1 text-xs leading-5 text-slate-500">{styleMeta?.label ?? "Selected template"} · {editorLayout} layout</p>
+            </div>
+            <div className="grid gap-2">{renderInvoiceActions(true)}</div>
           </Card>
           <details id="invoice-section-tax" className="scroll-mt-28 rounded-xl border border-slate-200 bg-white p-4 dark:border-white/10 dark:bg-white/[0.03]">
             <summary className="cursor-pointer text-sm font-semibold">Tax, GST & shipping settings</summary>

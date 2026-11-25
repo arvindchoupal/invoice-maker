@@ -244,6 +244,23 @@ This confirms that `/free-invoice` and `/free-invoice-generator` are currently i
 ### Deployment and review status
 
 - Status: **LOCAL IMPLEMENTATION COMPLETE; NOT DEPLOYED; LIVE SITE NOT VERIFIED**.
+
+## 2026-11-25 20:32 IST — clarify bank loan Excel report sample intent
+
+### Exact change
+
+- Updated `lib/blog/loan-project-post.ts` with an early answer explaining that the page covers business project / term-loan reports, provides a populated Excel sample through the linked generator, and does not provide a separate blank workbook.
+- Added the actual workbook sheet names and contents, plus FAQs for downloading the Excel sample and distinguishing this tool from a personal consumer-loan report.
+- Updated `components/blog/MarkdownContent.tsx` to render inline bold emphasis used in the article.
+- Fixed an inline `.xlsx` delimiter that broke the TypeScript template string and caused a development runtime error.
+
+### Verification and unchanged elements
+
+- Targeted ESLint and `git diff --check` passed.
+- Refreshed the local Chrome article page; it rendered successfully and showed the workbook sheets table and generator link.
+- Existing URL, canonical, title, meta description, H1, sample calculations, generator/export behavior and PDF/Excel claims are unchanged.
+- Status: **LOCAL IMPLEMENTATION COMPLETE; NOT DEPLOYED; LIVE SITE NOT VERIFIED**.
+- GSC review: 7 and 28 days after deployment; deployment date is not set.
 - Do not claim these additions are available on `invoicewala.shop` until a deployment identifier and live checks are recorded.
 - Deployment + 7 days: inspect the three edited URLs and both image URLs for crawling/indexing; confirm title, canonical and H1 remain unchanged.
 - Deployment + 28 days: compare Web and Image page/query performance with the final 2026-08-12 to 2026-11-12 baseline and with a like-for-like pre-deployment 28-day window.
@@ -513,4 +530,21 @@ This confirms that `/free-invoice` and `/free-invoice-generator` are currently i
 
 - Local Chrome verification on `/work-completion-certificate-generator` confirmed the first input now computes to text/caret `rgb(15, 23, 42)` on background `rgb(238, 244, 251)` with `color-scheme: light`.
 - Dark-mode field colors, field values, calculations, PDF generation, URLs, metadata, H1s and tool behavior are unchanged.
+- Status: **LOCAL IMPLEMENTATION COMPLETE; NOT DEPLOYED; LIVE SITE NOT VERIFIED**.
+
+## 2026-11-25 19:15:43 IST — remove duplicate public header from signed-in workspace
+
+### Exact change
+
+- Updated `app/globals.css` so the global public-site header is hidden whenever the authenticated `.invoicewala-shell` is present.
+- Updated `components/AppShell.tsx` to remove the public-header offsets that had remained after hiding that header: the desktop sidebar now starts 12 px from the viewport top instead of 92 px, and the workspace toolbar sticks at 0 instead of 76 px.
+- Dashboard, invoices, clients, bookkeeping, recurring, reports, settings and other signed-in workspace screens continue to use their existing app sidebar and workspace toolbar without a second public navigation row above them.
+
+### Verification and unchanged elements
+
+- Confirmed the workspace layout root remains `.invoicewala-shell`, which scopes the header rule to authenticated app routes.
+- Local Chrome review after hot reload confirmed the signed-in workspace is top-aligned without the empty header-height band.
+- Confirmed unauthenticated `/dashboard` requests still redirect to `/login?next=%2Fdashboard`; the public header remains visible on the login page as intended.
+- Public tools, calculators, formats, templates, resources and blog pages retain the CalcGuru-style global header and mega-menu.
+- No URL, canonical, title, meta description, H1, authentication logic, dashboard data or tool behavior changed.
 - Status: **LOCAL IMPLEMENTATION COMPLETE; NOT DEPLOYED; LIVE SITE NOT VERIFIED**.

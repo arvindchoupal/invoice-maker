@@ -78,6 +78,10 @@ body:has(.invoicewala-shell) > .theme-toggle-global {
   display: none;
 }
 
+body:has(.invoicewala-shell) > .global-site-header {
+  display: none;
+}
+
 .invoicewala-shell main > div {
   margin-inline: auto;
   width: 100%;
