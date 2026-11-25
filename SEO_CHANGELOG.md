@@ -454,3 +454,63 @@ This confirms that `/free-invoice` and `/free-invoice-generator` are currently i
 - Production build passed with 173 static pages.
 - Local browser review confirmed the existing single H1 and all five visible worked examples with correct displayed calculations and totals.
 - Status remains **LOCAL IMPLEMENTATION COMPLETE; NOT DEPLOYED; LIVE SITE NOT VERIFIED**.
+
+## 2026-11-25 07:27:27 IST — quote-to-payment tools and CalcGuru-style mega-menu header
+
+### New indexable tools
+
+- Added `/delivery-challan-generator` with a browser-based challan builder for delivery, job work, returnable material and approval movement; consignor, consignee, transport and item fields; live preview; and client-side PDF download.
+- Added `/work-completion-certificate-generator` with client, contractor, project, reference, scope, date, observation and signatory fields; live certificate preview; and client-side PDF download.
+- Added `/tools/outstanding-ageing-calculator` with partial-payment balances, Current/1–30/31–60/61–90/90+ day buckets and client-side CSV export.
+- Added `/tools/gst-invoice-validator` with common-field, GSTIN-structure, tax-split, arithmetic and total checks presented as pass, warning and error results. The page explicitly states that it does not query the GST portal, determine legal tax treatment or certify compliance.
+- Added `components/tools/WorkflowToolPage.tsx` as the shared tool-first SEO structure for these pages: working tool, practical guidance, use cases, workflow, related tools and visible FAQs.
+- Added all four entries to `lib/tools-catalog.ts`; this automatically includes them in the tools listing, structured ItemList and generated sitemap.
+- Expanded `app/tools/page.tsx` only with links to the new document, GST and receivables tools and their workflow paths.
+
+### CalcGuru-style header implementation
+
+- Added `components/PublicMegaMenu.tsx` with five desktop hover/focus menus: Tools, Calculators, Formats, Templates and Resources. Each panel contains three categorized link groups plus a view-all link.
+- Added a responsive mobile navigation using a compact menu button and expandable category sections.
+- Added `components/PublicHeaderActions.tsx` to preserve site search, authentication-aware Dashboard/New invoice actions and guest Log in/Claim free actions without duplicating the mega-menu links.
+- Updated `components/PublicSiteNav.tsx` and `components/GlobalSiteHeader.tsx` to use the categorized navigation while preserving the InvoiceWala logo and account CTAs.
+- Updated the global sans-serif stack in `app/globals.css` to the same native system stack observed on the CalcGuru reference: Apple system, system UI, Segoe UI, Roboto, Oxygen Sans, Ubuntu, Cantarell and Helvetica Neue fallbacks.
+- Updated header styling to a compact 15 px navigation, sticky translucent surface, subtle border/shadow and centered desktop content. InvoiceWala colors, logo and wording remain original.
+
+### Existing elements deliberately unchanged
+
+- No existing URL, canonical, title, meta description, H1, invoice calculation, PDF behavior, signup behavior or authentication behavior was removed or renamed.
+- `/free-invoice` and `/free-invoice-generator` remain separate.
+- Existing quotation, purchase-order, receipt, payment-reminder and due-date tools remain functionally unchanged.
+- The CalcGuru logo, page copy, tax categories and brand assets were not copied. Only the compact system typography, categorized navigation pattern and hover/focus interaction were used as a reference.
+
+### Verification completed
+
+- Targeted ESLint passed for all new tool modules, shared workflow shell, mega-menu and header components.
+- Production build passed with Next.js 16.2.6 and 177 static pages; all four new routes and `/sitemap.xml` were generated.
+- `git diff --check` passed.
+- Local browser QA confirmed the delivery-challan page renders the functional form before supporting content.
+- Desktop header QA confirmed all five primary options, search, login and Claim free fit in one row; the Tools mega-panel opens on keyboard focus and shows all three columns without viewport clipping after the panel-anchor correction.
+- 390×844 mobile QA confirmed the compact logo/menu/search/CTA row and expandable Tools, Calculators, Formats, Templates and Resources menu without horizontal overflow.
+- Dark-mode screenshots were reviewed for header, panel, focus state, menu contrast and mobile layout.
+
+### Deployment and review status
+
+- Status: **LOCAL IMPLEMENTATION COMPLETE; NOT DEPLOYED; LIVE SITE NOT VERIFIED**.
+- No commit, push, pull request or hosting deployment was performed.
+- After deployment, verify the global header on representative public, blog, authentication and signed-in pages; test each new route and sitemap entry on `https://invoicewala.shop` before marking live.
+- Deployment + 7 days: check crawling/indexing and accidental metadata or route changes.
+- Deployment + 28 days: review landing-page impressions, queries, CTR and engagement for the four new tools and the tools hub.
+
+## 2026-11-25 07:41:25 IST — public-tool input contrast correction
+
+### Exact change
+
+- Updated `app/globals.css` so public tool inputs, selects and textareas that use the dark-page `text-white` utility receive dark text and caret colors when the site is in light mode.
+- Added readable light-mode placeholder colors and explicit light/dark native control color schemes, including date inputs.
+- The rule applies consistently across the new document generators and existing public calculator/tool forms using the same field pattern.
+
+### Verification and unchanged elements
+
+- Local Chrome verification on `/work-completion-certificate-generator` confirmed the first input now computes to text/caret `rgb(15, 23, 42)` on background `rgb(238, 244, 251)` with `color-scheme: light`.
+- Dark-mode field colors, field values, calculations, PDF generation, URLs, metadata, H1s and tool behavior are unchanged.
+- Status: **LOCAL IMPLEMENTATION COMPLETE; NOT DEPLOYED; LIVE SITE NOT VERIFIED**.

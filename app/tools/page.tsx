@@ -53,6 +53,8 @@ const toolHubs = [
     links: [
       ["/quotation-maker", "Quotation maker"],
       ["/purchase-order-generator", "Purchase order generator"],
+      ["/delivery-challan-generator", "Delivery challan generator"],
+      ["/work-completion-certificate-generator", "Work completion certificate"],
       ["/receipt-generator", "Receipt generator"],
       ["/blog/estimate-vs-invoice", "Estimate vs invoice guide"],
     ],
@@ -63,10 +65,21 @@ const toolHubs = [
     links: [
       ["/tools/hsn-code-finder", "HSN and SAC code finder"],
       ["/tools/gst-calculator", "GST calculator"],
+      ["/tools/gst-invoice-validator", "GST invoice validator"],
       ["/tools/gst-bill-format-generator", "GST bill format generator"],
       ["/tools/profit-calculator", "Profit calculator"],
       ["/tools/margin-calculator", "Margin calculator"],
       ["/tools/discount-calculator", "Discount calculator"],
+    ],
+  },
+  {
+    title: "Payment and receivables tools",
+    body: "Move from an agreed due date to ageing, reminders and final payment proof.",
+    links: [
+      ["/tools/invoice-due-date-calculator", "Invoice due date calculator"],
+      ["/tools/outstanding-ageing-calculator", "Outstanding ageing calculator"],
+      ["/tools/payment-reminder-generator", "Payment reminder generator"],
+      ["/receipt-generator", "Payment receipt generator"],
     ],
   },
 ];
@@ -76,6 +89,9 @@ const recommendedPaths = [
   ["/gst-invoice-generator", "Create GST invoices", "Use this path when GSTIN, taxable value and CGST/SGST/IGST fields matter."],
   ["/invoice-template-india", "See invoice formats", "Useful for users comparing PDF, Word, Excel and GST-ready invoice template structures."],
   ["/quotation-maker", "Send a quotation first", "Best for contractors, agencies and service providers who need approval before invoicing."],
+  ["/delivery-challan-generator", "Record delivery", "Use a delivery challan when goods move before or without the final invoice."],
+  ["/work-completion-certificate-generator", "Confirm completed work", "Connect accepted project delivery with final billing."],
+  ["/tools/outstanding-ageing-calculator", "Review outstanding invoices", "Prioritize follow-up using current, 30, 60, 90 and 90+ day balances."],
   ["/receipt-generator", "Create a receipt", "Use after payment is received and the customer needs payment proof."],
   ["/purchase-order-generator", "Create purchase orders", "Useful for supplier purchases, procurement and vendor communication."],
 ];

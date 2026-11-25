@@ -37,7 +37,7 @@ html.dark body {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   text-rendering: optimizeLegibility;
 }
 
@@ -225,6 +225,21 @@ html:not(.dark) :is(main.bg-slate-950, main[class*="bg-[#050816]"]) [class~="bg-
 
 html:not(.dark) :is(main.bg-slate-950, main[class*="bg-[#050816]"]) [class~="bg-cyan-300/10"] {
   background: rgba(37, 99, 235, 0.1) !important;
+}
+
+html:not(.dark) :is(main.bg-slate-950, main[class*="bg-[#050816]"]) :is(input, select, textarea)[class~="text-white"] {
+  color: #0f172a !important;
+  caret-color: #0f172a;
+  color-scheme: light;
+}
+
+html:not(.dark) :is(main.bg-slate-950, main[class*="bg-[#050816]"]) :is(input, textarea)[class~="text-white"]::placeholder {
+  color: #64748b !important;
+  opacity: 1;
+}
+
+html.dark :is(main.bg-slate-950, main[class*="bg-[#050816]"]) :is(input, select, textarea)[class~="text-white"] {
+  color-scheme: dark;
 }
 
 html:not(.dark) :is(main.bg-slate-950, main[class*="bg-[#050816]"]) [class~="text-white"]:not([class*="bg-"]) {
@@ -495,10 +510,9 @@ html.dark main.bg-white [class~="text-slate-600"] {
 html.dark .invoice-home .homepage-sticky-header { background: rgb(15 20 29 / 92%); border-bottom-color: #ffffff14; }
 .invoice-home section[id], .invoice-home #demo { scroll-margin-top: 88px; }
 
-.global-site-header { position:sticky; top:0; z-index:50; height:76px; display:flex; align-items:center; border-bottom:1px solid #dce3ef; background:rgb(255 255 255 / 94%); backdrop-filter:blur(16px); box-shadow:0 3px 16px #152b5308; }
-.global-header-container { width:100%; max-width:1500px; margin-inline:auto; padding-inline:12px; }
+.global-site-header { position:sticky; top:0; z-index:50; height:76px; display:flex; align-items:center; border-bottom:1px solid #e5e7eb; background:rgb(255 255 255 / 97%); backdrop-filter:blur(14px); box-shadow:0 4px 18px rgb(15 23 42 / 7%); font-family:-apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; }
+.global-header-container { width:100%; max-width:1320px; margin-inline:auto; padding-inline:16px; }
 html.dark .global-site-header { background:rgb(15 20 29 / 94%); border-bottom-color:#ffffff14; }
-.global-site-header nav > div a { font-size:17.6px; line-height:24px; }
-.global-site-header nav > div a[href="/login"], .global-site-header nav > div a[href^="/signup"], .global-site-header nav > div a[href="/invoices/new"] { font-size:16px; }
+.global-site-header nav a { line-height:1.35; }
 html { scroll-padding-top:88px; }
 @media print { .global-site-header { display:none; } }

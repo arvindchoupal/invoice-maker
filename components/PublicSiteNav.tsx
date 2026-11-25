@@ -1,11 +1,13 @@
 import { BrandLogo } from "@/components/BrandLogo";
-import { PublicNavActions } from "@/components/PublicNavActions";
+import { PublicHeaderActions } from "@/components/PublicHeaderActions";
+import { PublicMegaMenu } from "@/components/PublicMegaMenu";
 
 export function PublicSiteNav() {
   return (
-    <nav className="flex min-w-0 items-center justify-between gap-2 sm:gap-4">
-      <BrandLogo href="/" imageClassName="h-9 w-9" tagline="" />
-      <PublicNavActions hideTemplatesOnMobile />
+    <nav aria-label="Primary navigation" className="flex h-full min-w-0 items-center gap-2 sm:gap-4">
+      <BrandLogo className="shrink-0" href="/" imageClassName="h-10 w-10" tagline="" />
+      <div className="ml-auto lg:ml-4"><PublicMegaMenu /></div>
+      <div className="ml-auto"><PublicHeaderActions /></div>
     </nav>
   );
 }
