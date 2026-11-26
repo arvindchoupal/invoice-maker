@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="330" viewBox="0 0 760 330" role="img" aria-labelledby="title desc">
+  <title id="title">Product label barcode scanner illustration</title>
+  <desc id="desc">A product label with a barcode is being read by a handheld scanner.</desc>
+  <rect width="760" height="330" rx="24" fill="#f8fafc"/>
+  <rect x="56" y="36" width="316" height="258" rx="18" fill="#fff" stroke="#cbd5e1" stroke-width="3"/>
+  <rect x="80" y="62" width="268" height="38" rx="8" fill="#e2e8f0"/>
+  <rect x="98" y="75" width="112" height="10" rx="5" fill="#94a3b8"/>
+  <g fill="#111827" shape-rendering="crispEdges">
+    <rect x="94" y="126" width="5" height="105"/><rect x="104" y="126" width="3" height="105"/><rect x="113" y="126" width="8" height="105"/><rect x="127" y="126" width="4" height="105"/>
+    <rect x="137" y="126" width="3" height="105"/><rect x="145" y="126" width="9" height="105"/><rect x="160" y="126" width="5" height="105"/><rect x="171" y="126" width="3" height="105"/>
+    <rect x="181" y="126" width="7" height="105"/><rect x="195" y="126" width="3" height="105"/><rect x="205" y="126" width="6" height="105"/><rect x="217" y="126" width="3" height="105"/>
+    <rect x="227" y="126" width="8" height="105"/><rect x="241" y="126" width="4" height="105"/><rect x="251" y="126" width="3" height="105"/><rect x="260" y="126" width="7" height="105"/>
+    <rect x="274" y="126" width="4" height="105"/><rect x="284" y="126" width="8" height="105"/><rect x="298" y="126" width="3" height="105"/><rect x="308" y="126" width="6" height="105"/>
+  </g>
+  <text x="220" y="258" fill="#334155" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" letter-spacing="4">5901234123457</text>
+  <path d="M414 186h79l45-42c12-11 31-8 38 7l14 30h58c21 0 38 17 38 38v14c0 21-17 38-38 38h-88l-39 28c-13 9-30 5-38-8l-22-36h-47c-14 0-25-11-25-25v-19c0-14 11-25 25-25Z" fill="#0f172a"/>
+  <path d="M590 186h43l21 44h-49l-15-44Z" fill="#06b6d4"/>
+  <path d="M396 203h-30M402 221h-47M396 239h-30" stroke="#06b6d4" stroke-width="5" stroke-linecap="round"/>
+  <path d="M502 171 478 145M510 259l-20 24" stroke="#334155" stroke-width="11" stroke-linecap="round"/>
+</svg>

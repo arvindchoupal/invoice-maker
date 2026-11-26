@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { apiBlob } from "@/lib/api";
 import { invoiceValidationErrors } from "@/lib/invoice-document";
 import type { Invoice } from "@/types";
@@ -14,13 +15,10 @@ function stepForError(message: string): FixStep {
   return "details";
 }
 
-export function InvoicePdfPreview({ invoice, onFix }: { invoice: Invoice; onFix?: (step: FixStep) => void }) {
+export function InvoicePdfPreview({ invoice, onFix, onClose }: { invoice: Invoice; onFix?: (step: FixStep) => void; onClose: () => void }) {
   const payload = JSON.stringify(invoice);
   const [preview, setPreview] = useState<{ payload: string; url?: string; error?: string }>({ payload: "" });
   useEffect(() => {
-    const snapshot = JSON.parse(payload) as Invoice;
-    const errors = invoiceValidationErrors(snapshot);
-    if (errors.length) return;
     let active = true;
     let url = "";
     const controller = new AbortController();
@@ -32,8 +30,16 @@ export function InvoicePdfPreview({ invoice, onFix }: { invoice: Invoice; onFix?
     return () => { active = false; clearTimeout(timer); controller.abort(); if (url) URL.revokeObjectURL(url); };
   }, [payload]);
   const errors = invoiceValidationErrors(invoice);
-  return <section className="rounded-xl border border-slate-200 bg-white p-4 text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-white">
-    <h2 className="font-semibold">PDF preview</h2><p className="mb-3 mt-1 text-xs text-slate-500">The same document layout is used when you save and download. Invoice numbers are assigned on save when left blank.</p>
-    {errors.length ? <div className="rounded-lg bg-slate-50 p-4 text-sm text-slate-700 dark:bg-slate-800 dark:text-slate-200"><p className="font-medium">Finish these details to see your PDF:</p><ul className="mt-2 grid gap-1.5">{errors.map((message) => <li className="flex flex-wrap items-center justify-between gap-2" key={message}><span>{message}</span>{onFix ? <button className="shrink-0 font-semibold text-blue-700 underline underline-offset-2 hover:text-blue-900 dark:text-blue-300 dark:hover:text-blue-100" type="button" onClick={() => onFix(stepForError(message))}>Open step</button> : null}</li>)}</ul></div> : preview.payload !== payload ? <p role="status" className="p-4 text-sm">Updating preview…</p> : preview.error ? <p role="alert" className="p-4 text-sm text-red-600">{preview.error}</p> : preview.url ? <><iframe title="Invoice PDF preview" src={preview.url} className="h-[75vh] min-h-[480px] w-full rounded-lg border-0 bg-slate-100" /><a className="mt-2 inline-block text-sm text-blue-600 underline" href={preview.url} target="_blank" rel="noreferrer">Open preview in a new tab</a></> : null}
-  </section>;
+  return <div className="fixed inset-0 z-[110] grid place-items-center bg-slate-950/60 p-2 sm:p-5" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <section role="dialog" aria-modal="true" aria-labelledby="invoice-pdf-preview-title" className="flex max-h-[96vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl bg-white text-slate-900 shadow-2xl dark:bg-slate-900 dark:text-white">
+      <header className="flex items-center justify-between gap-4 border-b border-slate-200 px-5 py-3 dark:border-slate-700">
+        <div><h2 id="invoice-pdf-preview-title" className="font-semibold">PDF preview</h2><p className="mt-0.5 text-xs text-slate-500">This is the same PDF layout used for download.</p></div>
+        <button type="button" onClick={onClose} aria-label="Close PDF preview" className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"><X className="h-5 w-5" /></button>
+      </header>
+      {errors.length ? <div className="max-h-28 overflow-auto border-b border-amber-200 bg-amber-50 px-5 py-2 text-xs text-amber-950 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100"><span className="font-semibold">Complete these fields for the final invoice:</span><ul className="mt-1 flex flex-wrap gap-x-5 gap-y-1">{errors.map((message) => <li className="flex items-center gap-1.5" key={message}><span>{message}</span>{onFix ? <button className="font-semibold underline underline-offset-2" type="button" onClick={() => { onClose(); onFix(stepForError(message)); }}>Fix</button> : null}</li>)}</ul></div> : null}
+      <div className="min-h-0 flex-1 bg-slate-100 p-2 dark:bg-slate-950 sm:p-4">
+        {preview.payload !== payload ? <p role="status" className="grid h-full min-h-[55vh] place-items-center text-sm text-slate-600">Preparing PDF preview…</p> : preview.error ? <p role="alert" className="grid h-full min-h-[55vh] place-items-center text-sm text-red-600">{preview.error}</p> : preview.url ? <iframe title="Invoice PDF preview" src={preview.url} className="h-[76vh] min-h-[420px] w-full rounded-lg border-0 bg-white" /> : null}
+      </div>
+    </section>
+  </div>;
 }

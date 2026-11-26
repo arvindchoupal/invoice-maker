@@ -162,6 +162,12 @@ html:not(.dark) :is(main.bg-slate-950, main[class*="bg-[#050816]"]) {
   color: #0f172a !important;
 }
 
+html:not(.dark) main.bg-slate-950 .barcode-generator-panel {
+  background: #ffffff !important;
+  border-color: #dbe5f1 !important;
+  color: #0f172a !important;
+}
+
 html:not(.dark) :is(main.bg-slate-950, main[class*="bg-[#050816]"]) [class~="border-white/10"],
 html:not(.dark) :is(main.bg-slate-950, main[class*="bg-[#050816]"]) [class~="border-white/15"],
 html:not(.dark) :is(main.bg-slate-950, main[class*="bg-[#050816]"]) [class~="border-white/20"] {
@@ -194,6 +200,7 @@ html:not(.dark) :is(main.bg-slate-950, main[class*="bg-[#050816]"]) :is(
 html:not(.dark) :is(main.bg-slate-950, main[class*="bg-[#050816]"]) :is(
   [class~="bg-slate-950/50"],
   [class~="bg-slate-950/70"],
+  [class~="bg-slate-950/80"],
   [class~="bg-slate-900"]
 ) {
   background: #eef4fb !important;

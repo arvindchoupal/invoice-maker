@@ -4,6 +4,11 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
+## Verification commands
+
+- Do not run `npm run build`, `next build`, or any production build after code changes unless the user explicitly asks for a build in the current request.
+- Prefer targeted linting, type checks, `git diff --check`, and focused browser verification when they are sufficient.
+
 ## InvoiceWala SEO change discipline
 
 - Read `SEO_CHANGELOG.md` before changing `/free-invoice`, `/free-invoice-generator`, or related SEO content.

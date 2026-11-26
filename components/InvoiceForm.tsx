@@ -27,6 +27,7 @@ import { InvoicePdfPreview } from "@/components/InvoicePdfPreview";
 import { InvoiceAdditionalDetails } from "@/components/InvoiceAdditionalDetails";
 import { invoiceValidationErrors, invoiceLogoData, invoiceDates } from "@/lib/invoice-document";
 import { TemplateGallery } from "@/components/TemplateGallery";
+import { PaymentQrImage, PaymentQrModal } from "@/components/PaymentQrModal";
 import { Badge, Button, Card, Field } from "@/components/ui";
 
 type BuilderItem = InvoiceItem & { localId: string };
@@ -78,6 +79,8 @@ const blankItem = (taxRate = 0): BuilderItem => ({
 function toBuilderInvoice(initial?: Partial<Invoice>): BuilderInvoice {
   return {
     amountPaid: 0, taxMode: "tax", documentTitle: "INVOICE",
+    paymentInstructions: "",
+    paymentMethods: {},
     ...invoiceDates(),
     status: "Draft",
     currency: "INR",
@@ -125,6 +128,8 @@ function toApiInvoice(invoice: BuilderInvoice, pdfStyle: string): Invoice {
     customerAddress: invoice.customerAddress?.trim() || undefined,
     notes: invoice.notes?.trim() || undefined,
     terms: invoice.terms?.trim() || undefined,
+    paymentInstructions: invoice.paymentInstructions?.trim() || undefined,
+    paymentMethods: invoice.paymentMethods,
     pdfStyle,
     items,
   };
@@ -152,6 +157,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
   const [pdfStyle, setPdfStyle] = useState(initial?.pdfStyle ?? "classic");
   const [pdfStyles, setPdfStyles] = useState<PdfStyleMeta[]>([]);
   const [showGallery, setShowGallery] = useState(false);
+  const [showPaymentQr, setShowPaymentQr] = useState(false);
   const [shareMessage, setShareMessage] = useState("");
   const [clients, setClients] = useState<Client[]>([]);
   const [draggedItemId, setDraggedItemId] = useState<string | null>(null);
@@ -428,8 +434,8 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
           <MessageCircle className="h-4 w-4" />WhatsApp
         </a>
       </> : <span className={`text-xs text-slate-500 ${stacked ? "px-1" : ""}`}>Saves invoice, then downloads PDF</span>}
-      <Button type="button" variant="secondary" className={widthClass} onClick={() => setShowPreview(open => !open)} aria-expanded={showPreview}>
-        <Maximize2 className="h-4 w-4" />{showPreview ? "Hide PDF preview" : "Preview PDF"}
+      <Button type="button" variant="secondary" className={widthClass} onClick={() => setShowPreview(true)} disabled={loading || validationErrors.length > 0} title={validationErrors.length ? "Complete the required invoice fields to preview the PDF." : undefined}>
+        <Maximize2 className="h-4 w-4" />Preview PDF
       </Button>
       <Button type="button" variant="secondary" className={widthClass} onClick={() => void save()}><Save className="h-4 w-4" />Save invoice</Button>
       <Button type="button" className={widthClass} onClick={() => void downloadPdf()}>Save & download PDF</Button>
@@ -496,7 +502,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
             <p className={`${styles.sectionLabel} mb-3 text-xs font-semibold uppercase tracking-wide`}>From</p>
             <p className="mb-3 text-xs text-slate-500">{branding.company_name ? "Prefilled from your company settings. Edit these details for this invoice." : <>Add your business profile in <Link className="font-semibold text-blue-600 underline dark:text-blue-300" href="/settings?returnTo=%2Finvoices%2Fnew" onClick={preserveDraftBeforeSettings}>Settings</Link> to fill these details automatically.</>}</p>
             <div className="grid gap-2">
-              <Field label="Business name (required)"><input className={compactInput} autoComplete="organization" required value={invoice.businessName} onFocus={() => journey.visit(stepForField("businessName"))} onChange={(e) => update("businessName", e.target.value)} /></Field>
+              <Field label={<span>Business name <span aria-hidden="true" className="text-red-600">*</span></span>}><input className={compactInput} autoComplete="organization" required value={invoice.businessName} onFocus={() => journey.visit(stepForField("businessName"))} onChange={(e) => update("businessName", e.target.value)} /></Field>
               <Field label="Business email (optional)"><input className={compactInput} type="email" autoComplete="email" value={invoice.businessEmail} onFocus={() => journey.visit(stepForField("businessEmail"))} onChange={(e) => update("businessEmail", e.target.value)} /></Field>
               <Field label="GSTIN / VAT number (optional)"><input className={compactInput} value={invoice.businessTaxId} onFocus={() => journey.visit(stepForField("businessTaxId"))} onChange={(e) => update("businessTaxId", e.target.value)} /></Field>
               <Field label="Business address (optional)"><textarea className={`${compactInput} min-h-16`} autoComplete="street-address" value={invoice.businessAddress} onFocus={() => journey.visit(stepForField("businessAddress"))} onChange={(e) => update("businessAddress", e.target.value)} /></Field>
@@ -515,7 +521,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
               ) : null}
             </div>
             <div className="grid gap-2">
-              <Field label="Customer name (required)"><input className={compactInput} autoComplete="name" required value={invoice.customerName} onFocus={() => journey.visit(stepForField("customerName"))} onChange={(e) => update("customerName", e.target.value)} /></Field>
+              <Field label={<span>Customer name <span aria-hidden="true" className="text-red-600">*</span></span>}><input className={compactInput} autoComplete="name" required value={invoice.customerName} onFocus={() => journey.visit(stepForField("customerName"))} onChange={(e) => update("customerName", e.target.value)} /></Field>
               <Field label="Customer email (optional)"><input className={compactInput} type="email" autoComplete="email" value={invoice.customerEmail} onFocus={() => journey.visit(stepForField("customerEmail"))} onChange={(e) => update("customerEmail", e.target.value)} /></Field>
               <Field label="Customer GSTIN / VAT number (optional)"><input className={compactInput} value={invoice.customerTaxId} onFocus={() => journey.visit(stepForField("customerTaxId"))} onChange={(e) => update("customerTaxId", e.target.value)} /></Field>
               <Field label="Customer address (optional)"><textarea className={`${compactInput} min-h-16`} autoComplete="street-address" value={invoice.customerAddress} onFocus={() => journey.visit(stepForField("customerAddress"))} onChange={(e) => update("customerAddress", e.target.value)} /></Field>
@@ -529,9 +535,9 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
       return sectionShell(id, <div>
         <div className="overflow-x-auto rounded-xl border border-slate-200">
           <table className="w-full min-w-[760px] text-sm">
-            <thead className="text-xs uppercase tracking-wide" style={editorTableStyle}><tr>{["Item / description", "Qty", "Rate", "Tax %", "Disc %", "Amount", ""].map((label, index) => <th key={index} scope="col" className="px-3 py-3 text-left font-semibold">{label || <span className="sr-only">Item actions</span>}</th>)}</tr></thead>
+            <thead className="text-xs uppercase tracking-wide" style={editorTableStyle}><tr>{["Item / description", "Qty", "Rate", "Tax %", "Disc %", "Amount", ""].map((label, index) => <th key={index} scope="col" className="px-3 py-3 text-left font-semibold">{!label ? <span className="sr-only">Item actions</span> : index === 0 ? <>Item / description <span aria-hidden="true" className="text-red-600">*</span></> : label}</th>)}</tr></thead>
             <tbody className="divide-y divide-slate-200">{invoice.items.map((item, index) => <tr key={item.localId} draggable onDragStart={() => setDraggedItemId(item.localId)} onDragOver={event => event.preventDefault()} onDrop={() => dropItemOn(item.localId)} className={draggedItemId === item.localId ? "opacity-50" : ""}>
-              <td className="min-w-60 px-2 py-3 align-top"><input aria-label={`Item ${index + 1} name (required)`} className={compactInput} placeholder="Product or service" required value={item.name} onChange={event => updateItem(item.localId, {name:event.target.value})} /><input aria-label={`Item ${index + 1} description`} className={compactInput} placeholder="Additional details (optional)" value={item.description || ""} onChange={event => updateItem(item.localId, {description:event.target.value})} /><details className="px-2 text-xs text-slate-500"><summary className="cursor-pointer py-2">HSN / SAC</summary><input aria-label={`Item ${index + 1} HSN / SAC`} className={compactInput} value={item.hsnCode || ""} onChange={event => updateItem(item.localId, {hsnCode:event.target.value})} /></details></td>
+              <td className="min-w-60 px-2 py-3 align-top"><input aria-label={`Item ${index + 1} name`} className={compactInput} placeholder="Product or service" required value={item.name} onChange={event => updateItem(item.localId, {name:event.target.value})} /><input aria-label={`Item ${index + 1} description`} className={compactInput} placeholder="Additional details (optional)" value={item.description || ""} onChange={event => updateItem(item.localId, {description:event.target.value})} /><details className="px-2 text-xs text-slate-500"><summary className="cursor-pointer py-2">HSN / SAC</summary><input aria-label={`Item ${index + 1} HSN / SAC`} className={compactInput} value={item.hsnCode || ""} onChange={event => updateItem(item.localId, {hsnCode:event.target.value})} /></details></td>
               <td className="w-20 px-1 py-3 align-top"><input aria-label={`Item ${index + 1} quantity`} className={compactInput} type="number" min="0.01" step="0.01" value={item.quantity} onChange={event => updateItem(item.localId,{quantity:Number(event.target.value)})} /></td>
               <td className="w-28 px-1 py-3 align-top"><input aria-label={`Item ${index + 1} rate`} className={compactInput} type="number" min="0" step="0.01" value={item.unitPrice} onChange={event => updateItem(item.localId,{unitPrice:Number(event.target.value)})} /></td>
               <td className="w-20 px-1 py-3 align-top"><input aria-label={`Item ${index + 1} tax percentage`} className={compactInput} type="number" min="0" max="100" step="0.01" disabled={invoice.taxMode === "none"} value={invoice.taxMode === "none" ? 0 : item.taxRate} onChange={event => updateItem(item.localId,{taxRate:Number(event.target.value)})} /></td>
@@ -549,6 +555,17 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
       <div className="grid gap-3 md:grid-cols-2">
         <Field label="Notes"><textarea className={`${compactInput} min-h-20`} value={invoice.notes} onFocus={() => journey.visit(stepForField("notes"))} onChange={(e) => update("notes", e.target.value)} /></Field>
         <Field label="Terms"><textarea className={`${compactInput} min-h-20`} value={invoice.terms} onFocus={() => journey.visit(stepForField("terms"))} onChange={(e) => update("terms", e.target.value)} /></Field>
+        {(() => {
+          const qrPayment = invoice.paymentMethods?.qrPayment;
+          const hasQrImage = Boolean(qrPayment?.enabled && (qrPayment.value || qrPayment.imageData));
+          return <div className={`grid gap-4 rounded-xl border border-slate-200 p-4 md:col-span-2 ${hasQrImage ? "md:grid-cols-[180px_minmax(0,1fr)]" : "grid-cols-1"}`}>
+            {hasQrImage && qrPayment ? <div className="flex items-start justify-center md:border-r md:border-slate-200 md:pr-4"><PaymentQrImage settings={qrPayment} invoice={{ ...toApiInvoice(invoice, pdfStyle), total: totals.total }} /></div> : null}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              {qrPayment?.value || qrPayment?.imageData ? <div><p className="text-sm font-semibold">{qrPayment.method.toUpperCase()} payment method</p><p className="mt-1 max-w-md break-all text-xs text-slate-500">{qrPayment.value || "Uploaded QR image"}</p></div> : <p className="text-sm text-slate-500">Add a payment option for your customer.</p>}
+              <Button type="button" variant="secondary" onClick={() => setShowPaymentQr(true)}><Plus className="h-4 w-4" />Add Payment Method</Button>
+            </div>
+          </div>;
+        })()}
       </div>
     ));
   }
@@ -590,6 +607,16 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
         />
       ) : null}
 
+      {showPaymentQr ? <PaymentQrModal
+        initial={invoice.paymentMethods?.qrPayment}
+        invoice={{ ...toApiInvoice(invoice, pdfStyle), total: totals.total }}
+        onCancel={() => setShowPaymentQr(false)}
+        onSave={(settings) => {
+          update("paymentMethods", { ...invoice.paymentMethods, qrPayment: settings });
+          setShowPaymentQr(false);
+        }}
+      /> : null}
+
       <div className="grid min-w-0 items-start gap-5 xl:grid-cols-[210mm_240px] xl:justify-center">
         <article
           className={`${styles.paper} min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-lg`}
@@ -610,7 +637,7 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
                   <input className="sr-only" aria-label="Invoice logo" type="file" accept="image/png,image/jpeg" onChange={event => uploadLogo(event.target.files?.[0] ?? null)} />
                 </label>
               )}
-              <div className="max-w-full sm:max-w-72"><input aria-label="Document title" className={`${styles.titleInput} ${compactInput.replace("text-sm", "text-3xl")} text-right font-bold tracking-tight`} value={invoice.documentTitle || "INVOICE"} onChange={event => update("documentTitle", event.target.value)} /><label className={`${styles.numberLabel} mt-2 flex items-center justify-end gap-2 text-sm text-slate-500`}><span>#</span><input aria-label="Invoice number" className={`${styles.numberInput} ${compactInput} max-w-48 text-right`} value={invoice.invoiceNumber || ""} placeholder="Assigned on save" onChange={event => update("invoiceNumber", event.target.value)} /></label></div>
+              <div className="max-w-full sm:max-w-72"><input aria-label="Document title" className={`${styles.titleInput} ${compactInput.replace("text-sm", "text-3xl")} text-right font-bold tracking-tight`} value={invoice.documentTitle || "INVOICE"} onChange={event => update("documentTitle", event.target.value)} /><label className={`${styles.numberLabel} mt-2 flex items-center justify-end gap-2 text-sm text-slate-500`}><span>#</span><input aria-label="Invoice number" className={`${styles.numberInput} ${compactInput} max-w-48 text-right`} style={editorHeader === "solid" ? { color: "#fff", backgroundColor: "rgba(255, 255, 255, 0.1)", borderColor: "rgba(255, 255, 255, 0.28)", caretColor: "#fff" } : undefined} value={invoice.invoiceNumber || ""} placeholder="Assigned on save" onChange={event => update("invoiceNumber", event.target.value)} /></label></div>
             </div>
             {editorSectionOrder.map(section => <Fragment key={section}>{renderSection(section)}</Fragment>)}
             <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
@@ -637,10 +664,10 @@ export function InvoiceForm({ initial, invoiceId }: { initial?: Partial<Invoice>
             <summary className="cursor-pointer text-sm font-semibold">Tax, GST & shipping settings</summary>
             <div className="mt-4"><InvoiceAdditionalDetails invoice={invoice} update={(key, value) => { markDirty(stepForField(key)); setInvoice(current => ({ ...current, [key]: value })); }} /></div>
           </details>
-          {validationErrors.length ? <p className="text-xs leading-6 text-slate-500">Add the required billing details before saving. Any missing fields will be listed when you save or preview.</p> : <p className="text-sm text-emerald-700 dark:text-emerald-300">Ready to save your invoice.</p>}
+          {validationErrors.length ? <p className="text-xs leading-6 text-slate-500">Complete the required billing details to enable PDF preview and save your invoice.</p> : <p className="text-sm text-emerald-700 dark:text-emerald-300">Ready to save your invoice and preview the PDF.</p>}
         </aside>
       </div>
-      {showPreview ? <InvoicePdfPreview invoice={toApiInvoice(invoice, pdfStyle)} onFix={focusDocumentSection} /> : null}
+      {showPreview ? <InvoicePdfPreview invoice={toApiInvoice(invoice, pdfStyle)} onFix={focusDocumentSection} onClose={() => setShowPreview(false)} /> : null}
 
     </fieldset>
   );

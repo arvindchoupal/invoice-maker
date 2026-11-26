@@ -7,6 +7,13 @@ import type { Invoice } from "@/types";
 import { InvoiceForm } from "@/components/InvoiceForm";
 import { EmptyState, PageHeader } from "@/components/ui";
 
+function parsePaymentMethods(value: unknown): Invoice["paymentMethods"] {
+  if (typeof value === "string") {
+    try { return JSON.parse(value) as Invoice["paymentMethods"]; } catch { return {}; }
+  }
+  return value && typeof value === "object" ? value as Invoice["paymentMethods"] : {};
+}
+
 export default function EditInvoicePage() {
   const params = useParams<{ id: string }>();
   const [loadedId, setLoadedId] = useState("");
@@ -39,6 +46,8 @@ export default function EditInvoicePage() {
         customerAddress: String(data.customer_address ?? ""),
         notes: String(data.notes ?? ""),
         terms: String(data.terms ?? ""),
+        paymentInstructions: String(data.payment_instructions ?? ""),
+        paymentMethods: parsePaymentMethods(data.payment_methods),
         pdfStyle: String(data.pdf_style ?? "classic"),
         items: (data.items as Array<Record<string, unknown>>).map((item) => ({
           hsnCode: String(item.hsn_code || ""),

@@ -100,7 +100,7 @@ export function SectionHeader({
   );
 }
 
-export function Field({ label, children, hint }: { label: string; children: ReactNode; hint?: string }) {
+export function Field({ label, children, hint }: { label: ReactNode; children: ReactNode; hint?: string }) {
   return (
     <label className="grid gap-2 text-sm font-medium text-slate-700 dark:text-slate-200">
       <span>{label}</span>

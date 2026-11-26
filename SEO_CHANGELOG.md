@@ -548,3 +548,54 @@ This confirms that `/free-invoice` and `/free-invoice-generator` are currently i
 - Public tools, calculators, formats, templates, resources and blog pages retain the CalcGuru-style global header and mega-menu.
 - No URL, canonical, title, meta description, H1, authentication logic, dashboard data or tool behavior changed.
 - Status: **LOCAL IMPLEMENTATION COMPLETE; NOT DEPLOYED; LIVE SITE NOT VERIFIED**.
+
+## 2026-11-26 08:06:32 IST — barcode generator and scanner tool
+
+### Exact change
+
+- Added `/tools/barcode-generator` with two browser tools: generate Code 39 and EAN-13 barcodes, or scan a barcode image and use a camera when the browser supports the Barcode Detection API.
+- Added EAN-13 check-digit calculation and validation, optional Code 39 Mod 43 check character, bar-height and printed-value controls, PNG/SVG downloads, and copyable values.
+- Added format guidance, scan/print advice, privacy and GS1 limitations, visible FAQs, structured WebApplication, FAQ, breadcrumb and HowTo data, plus a local SVG illustration.
+- Added the page to `lib/tools-catalog.ts`; the tools hub, sitemap and tools ItemList derive from this catalog.
+
+### Files changed
+
+- `app/tools/barcode-generator/page.tsx` — route metadata, canonical and structured data.
+- `app/tools/barcode-generator/BarcodeToolClient.tsx` — barcode generator and scanner interface.
+- `app/tools/barcode-generator/BarcodeSeoSections.tsx` — supporting guide, FAQs and illustration placement.
+- `lib/tools-catalog.ts` — tool listing and sitemap source.
+- `public/images/barcode-generator/scan-label.svg` — original product-label/scanner illustration.
+- `SEO_CHANGELOG.md` — this record.
+
+### Existing elements deliberately unchanged
+
+- Existing URLs, metadata, canonical tags, H1s, invoice calculations, PDF flows, signup behavior and existing tool functionality were not changed.
+- Barcode scanning remains browser-dependent; the page explains that only browsers with supported barcode detection can scan images or use the camera. The generator itself runs locally and does not assign GS1 identifiers.
+
+### Verification and deployment
+
+- Targeted ESLint passed for the barcode route, client, SEO sections and catalog; `git diff --check` passed.
+- Local browser review confirmed the default EAN-13 preview, generator/scanner tabs, full guide, and local SVG illustration render; PNG/SVG download controls were visible.
+- `npx tsc --noEmit` still reports the pre-existing `app/(app)/dashboard/page.tsx:204` nullability issue (`data` may be null); no barcode file was reported.
+- Status: **LOCAL IMPLEMENTATION COMPLETE; NOT DEPLOYED; LIVE SITE NOT VERIFIED**. No commit or deployment was performed.
+- After deployment, review the live route, canonical, sitemap entry and scan/generation behavior. GSC review: 2026-12-03 (7 days) and 2026-12-24 (28 days) after deployment.
+
+## 2026-11-26 08:31 IST — barcode guide examples and explanations
+
+### Exact change
+
+- Expanded `app/tools/barcode-generator/BarcodeSeoSections.tsx` with concrete Code 39 examples (`ITEM-001`, `TOOL-27`) and an EAN-13 check-digit example (`590123412345` → check digit `7` → `5901234123457`).
+- Added plain-language examples for choosing a format, validating input, setting label height, printing and scanning a sample, and preserving the barcode quiet zone.
+- Clarified in the guide and FAQ that the EAN-13 example demonstrates the format and checksum only; the tool does not assign a GS1 product identifier.
+
+### Existing elements deliberately unchanged
+
+- URL, title, meta description, canonical, H1, tool controls, barcode generation/scanning behavior, structured data, invoice flows and existing tool catalog entries are unchanged.
+- No claims of GS1 assignment or retail eligibility were added.
+
+### Verification and deployment
+
+- `git diff --check` passed. No tests or production build were run.
+- Local browser screenshot was supplied for the current page; no new browser review or live-site verification was performed for this copy update.
+- Status: **LOCAL IMPLEMENTATION COMPLETE; NOT DEPLOYED; LIVE SITE NOT VERIFIED**. No commit or deployment was performed.
+- GSC review remains scheduled for 2026-12-03 (7 days) and 2026-12-24 (28 days) after deployment.

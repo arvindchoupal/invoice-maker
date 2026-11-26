@@ -1,4 +1,4 @@
-const API_URL = "https://api.invoicewala.shop/api";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://api.invoicewala.shop/api";
 
 export function getToken() {
   if (typeof window === "undefined") return "";

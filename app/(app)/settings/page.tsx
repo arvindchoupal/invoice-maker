@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FileImage, FileText, Settings2 } from "lucide-react";
 import { API_URL, api } from "@/lib/api";
 import type { PdfStyleMeta } from "@/lib/pdf-styles";
 import { TemplateGallery } from "@/components/TemplateGallery";
-import { Button, Field, PageHeader, inputClass } from "@/components/ui";
+import { Button, Field, inputClass } from "@/components/ui";
 
 function assetUrl(path: string | number | undefined) {
   const value = String(path ?? "");
@@ -26,6 +27,7 @@ export default function SettingsPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<"company" | "pdf" | "branding">("company");
 
   useEffect(() => {
     Promise.all([api<Record<string, string | number>>("/settings"), api<PdfStyleMeta[]>("/invoices/pdf/styles/list")])
@@ -113,9 +115,30 @@ export default function SettingsPage() {
 
   return (
     <div className="grid gap-5">
-      <PageHeader title="Settings" description="Configure company profile, logo, currency, tax, and theme preferences." />
+      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-[#2b3138] dark:bg-[#151a20] dark:shadow-none" aria-label="Settings overview">
+        <div className="flex flex-wrap items-center justify-between gap-5 p-6 lg:p-8">
+          <div className="flex items-center gap-5">
+            <div className="grid h-20 w-20 shrink-0 place-items-center rounded-full border-2 border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-300">
+              <Settings2 className="h-9 w-9" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-3">
+                <h2 className="text-2xl font-semibold tracking-tight text-slate-950 dark:text-white">InvoiceWala settings</h2>
+                <span className="rounded-md border border-blue-500/30 bg-blue-500/10 px-2 py-1 font-mono text-xs font-semibold text-blue-700 dark:text-blue-300">SETTINGS</span>
+              </div>
+              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Company profile, invoice defaults and branding preferences</p>
+            </div>
+          </div>
+          <span className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300">Configuration active</span>
+        </div>
+        <nav className="flex flex-wrap gap-1 overflow-x-auto border-t border-slate-200 px-5 pt-2 dark:border-[#2b3138]" aria-label="Settings sections">
+          <button type="button" onClick={() => setActiveTab("company")} className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold ${activeTab === "company" ? "border-blue-500 text-blue-600 dark:text-blue-300" : "border-transparent text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white"}`}><Settings2 className="h-4 w-4" />Company profile</button>
+          <button type="button" onClick={() => setActiveTab("pdf")} className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold ${activeTab === "pdf" ? "border-blue-500 text-blue-600 dark:text-blue-300" : "border-transparent text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white"}`}><FileText className="h-4 w-4" />PDF templates</button>
+          <button type="button" onClick={() => setActiveTab("branding")} className={`inline-flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold ${activeTab === "branding" ? "border-blue-500 text-blue-600 dark:text-blue-300" : "border-transparent text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white"}`}><FileImage className="h-4 w-4" />Branding</button>
+        </nav>
+      </section>
       {error ? <p className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-500/20 dark:bg-red-950/30 dark:text-red-200" role="alert">{error}</p> : null}
-      {loading ? <p className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900">Loading saved settings…</p> : <form key="loaded-settings" onSubmit={save} className="grid gap-5 rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+      {loading ? <p className="rounded-2xl border border-slate-200 bg-white p-5 text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900">Loading saved settings…</p> : activeTab === "company" ? <form id="company-profile" key="loaded-settings" onSubmit={save} className="grid gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-[#2b3138] dark:bg-[#151a20] dark:shadow-none">
         <section className="grid gap-4 md:grid-cols-2" aria-labelledby="company-profile-title">
           <div className="md:col-span-2">
             <h2 id="company-profile-title" className="font-semibold">Company profile and invoice defaults</h2>
@@ -143,13 +166,11 @@ export default function SettingsPage() {
             <Button disabled={saving}>{saving ? "Saving…" : "Save company details"}</Button>
           </div>
         </section>
-        <details className="rounded-xl border border-slate-200 p-4 dark:border-slate-700">
-          <summary className="cursor-pointer font-semibold">Default PDF template <span className="font-normal text-slate-500">({pdfStyles.length} designs)</span></summary>
-          <p className="mb-3 mt-2 text-sm text-slate-500">Choose the design used for new invoices. This is optional; the current template is already selected.</p>
-          {pdfStyles.length ? <TemplateGallery styles={pdfStyles} selectedId={defaultPdfStyle} onSelect={setDefaultPdfStyle} /> : <p className="text-sm text-slate-500">Invoice templates are unavailable right now.</p>}
-        </details>
-      </form>}
-      <form onSubmit={uploadLogo} className="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+      </form> : activeTab === "pdf" ? <section id="pdf-templates" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-[#2b3138] dark:bg-[#151a20] dark:shadow-none">
+        <h2 className="font-semibold">Default PDF template <span className="font-normal text-slate-500">({pdfStyles.length} designs)</span></h2>
+        <p className="mb-4 mt-2 text-sm text-slate-500">Choose the design used for new invoices. This is optional; the current template is already selected.</p>
+        {pdfStyles.length ? <TemplateGallery styles={pdfStyles} selectedId={defaultPdfStyle} onSelect={setDefaultPdfStyle} /> : <p className="text-sm text-slate-500">Invoice templates are unavailable right now.</p>}
+      </section> : <form id="branding" onSubmit={uploadLogo} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-[#2b3138] dark:bg-[#151a20] dark:shadow-none">
         <div className="mb-4 flex items-center gap-4">
           {assetUrl(settings.logo_url) ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -167,7 +188,7 @@ export default function SettingsPage() {
           <Button disabled={saving}>{saving ? "Uploading…" : "Upload logo"}</Button>
           {assetUrl(settings.logo_url) ? <Button type="button" variant="secondary" disabled={saving} onClick={removeLogo}>Remove logo</Button> : null}
         </div>
-      </form>
+      </form>}
       {message ? <p className="rounded-md bg-emerald-50 p-3 text-sm text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-200" role="status">{message}</p> : null}
     </div>
   );

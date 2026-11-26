@@ -13,6 +13,18 @@ export type ToolCatalogEntry = {
 
 export const TOOLS_CATALOG: ToolCatalogEntry[] = [
   {
+    href: "/tools/barcode-generator",
+    title: "Barcode generator and scanner",
+    body: "Create Code 39 or EAN-13 barcodes, download SVG or PNG, and scan a barcode image or camera feed in your browser.",
+    tag: "Business tools",
+    intent: "Best for product labels and quick barcode checks",
+    metaTitle: "Free Barcode Generator & Scanner Online | Code 39, EAN-13",
+    metaDescription: "Generate Code 39 and EAN-13 barcodes or scan a barcode image with this free browser tool. Download SVG or PNG; your barcode data stays on your device.",
+    headline: "Generate a barcode or scan one from an image.",
+    highlights: ["Generate Code 39 and EAN-13 barcodes", "Download a print-ready SVG or PNG", "Scan barcode images or use a camera where supported"],
+    signupSource: "barcode-generator",
+  },
+  {
     href: "/tools/business-loan-project-report-generator",
     title: "Bank Loan Project Report — PDF & Excel",
     body: "Create a bank loan project report online. Start with a retail shop sample, add your figures and download projected financial statements in PDF and Excel.",

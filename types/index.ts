@@ -35,6 +35,22 @@ export interface InvoiceItem {
 
 export interface Invoice {
   amountPaid?: number;
+  paymentInstructions?: string;
+  paymentMethods?: {
+    bankTransfer?: string;
+    upi?: string;
+    cheque?: string;
+    paypal?: string;
+    wallet?: string;
+    other?: string;
+    qrPayment?: {
+      enabled: boolean;
+      method: "upi" | "link" | "paypal" | "wise" | "stripe" | "bank" | "custom";
+      value: string;
+      description: string;
+      imageData?: string;
+    };
+  };
   shippingAddress?: string;
   taxMode?: TaxMode;
   supplierState?: string;

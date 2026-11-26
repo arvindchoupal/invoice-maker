@@ -27,7 +27,7 @@ export default function LoginPage() {
     try { savedDraft = await attachPublicInvoiceDraft(); }
     catch { router.push("/free-invoice?saveError=1"); return; }
     if (hasDraft && !savedDraft) { router.push("/free-invoice?saveError=1"); return; }
-    router.push(savedDraft?.id ? `/invoices/${savedDraft.id}/edit` : "/dashboard");
+    router.push(savedDraft?.id ? `/invoices/${savedDraft.id}/edit` : "/invoices");
   }
 
   async function loginWithGoogle(credential: string) {

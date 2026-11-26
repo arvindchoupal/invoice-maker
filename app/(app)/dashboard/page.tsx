@@ -11,7 +11,6 @@ import {
   IndianRupee,
   Mail,
   ReceiptText,
-  Sparkles,
   TrendingUp,
   Users,
 } from "lucide-react";
@@ -116,6 +115,7 @@ export default function DashboardPage() {
   const maxRevenue = Math.max(...(data?.monthlyRevenue.map((m) => Number(m.revenue)) ?? [1]), 1);
   const maxPayments = Math.max(...(data?.paymentTrends.map((m) => Number(m.amount)) ?? [1]), 1);
   const primaryInsight = data?.insights[0];
+  const hasRevenueTrend = Boolean(data && data.monthlyRevenue.length > 1 && data.monthlyRevenue.some((item) => Number(item.revenue) > 0));
 
   return (
     <div className="grid gap-5">
@@ -124,7 +124,7 @@ export default function DashboardPage() {
         <div className="relative grid gap-5 lg:grid-cols-[1fr_320px]">
           <div>
             <div className="inline-flex items-center gap-2 rounded-md bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 ring-1 ring-blue-100 dark:bg-blue-500/10 dark:text-blue-300 dark:ring-blue-500/20">
-              <Sparkles className="h-3.5 w-3.5" />
+              <TrendingUp className="h-3.5 w-3.5" />
               Finance overview
             </div>
             <h1 className="mt-5 max-w-3xl text-3xl font-semibold tracking-tight text-slate-950 dark:text-white md:text-[2rem]">
@@ -137,10 +137,6 @@ export default function DashboardPage() {
               <LinkButton href="/invoices/new">
                 <FilePlus2 className="h-4 w-4" />
                 New invoice
-              </LinkButton>
-              <LinkButton href="/ai-import" variant="secondary">
-                <Sparkles className="h-4 w-4" />
-                Import with AI
               </LinkButton>
               <LinkButton href="/invoices" variant="ghost">
                 <ReceiptText className="h-4 w-4" />
@@ -203,7 +199,7 @@ export default function DashboardPage() {
       <div className="grid gap-5 xl:grid-cols-[1.4fr_0.8fr]">
         <Card className="p-5">
           <SectionHeader title="Monthly revenue" eyebrow="Invoices" action={<Badge tone="blue">Database values</Badge>} />
-          {data?.monthlyRevenue.length ? (
+          {hasRevenueTrend ? (
             <div className="mt-6 flex h-72 items-end gap-3">
               {data.monthlyRevenue.map((item) => {
                 const amount = Number(item.revenue);
@@ -219,7 +215,12 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="mt-6">
-              <EmptyState contained title="No revenue yet" body="Create invoices to populate revenue trends from the database." action={<LinkButton href="/invoices/new">Create invoice</LinkButton>} />
+              <EmptyState
+                contained
+                title={summary?.total_invoices ? "More invoice history needed" : "No monthly revenue yet"}
+                body={summary?.total_invoices ? "Monthly trends become useful after invoices span more than one month and include recorded revenue." : "Create and send invoices to start tracking monthly revenue."}
+                action={<LinkButton href="/invoices/new">Create invoice</LinkButton>}
+              />
             </div>
           )}
         </Card>
@@ -231,7 +232,7 @@ export default function DashboardPage() {
               <div className="rounded-2xl border border-slate-200/70 bg-slate-50/80 p-4 transition hover:-translate-y-0.5 hover:bg-white dark:border-white/10 dark:bg-white/[0.04]" key={`${insight.type}-${insight.message}`}>
                 <div className="flex gap-3">
                   <div className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-200">
-                    {insight.severity === "warning" ? <AlertTriangle className="h-4 w-4" /> : insight.severity === "success" ? <CheckCircle2 className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
+                    {insight.severity === "warning" ? <AlertTriangle className="h-4 w-4" /> : insight.severity === "success" ? <CheckCircle2 className="h-4 w-4" /> : <FileText className="h-4 w-4" />}
                   </div>
                   <div>
                     <Badge tone={insightTone(insight.severity)}>{insight.type}</Badge>
