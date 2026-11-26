@@ -199,7 +199,7 @@ export default function DashboardPage() {
       <div className="grid gap-5 xl:grid-cols-[1.4fr_0.8fr]">
         <Card className="p-5">
           <SectionHeader title="Monthly revenue" eyebrow="Invoices" action={<Badge tone="blue">Database values</Badge>} />
-          {hasRevenueTrend ? (
+          {data && hasRevenueTrend ? (
             <div className="mt-6 flex h-72 items-end gap-3">
               {data.monthlyRevenue.map((item) => {
                 const amount = Number(item.revenue);
