@@ -13,6 +13,7 @@ import {
   FileText,
   LayoutDashboard,
   LogOut,
+  Mail,
   Menu,
   PanelLeftClose,
   Plus,
@@ -81,7 +82,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const isInvoiceEditor = pathname === "/invoices/new" || /^\/invoices\/[^/]+\/edit$/.test(pathname);
   const compactSidebar = isInvoiceEditor ? !editorSidebarExpanded : sidebarCollapsed;
-  const visibleNav = nav;
+  const visibleNav = user?.role === "admin" ? [...nav, { href: "/admin/email", label: "Email users", icon: Mail }] : nav;
   const currentNav = visibleNav.find((item) => pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href)));
   const routeDetail = routeDetails(pathname);
   const CurrentPageIcon = routeDetail?.icon ?? currentNav?.icon ?? LayoutDashboard;
@@ -121,8 +122,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <BrandLogo
             href="/dashboard"
             className={`rounded-lg px-2 py-2 transition hover:bg-slate-100 dark:hover:bg-white/[0.06] ${compactSidebar ? "justify-center" : ""}`}
-            imageClassName={compactSidebar ? "h-8 w-8" : "h-8 w-8"}
-            showText={!compactSidebar}
+            imageClassName={compactSidebar ? "h-8 w-8" : "h-8 w-[96px]"}
+            showText={false}
           />
 
           <nav className="mt-5 grid gap-1">
@@ -173,9 +174,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <header className={`sticky top-0 z-20 border-b border-slate-200 px-4 py-2.5 transition-colors duration-200 dark:border-[#2b3138] lg:px-5 ${headerScrolled ? "bg-white/95 backdrop-blur-xl dark:bg-[#0f1216]/95" : "bg-transparent backdrop-blur-none"}`}>
           <div className="mx-auto flex max-w-[100rem] items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-3 lg:hidden">
-              <BrandLogo href="/dashboard" imageClassName="h-9 w-9" showText={false} />
+              <BrandLogo href="/dashboard" imageClassName="h-9 w-[108px]" showText={false} />
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold">InvoiceWala</p>
                 <h1 className="truncate text-xs font-medium text-slate-500 dark:text-slate-400">{pageTitle}</h1>
               </div>
             </div>

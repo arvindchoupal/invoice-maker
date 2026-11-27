@@ -13,19 +13,27 @@ type BrandLogoProps = {
 export function BrandLogo({
   href = "/",
   className = "",
-  imageClassName = "h-10 w-10",
-  showText = true,
-  tagline = "Finance OS",
+  imageClassName = "h-10 w-[120px]",
+  showText = false,
+  tagline = "",
   title = "InvoiceWala",
 }: BrandLogoProps) {
   const content = (
     <>
       <Image
-        src="/logo.png"
+        src="/invoicewala-gradient-logo-v2.png"
         alt="InvoiceWala"
-        width={80}
-        height={80}
-        className={`shrink-0 rounded-2xl object-contain ${imageClassName}`}
+        width={2140}
+        height={735}
+        className={`shrink-0 object-contain dark:hidden ${imageClassName}`}
+        priority
+      />
+      <Image
+        src="/invoicewala-gradient-swoosh-logo.png"
+        alt="InvoiceWala"
+        width={2172}
+        height={724}
+        className={`hidden shrink-0 object-contain dark:block ${imageClassName}`}
         priority
       />
       {showText ? (

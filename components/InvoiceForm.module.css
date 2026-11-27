@@ -36,6 +36,13 @@
   background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
 }
+.paper.paper.paper[data-editor-header="solid"] .titleInput:focus,
+.paper.paper.paper[data-editor-header="solid"] .numberInput:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  caret-color: #ffffff;
+}
 .paper.paper.paper[data-editor-header="solid"] .titleInput::placeholder,
 .paper.paper.paper[data-editor-header="solid"] .numberInput::placeholder,
 .paper.paper.paper[data-editor-header="solid"] .numberLabel { color: rgba(255, 255, 255, 0.75); }

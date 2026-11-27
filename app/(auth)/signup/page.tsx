@@ -70,7 +70,7 @@ export default function SignupPage() {
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="grid min-h-screen lg:grid-cols-[1.04fr_0.96fr]">
         <div className="relative hidden overflow-hidden border-r border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.2),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.15),transparent_32%)] p-10 lg:flex lg:flex-col">
-          <BrandLogo href="/" imageClassName="h-10 w-10" tagline="" />
+          <BrandLogo href="/" imageClassName="h-10 w-[120px]" tagline="" />
           <div className="flex flex-1 items-center">
             <div className="max-w-2xl">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Founding customer offer</p>
@@ -93,7 +93,7 @@ export default function SignupPage() {
         <div className="flex min-h-screen items-center justify-center px-5 py-10 sm:px-8">
           <div className="w-full max-w-md">
             <div className="mb-8 flex items-center justify-between">
-              <BrandLogo href="/" className="lg:hidden" imageClassName="h-9 w-9" tagline="" />
+              <BrandLogo href="/" className="lg:hidden" imageClassName="h-9 w-[108px]" tagline="" />
               <Link className="ml-auto rounded-xl border border-white/10 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:bg-white/10" href="/login">
                 Log in
               </Link>
