@@ -5,7 +5,7 @@ import { api } from "@/lib/api";
 import { PageHeader } from "@/components/ui";
 
 type Recipient = { id: number; name: string; email: string };
-type SendResult = { sent: number; failed: number; total: number };
+type SendResult = { sent: number; failed: number; total: number; failureCodes: string[] };
 type RecipientMode = "all" | "selected";
 const panel = "rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900";
 const field = "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-blue-900";
@@ -21,6 +21,9 @@ export default function AdminEmailPage() {
   const [previewError, setPreviewError] = useState("");
   const [reviewing, setReviewing] = useState(false);
   const [sending, setSending] = useState(false);
+  const [checkingConnection, setCheckingConnection] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState("");
+  const [connectionError, setConnectionError] = useState("");
   const [error, setError] = useState("");
   const [result, setResult] = useState<SendResult | null>(null);
   const selectedCount = selectedIds.length;
@@ -57,6 +60,20 @@ export default function AdminEmailPage() {
     setReviewing(false);
   }
 
+  async function checkEmailConnection() {
+    setCheckingConnection(true);
+    setConnectionStatus("");
+    setConnectionError("");
+    try {
+      const result = await api<{ host: string; port: number }>("/admin/email/test-connection", { method: "POST" });
+      setConnectionStatus(`SMTP connection and STARTTLS verified: ${result.host}:${result.port}. No email was sent.`);
+    } catch (err) {
+      setConnectionError(err instanceof Error ? err.message : "SMTP connection test failed");
+    } finally {
+      setCheckingConnection(false);
+    }
+  }
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
@@ -90,6 +107,12 @@ export default function AdminEmailPage() {
         <p className="font-semibold">Recipients</p>
         <p className="mt-1 text-slate-600 dark:text-slate-300">{recipients === null ? "Loading users…" : `${recipients.length} non-admin users available.`}</p>
         <p className="mt-1 text-xs text-slate-500">Each user receives a separate email. Recipient addresses stay private.</p>
+      </div>
+
+      <div className="mb-5">
+        <button className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:hover:bg-slate-800" type="button" disabled={checkingConnection} onClick={checkEmailConnection}>{checkingConnection ? "Checking SMTP…" : "Test email connection"}</button>
+        {connectionStatus ? <p className="mt-2 text-sm text-emerald-700 dark:text-emerald-300" role="status">{connectionStatus}</p> : null}
+        {connectionError ? <p className="mt-2 text-sm text-red-700 dark:text-red-300" role="alert">{connectionError}</p> : null}
       </div>
 
       <form className="grid gap-5" onSubmit={submit}>
@@ -139,7 +162,7 @@ export default function AdminEmailPage() {
 
       {error ? <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-200" role="alert">{error}</p> : null}
       {previewError ? <p className="mt-4 text-sm text-amber-700 dark:text-amber-300" role="status">Preview: {previewError}</p> : null}
-      {result ? <p className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200" role="status">Email sent to {result.sent} of {result.total} recipients{result.failed ? `; ${result.failed} failed.` : "."}</p> : null}
+      {result ? <p className={`mt-4 rounded-lg p-3 text-sm ${result.failed ? "bg-amber-50 text-amber-900 dark:bg-amber-950/40 dark:text-amber-100" : "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"}`} role="status">Email sent to {result.sent} of {result.total} recipients{result.failed ? `; ${result.failed} failed (SMTP: ${result.failureCodes.join(", ") || "unknown error"}).` : "."}</p> : null}
     </section>
   </div>;
 }
